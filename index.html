@@ -4,190 +4,1327 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Mon Logiciel Garage | Devis, factures et gestion atelier</title>
-
-  <meta name="description"
-    content="Le logiciel simple pour garages indépendants : devis en 2 minutes, factures automatiques, clients, véhicules et suivi atelier." />
-
+  <meta
+    name="description"
+    content="Le logiciel simple pour garages indépendants : devis en 2 minutes, factures automatiques, clients, véhicules et suivi atelier."
+  />
   <style>
     :root {
       --bg: #081120;
-      --text: #fff;
+      --bg-soft: #0d1b2f;
+      --card: rgba(255,255,255,0.06);
+      --card-border: rgba(255,255,255,0.12);
+      --text: #ffffff;
       --muted: #b8c4d6;
       --green: #22c55e;
+      --green-dark: #16a34a;
+      --blue-soft: #60a5fa;
+      --warning: #f59e0b;
+      --max: 1180px;
+      --shadow: 0 20px 60px rgba(0,0,0,0.28);
+      --radius: 22px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
     }
 
     body {
       margin: 0;
       font-family: Arial, Helvetica, sans-serif;
-      background: #07101d;
+      background:
+        radial-gradient(circle at top right, rgba(34,197,94,0.15), transparent 25%),
+        radial-gradient(circle at top left, rgba(96,165,250,0.12), transparent 30%),
+        linear-gradient(180deg, #07101d 0%, #0a1424 100%);
       color: var(--text);
+      line-height: 1.5;
     }
 
-    a { color: inherit; text-decoration: none; }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
 
     .container {
-      max-width: 1100px;
-      margin: auto;
-      padding: 20px;
+      width: min(var(--max), calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(34,197,94,0.12);
+      border: 1px solid rgba(34,197,94,0.28);
+      color: #c9f7d8;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(10px);
+      background: rgba(8, 17, 32, 0.72);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .topbar-inner {
+      min-height: 74px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+      letter-spacing: 0.2px;
+    }
+
+    .brand-logo {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--green), #86efac);
+      color: #05210f;
+      display: grid;
+      place-items: center;
+      font-size: 20px;
+      font-weight: 900;
+      box-shadow: 0 10px 30px rgba(34,197,94,0.24);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .nav a:hover {
+      color: white;
     }
 
     .btn {
-      padding: 14px 22px;
-      border-radius: 10px;
-      font-weight: bold;
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      border: 0;
+      border-radius: 14px;
+      padding: 15px 22px;
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
     }
 
     .btn-primary {
       background: var(--green);
-      color: #000;
+      color: #05210f;
+      box-shadow: 0 16px 36px rgba(34,197,94,0.24);
+    }
+
+    .btn-primary:hover {
+      background: #2dd563;
     }
 
     .btn-secondary {
-      border: 1px solid #fff;
+      background: rgba(255,255,255,0.06);
+      color: white;
+      border: 1px solid rgba(255,255,255,0.12);
     }
 
-    header {
+    .hero {
+      padding: 72px 0 44px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.08fr 0.92fr;
+      gap: 34px;
+      align-items: center;
+    }
+
+    .hero h1 {
+      font-size: clamp(38px, 5vw, 68px);
+      line-height: 1.02;
+      margin: 18px 0 18px;
+      letter-spacing: -1.6px;
+    }
+
+    .hero p {
+      margin: 0 0 28px;
+      color: var(--muted);
+      font-size: 20px;
+      max-width: 700px;
+    }
+
+    .hero-actions {
       display: flex;
-      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+
+    .hero-points {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px 22px;
+      color: #d5def0;
+      font-size: 15px;
+    }
+
+    .hero-points span::before {
+      content: "✔";
+      margin-right: 8px;
+      color: var(--green);
+      font-weight: 900;
+    }
+
+    .visual-card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.04));
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 26px;
       padding: 20px;
-      background: #081120;
+      box-shadow: var(--shadow);
+    }
+
+    .mock-window {
+      background: #0b1627;
+      border-radius: 22px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .mock-top {
+      height: 54px;
+      padding: 0 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #0f1d32;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.22);
+    }
+
+    .mock-body {
+      padding: 18px;
+      display: grid;
+      gap: 16px;
+    }
+
+    .kpis {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .kpi {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 14px;
+    }
+
+    .kpi small {
+      display: block;
+      color: var(--muted);
+      margin-bottom: 8px;
+      font-size: 12px;
+    }
+
+    .kpi strong {
+      font-size: 20px;
+    }
+
+    .table-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 14px;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr 1fr 0.8fr;
+      gap: 10px;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      font-size: 13px;
+      color: #e8eef9;
+    }
+
+    .row:last-child {
+      border-bottom: 0;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .tag-green {
+      background: rgba(34,197,94,0.16);
+      color: #c8f7d7;
+    }
+
+    .tag-orange {
+      background: rgba(245,158,11,0.16);
+      color: #fde5b0;
+    }
+
+    .proof {
+      padding: 18px 0 46px;
+    }
+
+    .proof-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+
+    .proof-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 18px;
+      padding: 20px;
+    }
+
+    .proof-card strong {
+      display: block;
+      font-size: 28px;
+      margin-bottom: 8px;
     }
 
     section {
-      padding: 60px 0;
+      padding: 54px 0;
     }
 
-    footer {
-      padding: 40px 0;
-      border-top: 1px solid #333;
-      text-align: center;
-      font-size: 14px;
+    .section-head {
+      max-width: 760px;
+      margin-bottom: 28px;
+    }
+
+    .section-head h2 {
+      font-size: clamp(30px, 4vw, 48px);
+      line-height: 1.06;
+      margin: 0 0 12px;
+      letter-spacing: -1px;
+    }
+
+    .section-head p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 18px;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .feature-card {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      background: rgba(34,197,94,0.15);
+      color: #cbf8d8;
+      font-size: 22px;
+      margin-bottom: 16px;
+    }
+
+    .feature-card h3 {
+      margin: 0 0 10px;
+      font-size: 22px;
+    }
+
+    .feature-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .problem-solution {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .list-card {
+      border-radius: 22px;
+      padding: 26px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.04);
+    }
+
+    .list-card.bad {
+      background: rgba(127, 29, 29, 0.16);
+      border-color: rgba(248,113,113,0.2);
+    }
+
+    .list-card.good {
+      background: rgba(20, 83, 45, 0.18);
+      border-color: rgba(34,197,94,0.22);
+    }
+
+    .list-card h3 {
+      margin-top: 0;
+      font-size: 24px;
+    }
+
+    .list-card ul {
+      padding-left: 18px;
+      margin: 0;
+      color: #e7edf7;
+    }
+
+    .list-card li {
+      margin: 10px 0;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .step {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 22px;
+      padding: 22px;
+    }
+
+    .step-number {
+      width: 42px;
+      height: 42px;
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      background: var(--green);
+      color: #062411;
+      font-weight: 900;
+      margin-bottom: 14px;
+    }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .price-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 26px;
+      padding: 26px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .price-card.featured {
+      background: linear-gradient(180deg, rgba(34,197,94,0.14), rgba(255,255,255,0.05));
+      border-color: rgba(34,197,94,0.35);
+      transform: translateY(-6px);
+    }
+
+    .popular {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: var(--green);
+      color: #05210f;
+      font-weight: 900;
+      font-size: 12px;
+      padding: 8px 10px;
+      border-radius: 999px;
+    }
+
+    .price-card h3 {
+      margin: 0 0 8px;
+      font-size: 24px;
+    }
+
+    .price-card p {
+      margin: 0 0 18px;
       color: var(--muted);
     }
 
-    h1 { font-size: 48px; }
-    h2 { font-size: 32px; margin-bottom: 20px; }
+    .price {
+      font-size: 48px;
+      font-weight: 900;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
 
-    .card {
-      background: #0d1b2f;
-      padding: 20px;
-      border-radius: 12px;
-      margin-bottom: 20px;
+    .price small {
+      font-size: 16px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .price-card ul {
+      list-style: none;
+      padding: 0;
+      margin: 22px 0;
+    }
+
+    .price-card li {
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      color: #eaf0f8;
+    }
+
+    .price-card li:last-child {
+      border-bottom: 0;
+    }
+
+    .testimonial-wrap {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .testimonial {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 22px;
+      padding: 24px;
+    }
+
+    .stars {
+      color: #fbbf24;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+    }
+
+    .testimonial p {
+      color: #e9eef7;
+      margin: 0 0 16px;
+    }
+
+    .testimonial strong {
+      display: block;
+    }
+
+    .faq {
+      display: grid;
+      gap: 14px;
+    }
+
+    .faq-item {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 18px;
+      padding: 18px 20px;
+    }
+
+    .faq-item h3 {
+      margin: 0 0 8px;
+      font-size: 18px;
+    }
+
+    .faq-item p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .cta-final {
+      padding: 70px 0 84px;
+    }
+
+    .cta-box {
+      background:
+        radial-gradient(circle at top right, rgba(34,197,94,0.16), transparent 30%),
+        rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 30px;
+      padding: 34px;
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+
+    .cta-box h2 {
+      margin: 0 0 12px;
+      font-size: clamp(30px, 4vw, 52px);
+      line-height: 1.05;
+    }
+
+    .cta-box p {
+      margin: 0 auto 24px;
+      max-width: 760px;
+      color: var(--muted);
+      font-size: 18px;
+    }
+
+    .legal-section {
+      padding: 44px 0;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.02);
+    }
+
+    .legal-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 22px;
+      padding: 28px;
+      box-shadow: var(--shadow);
+    }
+
+    .legal-card h2 {
+      margin-top: 0;
+      font-size: clamp(28px, 4vw, 40px);
+    }
+
+    .legal-card h3 {
+      margin: 24px 0 8px;
+      font-size: 20px;
+    }
+
+    .legal-card p,
+    .legal-card li {
+      color: #e5edf8;
+    }
+
+    .legal-card ul {
+      margin: 10px 0 0;
+      padding-left: 20px;
+    }
+
+    .rgpd-note {
+      margin-top: 18px;
+      font-size: 13px;
+      color: var(--muted);
+      max-width: 760px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    footer {
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding: 22px 0 40px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a:hover {
+      color: white;
+    }
+
+    @media (max-width: 1080px) {
+      .hero-grid,
+      .features-grid,
+      .proof-grid,
+      .pricing-grid,
+      .testimonial-wrap,
+      .steps,
+      .problem-solution {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding-top: 46px;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .nav {
+        display: none;
+      }
+
+      .hero p,
+      .section-head p,
+      .cta-box p {
+        font-size: 17px;
+      }
+
+      .kpis {
+        grid-template-columns: 1fr;
+      }
+
+      .row {
+        grid-template-columns: 1fr;
+      }
+
+      .topbar-inner {
+        min-height: 68px;
+      }
+
+      .footer-inner {
+        flex-direction: column;
+        align-items: flex-start;
+      }
     }
   </style>
 </head>
-
 <body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a href="#" class="brand">
+        <div class="brand-logo">M</div>
+        <span>Mon Logiciel Garage</span>
+      </a>
 
-<header>
-  <strong>Mon Logiciel Garage</strong>
-  <a class="btn btn-primary" href="https://app.monlogicielgarage.fr">Essai gratuit</a>
-</header>
+      <nav class="nav">
+        <a href="#fonctionnalites">Fonctionnalités</a>
+        <a href="#tarifs">Tarifs</a>
+        <a href="#avis">Avis</a>
+        <a href="#faq">FAQ</a>
+      </nav>
 
-<section class="container">
-  <h1>Le logiciel simple pour garages</h1>
-  <p>Devis, factures, clients et atelier en un seul outil.</p>
+      <a class="btn btn-primary" href="https://app.monlogicielgarage.fr">Essai gratuit</a>
+    </div>
+  </header>
 
-  <a class="btn btn-primary" href="https://app.monlogicielgarage.fr">Tester gratuitement</a>
-  <a class="btn btn-secondary" href="#tarifs">Voir les tarifs</a>
-</section>
+  <main>
+    <section class="hero">
+      <div class="container hero-grid">
+        <div>
+          <span class="badge">⚡ Pensé pour les garages indépendants</span>
+          <h1>Le logiciel garage simple, rapide et vraiment rentable</h1>
+          <p>
+            Créez vos devis en 2 minutes, transformez-les en facture, suivez vos clients,
+            vos véhicules et votre atelier sans perdre du temps avec un logiciel compliqué.
+          </p>
 
-<section id="tarifs" class="container">
-  <h2>Tarifs</h2>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="https://app.monlogicielgarage.fr">Tester gratuitement</a>
+            <a class="btn btn-secondary" href="#tarifs">Voir les tarifs</a>
+          </div>
 
-  <div class="card">
-    <h3>Starter</h3>
-    <p>29€/mois</p>
-  </div>
+          <div class="hero-points">
+            <span>Essai gratuit</span>
+            <span>Sans installation</span>
+            <span>Simple à prendre en main</span>
+            <span>Conçu pour garages auto</span>
+          </div>
+        </div>
 
-  <div class="card">
-    <h3>Pro</h3>
-    <p>49€/mois</p>
-  </div>
+        <div class="visual-card">
+          <div class="mock-window">
+            <div class="mock-top">
+              <div class="dot"></div>
+              <div class="dot"></div>
+              <div class="dot"></div>
+            </div>
 
-  <div class="card">
-    <h3>Elite</h3>
-    <p>79€/mois</p>
-  </div>
-</section>
+            <div class="mock-body">
+              <div class="kpis">
+                <div class="kpi">
+                  <small>Devis du jour</small>
+                  <strong>12</strong>
+                </div>
+                <div class="kpi">
+                  <small>Factures émises</small>
+                  <strong>8</strong>
+                </div>
+                <div class="kpi">
+                  <small>CA du jour</small>
+                  <strong>2 480€</strong>
+                </div>
+              </div>
 
-<section id="contact" class="container">
-  <h2>Contact</h2>
-  <p>Email : support@monlogicielgarage.fr</p>
+              <div class="table-card">
+                <div class="row" style="font-weight:700; color:#b8c4d6;">
+                  <div>Client</div>
+                  <div>Document</div>
+                  <div>Véhicule</div>
+                  <div>Statut</div>
+                </div>
+                <div class="row">
+                  <div>Jean Martin</div>
+                  <div>DEV-2026-00024</div>
+                  <div>AB-123-CD</div>
+                  <div><span class="tag tag-green">Accepté</span></div>
+                </div>
+                <div class="row">
+                  <div>Garage Dupont</div>
+                  <div>FAC-2026-00017</div>
+                  <div>Renault Master</div>
+                  <div><span class="tag tag-green">Payée</span></div>
+                </div>
+                <div class="row">
+                  <div>Mme Leroy</div>
+                  <div>OR-2026-00006</div>
+                  <div>Peugeot 208</div>
+                  <div><span class="tag tag-orange">En cours</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-  <p style="font-size:12px">
-    En soumettant ce formulaire, vous acceptez l’utilisation de vos données.
-    Voir politique de confidentialité ci-dessous.
-  </p>
-</section>
+    <section class="proof">
+      <div class="container proof-grid">
+        <div class="proof-card">
+          <strong>2 min</strong>
+          <span>pour créer un devis propre</span>
+        </div>
+        <div class="proof-card">
+          <strong>1 clic</strong>
+          <span>pour passer du devis à la facture</span>
+        </div>
+        <div class="proof-card">
+          <strong>0 papier inutile</strong>
+          <span>tout est centralisé dans le logiciel</span>
+        </div>
+        <div class="proof-card">
+          <strong>+ clair</strong>
+          <span>pour vous, vos salariés et vos clients</span>
+        </div>
+      </div>
+    </section>
 
-<!-- MENTIONS -->
-<section id="mentions-legales" class="container">
-  <h2>Mentions légales</h2>
+    <section id="fonctionnalites">
+      <div class="container">
+        <div class="section-head">
+          <h2>Tout ce qu’un garage a besoin de faire, au même endroit</h2>
+          <p>
+            Un outil pensé pour aller vite, faire propre, et éviter les logiciels lourds
+            qui compliquent la vie au lieu d’en faire gagner.
+          </p>
+        </div>
 
-  <p>
-    monlogicielgarage.fr<br>
-    [TON NOM / SOCIÉTÉ]<br>
-    Forme : [SARL]<br>
-    Adresse : [ADRESSE]<br>
-    SIRET : [NUMERO]<br>
-    Email : support@monlogicielgarage.fr
-  </p>
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon">🧾</div>
+            <h3>Devis ultra rapides</h3>
+            <p>
+              Créez un devis clair en quelques minutes avec lignes, TVA, pièces,
+              main d’œuvre et total automatique.
+            </p>
+          </div>
 
-  <p>
-    Hébergement : :contentReference[oaicite:0]{index=0}<br>
-    Domaine : :contentReference[oaicite:1]{index=1}
-  </p>
+          <div class="feature-card">
+            <div class="feature-icon">💶</div>
+            <h3>Factures automatiques</h3>
+            <p>
+              Transformez votre devis ou votre ordre de réparation en facture sans tout refaire.
+            </p>
+          </div>
 
-  <p>
-    Le contenu du site est protégé. Toute reproduction interdite.
-  </p>
-</section>
+          <div class="feature-card">
+            <div class="feature-icon">🚗</div>
+            <h3>Clients & véhicules</h3>
+            <p>
+              Gardez l’historique complet des clients, des véhicules et des interventions.
+            </p>
+          </div>
 
-<!-- CGV -->
-<section id="cgv" class="container">
-  <h2>CGV</h2>
+          <div class="feature-card">
+            <div class="feature-icon">🛠️</div>
+            <h3>Ordres de réparation</h3>
+            <p>
+              Gérez l’entrée atelier, les travaux à faire, les travaux effectués et la validation.
+            </p>
+          </div>
 
-  <p><strong>Objet :</strong> logiciel SaaS pour garages</p>
+          <div class="feature-card">
+            <div class="feature-icon">📄</div>
+            <h3>PDF propres et pros</h3>
+            <p>
+              Sortez des documents lisibles, sérieux et imprimables pour rassurer immédiatement vos clients.
+            </p>
+          </div>
 
-  <p><strong>Accès :</strong> abonnement en ligne</p>
+          <div class="feature-card">
+            <div class="feature-icon">☁️</div>
+            <h3>Accessible partout</h3>
+            <p>
+              Ouvrez votre logiciel depuis l’atelier, le bureau ou la maison, sans installation compliquée.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
 
-  <p><strong>Tarifs :</strong> modifiables sans rétroactivité</p>
+    <section>
+      <div class="container">
+        <div class="section-head">
+          <h2>Arrêtez les devis brouillons et les factures qui prennent trop de temps</h2>
+          <p>
+            Le vrai problème des petits garages, ce n’est pas le manque de travail.
+            C’est le temps perdu à gérer l’administratif.
+          </p>
+        </div>
 
-  <p><strong>Paiement :</strong> renouvellement automatique</p>
+        <div class="problem-solution">
+          <div class="list-card bad">
+            <h3>Sans Mon Logiciel Garage</h3>
+            <ul>
+              <li>Devis faits à la va-vite</li>
+              <li>Factures refaites à la main</li>
+              <li>Infos clients dispersées</li>
+              <li>Suivi véhicule compliqué</li>
+              <li>Perte de temps tous les jours</li>
+            </ul>
+          </div>
 
-  <p><strong>Résiliation :</strong> à tout moment via support@monlogicielgarage.fr</p>
+          <div class="list-card good">
+            <h3>Avec Mon Logiciel Garage</h3>
+            <ul>
+              <li>Devis propres en quelques minutes</li>
+              <li>Factures générées plus vite</li>
+              <li>Clients et véhicules centralisés</li>
+              <li>Suivi atelier plus clair</li>
+              <li>Plus de temps pour le vrai travail</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
 
-  <p><strong>Responsabilité :</strong> service sans garantie totale</p>
+    <section>
+      <div class="container">
+        <div class="section-head">
+          <h2>Comment ça marche ?</h2>
+          <p>Simple. Rapide. Sans prise de tête.</p>
+        </div>
 
-  <p><strong>Droit :</strong> droit français</p>
-</section>
+        <div class="steps">
+          <div class="step">
+            <div class="step-number">1</div>
+            <h3>Créez le client et le véhicule</h3>
+            <p>Enregistrez les informations une seule fois et retrouvez-les facilement.</p>
+          </div>
 
-<!-- CONFIDENTIALITE -->
-<section id="confidentialite" class="container">
-  <h2>Politique de confidentialité</h2>
+          <div class="step">
+            <div class="step-number">2</div>
+            <h3>Faites le devis ou l’ordre de réparation</h3>
+            <p>Ajoutez vos lignes de pièces et main d’œuvre, le total se calcule automatiquement.</p>
+          </div>
 
-  <p>Données collectées : nom, email</p>
+          <div class="step">
+            <div class="step-number">3</div>
+            <h3>Transformez en facture</h3>
+            <p>En un clic, vous passez à la facturation avec un PDF propre prêt à être remis au client.</p>
+          </div>
+        </div>
+      </div>
+    </section>
 
-  <p>Utilisation : service et contact</p>
+    <section id="tarifs">
+      <div class="container">
+        <div class="section-head">
+          <h2>Des tarifs simples, sans usine à gaz</h2>
+          <p>
+            Choisissez l’offre adaptée à votre garage. Commencez gratuitement, sans engagement compliqué.
+          </p>
+        </div>
 
-  <p>Aucune revente des données</p>
+        <div class="pricing-grid">
+          <div class="price-card">
+            <h3>Starter</h3>
+            <p>Pour démarrer proprement</p>
+            <div class="price">29€ <small>/ mois HT</small></div>
+            <ul>
+              <li>Clients</li>
+              <li>Véhicules</li>
+              <li>Devis</li>
+              <li>Factures</li>
+              <li>PDF pro</li>
+            </ul>
+            <a class="btn btn-secondary" href="https://app.monlogicielgarage.fr">Commencer</a>
+          </div>
 
-  <p>Contact : support@monlogicielgarage.fr</p>
-</section>
+          <div class="price-card featured">
+            <div class="popular">Le plus choisi</div>
+            <h3>Pro</h3>
+            <p>Le meilleur rapport simplicité / efficacité</p>
+            <div class="price">49€ <small>/ mois HT</small></div>
+            <ul>
+              <li>Tout Starter</li>
+              <li>Ordres de réparation</li>
+              <li>Suivi atelier</li>
+              <li>Organisation plus complète</li>
+              <li>Utilisation quotidienne optimale</li>
+            </ul>
+            <a class="btn btn-primary" href="https://app.monlogicielgarage.fr">Tester 7 jours</a>
+          </div>
 
-<footer>
-  <p>© 2026 Mon Logiciel Garage</p>
+          <div class="price-card">
+            <h3>Elite</h3>
+            <p>Pour les garages qui veulent aller plus loin</p>
+            <div class="price">79€ <small>/ mois HT</small></div>
+            <ul>
+              <li>Tout Pro</li>
+              <li>Fonctions avancées</li>
+              <li>Gestion plus poussée</li>
+              <li>Support prioritaire</li>
+              <li>Évolution premium</li>
+            </ul>
+            <a class="btn btn-secondary" href="https://app.monlogicielgarage.fr">Découvrir</a>
+          </div>
+        </div>
+      </div>
+    </section>
 
-  <p>
-    <a href="#mentions-legales">Mentions légales</a> |
-    <a href="#cgv">CGV</a> |
-    <a href="#confidentialite">Confidentialité</a>
-  </p>
+    <section id="avis">
+      <div class="container">
+        <div class="section-head">
+          <h2>Ce que recherchent les garages aujourd’hui</h2>
+          <p>
+            Ils veulent quelque chose de simple, rapide, et compréhensible sans perdre une heure en configuration.
+          </p>
+        </div>
 
-  <p>support@monlogicielgarage.fr</p>
-</footer>
+        <div class="testimonial-wrap">
+          <div class="testimonial">
+            <div class="stars">★★★★★</div>
+            <p>
+              “Enfin un outil clair. Pas besoin d’être informaticien pour faire un devis propre.”
+            </p>
+            <strong>Garage indépendant</strong>
+            <span style="color:var(--muted);">Atelier auto</span>
+          </div>
 
+          <div class="testimonial">
+            <div class="stars">★★★★★</div>
+            <p>
+              “Le plus important pour moi, c’est le gain de temps entre le devis et la facture.”
+            </p>
+            <strong>Responsable atelier</strong>
+            <span style="color:var(--muted);">Garage multimarque</span>
+          </div>
+
+          <div class="testimonial">
+            <div class="stars">★★★★★</div>
+            <p>
+              “Simple, propre, lisible. C’est exactement ce qu’il faut pour un petit garage.”
+            </p>
+            <strong>Garagiste</strong>
+            <span style="color:var(--muted);">Mécanique générale</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="faq">
+      <div class="container">
+        <div class="section-head">
+          <h2>Questions fréquentes</h2>
+          <p>Les réponses simples aux questions que se posent les garages avant d’essayer.</p>
+        </div>
+
+        <div class="faq">
+          <div class="faq-item">
+            <h3>Est-ce compliqué à utiliser ?</h3>
+            <p>Non. Le but du logiciel est justement d’être plus simple que les solutions trop lourdes.</p>
+          </div>
+
+          <div class="faq-item">
+            <h3>Est-ce que je peux tester avant de payer ?</h3>
+            <p>Oui. Tu peux commencer avec un essai gratuit pour voir si l’outil te fait gagner du temps.</p>
+          </div>
+
+          <div class="faq-item">
+            <h3>Est-ce adapté à un petit garage ?</h3>
+            <p>Oui. C’est même la cible principale : garage indépendant, atelier simple, structure légère.</p>
+          </div>
+
+          <div class="faq-item">
+            <h3>Est-ce que je peux faire devis + facture + suivi véhicule ?</h3>
+            <p>Oui. C’est précisément l’intérêt du logiciel : tout regrouper au même endroit.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta-final">
+      <div class="container">
+        <div class="cta-box">
+          <h2>Commencez maintenant et gagnez du temps dès cette semaine</h2>
+          <p>
+            Si vous perdez déjà du temps sur vos devis, vos factures ou votre suivi atelier,
+            le plus simple est de tester le logiciel et voir la différence en quelques minutes.
+          </p>
+          <div class="hero-actions" style="justify-content:center; margin-bottom:0;">
+            <a class="btn btn-primary" href="https://app.monlogicielgarage.fr">Essai gratuit 7 jours</a>
+            <a class="btn btn-secondary" href="#tarifs">Voir les tarifs</a>
+          </div>
+          <p class="rgpd-note">
+            En poursuivant votre demande d’essai ou de contact, vous acceptez que vos données soient utilisées
+            pour vous recontacter dans le cadre commercial et technique du service. Voir la
+            <a href="#politique-confidentialite"><strong> politique de confidentialité</strong></a>.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="mentions-legales" class="legal-section">
+      <div class="container">
+        <div class="legal-card">
+          <h2>Mentions légales</h2>
+
+          <h3>Éditeur du site</h3>
+          <p>
+            Le site monlogicielgarage.fr est édité par :
+          </p>
+          <p>
+            <strong>[TON NOM / SOCIÉTÉ]</strong><br>
+            Forme juridique : [EX : SARL]<br>
+            Capital social : [CAPITAL SOCIAL]<br>
+            Siège social : [ADRESSE COMPLÈTE]<br>
+            SIRET : [NUMÉRO SIRET]<br>
+            RCS : [VILLE D’IMMATRICULATION]<br>
+            TVA intracommunautaire : [NUMÉRO TVA SI APPLICABLE]<br>
+            Email : support@monlogicielgarage.fr
+          </p>
+
+          <h3>Directeur de la publication</h3>
+          <p>[NOM DU DIRECTEUR DE PUBLICATION]</p>
+
+          <h3>Hébergement</h3>
+          <p>
+            Le site est hébergé par Netlify.
+          </p>
+
+          <h3>Nom de domaine et messagerie</h3>
+          <p>
+            Le nom de domaine et la messagerie professionnelle sont gérés via IONOS.
+          </p>
+
+          <h3>Propriété intellectuelle</h3>
+          <p>
+            L’ensemble du contenu du site, incluant notamment les textes, visuels, logos, éléments graphiques,
+            structure et code, est protégé par le droit de la propriété intellectuelle. Toute reproduction,
+            représentation, diffusion ou exploitation, totale ou partielle, sans autorisation préalable écrite
+            est interdite.
+          </p>
+
+          <h3>Responsabilité</h3>
+          <p>
+            L’éditeur s’efforce de fournir des informations aussi précises que possible. Toutefois, il ne pourra
+            être tenu responsable des omissions, inexactitudes, indisponibilités du site ou dommages directs
+            ou indirects liés à l’utilisation du site ou du logiciel.
+          </p>
+
+          <h3>Contact</h3>
+          <p>support@monlogicielgarage.fr</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="cgv" class="legal-section">
+      <div class="container">
+        <div class="legal-card">
+          <h2>Conditions Générales de Vente</h2>
+
+          <h3>1. Objet</h3>
+          <p>
+            Les présentes conditions générales de vente régissent l’accès et l’utilisation du logiciel
+            monlogicielgarage.fr, proposé sous forme de service en ligne (SaaS) exclusivement aux professionnels
+            de l’automobile.
+          </p>
+
+          <h3>2. Accès au service</h3>
+          <p>
+            Le service est accessible en ligne via abonnement. Le client est responsable de la confidentialité
+            de ses identifiants et de l’usage qui en est fait.
+          </p>
+
+          <h3>3. Tarifs</h3>
+          <p>
+            Les tarifs sont exprimés en euros hors taxes. Ils peuvent être modifiés à tout moment pour les
+            nouvelles souscriptions, sans effet rétroactif sur les abonnements déjà en cours, sauf stipulation
+            contraire clairement portée à la connaissance du client.
+          </p>
+
+          <h3>4. Paiement</h3>
+          <p>
+            Le paiement s’effectue via une solution sécurisée. Sauf indication contraire, l’abonnement est à
+            reconduction automatique à chaque échéance.
+          </p>
+
+          <h3>5. Durée et résiliation</h3>
+          <p>
+            Sauf offre spécifique contraire, l’abonnement est sans engagement. Le client peut demander la
+            résiliation à tout moment par email à support@monlogicielgarage.fr. La résiliation prend effet à la
+            prochaine échéance de facturation, sans remboursement de la période déjà entamée.
+          </p>
+
+          <h3>6. Utilisation du service</h3>
+          <p>
+            Le client s’engage à utiliser le service dans un cadre strictement professionnel, licite et conforme
+            à la réglementation applicable. Toute utilisation frauduleuse, abusive ou détournée pourra entraîner
+            la suspension ou la suppression du compte sans préavis.
+          </p>
+
+          <h3>7. Responsabilité</h3>
+          <p>
+            Le service est fourni dans le cadre d’une obligation de moyens. L’éditeur ne garantit pas une absence
+            totale d’erreurs, d’interruptions ou d’indisponibilité. Le client reste responsable de la vérification
+            finale des informations, documents et montants émis depuis le logiciel.
+          </p>
+
+          <h3>8. Maintenance</h3>
+          <p>
+            Des opérations de maintenance, de mise à jour ou d’amélioration peuvent entraîner une interruption
+            temporaire du service, sans que cela n’ouvre droit à indemnisation.
+          </p>
+
+          <h3>9. Données</h3>
+          <p>
+            Les données saisies par le client dans le logiciel restent sa propriété. L’éditeur s’engage à ne pas
+            vendre ces données à des tiers non autorisés.
+          </p>
+
+          <h3>10. Support</h3>
+          <p>
+            Le support est assuré via l’adresse support@monlogicielgarage.fr, selon des modalités raisonnables
+            compatibles avec l’offre souscrite.
+          </p>
+
+          <h3>11. Droit applicable et litiges</h3>
+          <p>
+            Les présentes CGV sont soumises au droit français. En cas de litige, compétence expresse est attribuée
+            aux tribunaux compétents du ressort de [VILLE].
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="politique-confidentialite" class="legal-section">
+      <div class="container">
+        <div class="legal-card">
+          <h2>Politique de confidentialité</h2>
+
+          <h3>1. Données collectées</h3>
+          <p>
+            Les données susceptibles d’être collectées via le site ou le service incluent notamment :
+            nom, prénom, adresse email, numéro de téléphone, nom du garage, informations professionnelles
+            et toute information communiquée volontairement dans le cadre d’une demande de contact ou d’essai.
+          </p>
+
+          <h3>2. Finalités du traitement</h3>
+          <p>
+            Les données sont utilisées pour :
+          </p>
+          <ul>
+            <li>répondre aux demandes de contact, de démonstration ou d’essai ;</li>
+            <li>gérer la relation commerciale ;</li>
+            <li>fournir le service ;</li>
+            <li>assurer le support ;</li>
+            <li>améliorer le site et l’expérience utilisateur.</li>
+          </ul>
+
+          <h3>3. Base légale</h3>
+          <p>
+            Les traitements reposent selon les cas sur l’exécution de mesures précontractuelles, l’exécution du
+            contrat, l’intérêt légitime de l’éditeur ou le respect des obligations légales.
+          </p>
+
+          <h3>4. Durée de conservation</h3>
+          <p>
+            Les données sont conservées pendant la durée nécessaire à la gestion de la relation commerciale et au
+            respect des obligations légales, comptables et fiscales applicables.
+          </p>
+
+          <h3>5. Partage des données</h3>
+          <p>
+            Les données ne sont ni vendues ni cédées à des tiers non autorisés. Elles peuvent être accessibles
+            uniquement aux prestataires techniques strictement nécessaires au fonctionnement du service.
+          </p>
+
+          <h3>6. Sécurité</h3>
+          <p>
+            Des mesures techniques et organisationnelles raisonnables sont mises en œuvre afin de protéger les
+            données personnelles contre la perte, l’altération, l’accès non autorisé ou la divulgation.
+          </p>
+
+          <h3>7. Droits des utilisateurs</h3>
+          <p>
+            Conformément à la réglementation applicable, vous disposez d’un droit d’accès, de rectification,
+            d’effacement, de limitation, d’opposition et, le cas échéant, de portabilité de vos données.
+            Vous pouvez exercer vos droits à l’adresse suivante : support@monlogicielgarage.fr
+          </p>
+
+          <h3>8. Cookies</h3>
+          <p>
+            Le site peut utiliser des cookies nécessaires à son fonctionnement ainsi que, le cas échéant, des
+            cookies de mesure d’audience. Si des traceurs nécessitant un consentement sont utilisés, un bandeau
+            d’information et de gestion du consentement devra être mis en place.
+          </p>
+
+          <h3>9. Contact</h3>
+          <p>
+            Pour toute question relative à la confidentialité ou à vos données personnelles :
+            support@monlogicielgarage.fr
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      <div>© 2026 Mon Logiciel Garage</div>
+
+      <div class="footer-links">
+        <a href="#mentions-legales">Mentions légales</a>
+        <a href="#cgv">CGV</a>
+        <a href="#politique-confidentialite">Politique de confidentialité</a>
+        <a href="mailto:support@monlogicielgarage.fr">support@monlogicielgarage.fr</a>
+      </div>
+
+      <div>Logiciel simple pour garages indépendants</div>
+    </div>
+  </footer>
 </body>
 </html>
