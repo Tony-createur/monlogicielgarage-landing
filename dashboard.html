@@ -531,359 +531,386 @@
   </div>
 
   <script>
-    const isPremium = localStorage.getItem("premium_access");
+    (function () {
+      const premiumAccess = localStorage.getItem("premium_access");
 
-    if (!isPremium) {
-      window.location.href = "/";
-    }
-
-    const email = localStorage.getItem("mlg_access_email") || "Abonné";
-    document.getElementById("userEmail").textContent = email;
-
-    const garageRaw = localStorage.getItem("mlg_garage_infos");
-    if (!garageRaw) {
-      window.location.href = "/setup.html";
-    }
-
-    function getGarageInfos() {
-      return JSON.parse(localStorage.getItem("mlg_garage_infos") || "{}");
-    }
-
-    function isGarageConfigured() {
-      const garage = getGarageInfos();
-      return !!(garage.nom && garage.adresse && garage.ville && garage.telephone && garage.email);
-    }
-
-    if (!isGarageConfigured()) {
-      window.location.href = "/setup.html";
-    }
-
-    function getGarageBlockHtml() {
-      const garage = getGarageInfos();
-
-      return `
-        <div class="doc-meta doc-company">
-          <strong>${garage.nom || ""}</strong><br>
-          ${garage.adresse || ""}<br>
-          ${garage.ville || ""}<br>
-          ${garage.telephone || ""}<br>
-          ${garage.email || ""}<br>
-          ${garage.siret ? `SIRET : ${garage.siret}<br>` : ""}
-          ${garage.tva ? `TVA : ${garage.tva}<br>` : ""}
-        </div>
-      `;
-    }
-
-    function getFooterMentionsHtml() {
-      const garage = getGarageInfos();
-      const lignes = [];
-
-      if (garage.siret) lignes.push(`SIRET : ${garage.siret}`);
-      if (garage.tva) lignes.push(`TVA intracommunautaire : ${garage.tva}`);
-      lignes.push("Merci pour votre confiance.");
-
-      return `<div class="doc-footer">${lignes.join("<br>")}</div>`;
-    }
-
-    function scrollToSection(id) {
-      document.getElementById(id).scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-
-    function logout() {
-      localStorage.removeItem("premium_access");
-      localStorage.removeItem("mlg_access_email");
-      window.location.href = "/";
-    }
-
-    function formatPrix(value) {
-      return Number(value).toLocaleString("fr-FR", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-      }) + " €";
-    }
-
-    function getDateFR() {
-      return new Date().toLocaleDateString("fr-FR");
-    }
-
-    function getDevisList() {
-      return JSON.parse(localStorage.getItem("mlg_devis_list") || "[]");
-    }
-
-    function saveDevisList(list) {
-      localStorage.setItem("mlg_devis_list", JSON.stringify(list));
-    }
-
-    function getFacturesList() {
-      return JSON.parse(localStorage.getItem("mlg_factures_list") || "[]");
-    }
-
-    function saveFacturesList(list) {
-      localStorage.setItem("mlg_factures_list", JSON.stringify(list));
-    }
-
-    function getNextDevisReference() {
-      const devisList = getDevisList();
-      const nextNumber = devisList.length + 1;
-      return "DEV-2026-" + String(nextNumber).padStart(4, "0");
-    }
-
-    function afficherDevis(devisData) {
-      const html = `
-        <div class="doc-header">
-          <div>
-            <div class="doc-title">DEVIS</div>
-            <div class="doc-meta">
-              Réf. : ${devisData.reference}<br>
-              Date : ${devisData.date}
-            </div>
-          </div>
-          ${getGarageBlockHtml()}
-        </div>
-
-        <div class="doc-section">
-          <p><strong>Client :</strong> ${devisData.client}</p>
-          <p><strong>Véhicule :</strong> ${devisData.vehicule}</p>
-        </div>
-
-        <div class="doc-section">
-          <p><strong>Prestation :</strong></p>
-          <p>${devisData.prestation.replace(/\n/g, "<br>")}</p>
-        </div>
-
-        <div class="doc-section">
-          <p><strong>Montant HT :</strong> ${formatPrix(devisData.prixHT)}</p>
-          <p><strong>TVA 20 % :</strong> ${formatPrix(devisData.tva)}</p>
-        </div>
-
-        <div class="doc-total">
-          Total TTC : ${formatPrix(devisData.prixTTC)}
-        </div>
-
-        ${getFooterMentionsHtml()}
-
-        <div class="small-actions">
-          <button class="btn" onclick="window.print()">Imprimer le devis</button>
-        </div>
-      `;
-
-      const box = document.getElementById("resultatDevis");
-      box.innerHTML = html;
-      box.style.display = "block";
-      document.getElementById("resultatFacture").style.display = "none";
-      document.getElementById("resultatFacture").innerHTML = "";
-    }
-
-    function afficherFacture(factureData) {
-      const html = `
-        <div class="doc-header">
-          <div>
-            <div class="doc-title">FACTURE</div>
-            <div class="doc-meta">
-              Réf. : ${factureData.reference}<br>
-              Date : ${factureData.date}
-            </div>
-          </div>
-          ${getGarageBlockHtml()}
-        </div>
-
-        <div class="doc-section">
-          <p><strong>Client :</strong> ${factureData.client}</p>
-          <p><strong>Véhicule :</strong> ${factureData.vehicule}</p>
-        </div>
-
-        <div class="doc-section">
-          <p><strong>Prestation facturée :</strong></p>
-          <p>${factureData.prestation.replace(/\n/g, "<br>")}</p>
-        </div>
-
-        <div class="doc-section">
-          <p><strong>Montant HT :</strong> ${formatPrix(factureData.prixHT)}</p>
-          <p><strong>TVA 20 % :</strong> ${formatPrix(factureData.tva)}</p>
-        </div>
-
-        <div class="doc-total">
-          Total TTC à payer : ${formatPrix(factureData.prixTTC)}
-        </div>
-
-        ${getFooterMentionsHtml()}
-
-        <div class="small-actions">
-          <button class="btn" onclick="window.print()">Imprimer la facture</button>
-        </div>
-      `;
-
-      const box = document.getElementById("resultatFacture");
-      box.innerHTML = html;
-      box.style.display = "block";
-      document.getElementById("resultatDevis").style.display = "none";
-      document.getElementById("resultatDevis").innerHTML = "";
-    }
-
-    function genererDevis() {
-      const client = document.getElementById("devisClient").value.trim();
-      const vehicule = document.getElementById("devisVehicule").value.trim();
-      const reference = document.getElementById("devisReference").value.trim() || getNextDevisReference();
-      const prestation = document.getElementById("devisPrestation").value.trim();
-      const prixHT = parseFloat(document.getElementById("devisPrixHT").value);
-
-      if (!client || !vehicule || !prestation || isNaN(prixHT)) {
-        alert("Merci de remplir tous les champs du devis.");
+      if (premiumAccess !== "true") {
+        window.location.replace("/");
         return;
       }
 
-      const tva = prixHT * 0.20;
-      const prixTTC = prixHT + tva;
+      const garageRaw = localStorage.getItem("mlg_garage_infos");
 
-      const devisData = {
-        id: Date.now(),
-        client,
-        vehicule,
-        reference,
-        prestation,
-        prixHT,
-        tva,
-        prixTTC,
-        date: getDateFR()
-      };
-
-      localStorage.setItem("mlg_last_devis", JSON.stringify(devisData));
-
-      const devisList = getDevisList();
-      devisList.unshift(devisData);
-      saveDevisList(devisList);
-
-      afficherDevis(devisData);
-      afficherListeDevis();
-      afficherDocumentsRecents();
-      mettreAJourStats();
-
-      document.getElementById("devisClient").value = "";
-      document.getElementById("devisVehicule").value = "";
-      document.getElementById("devisReference").value = "";
-      document.getElementById("devisPrestation").value = "";
-      document.getElementById("devisPrixHT").value = "";
-    }
-
-    function genererFacture() {
-      const stored = localStorage.getItem("mlg_last_devis");
-
-      if (!stored) {
-        alert("Aucun devis disponible. Générez d'abord un devis.");
+      if (!garageRaw) {
+        window.location.replace("/setup.html");
         return;
       }
 
-      const devisData = JSON.parse(stored);
-      const referenceFacture = devisData.reference.replace("DEV", "FAC");
+      function getGarageInfos() {
+        try {
+          return JSON.parse(localStorage.getItem("mlg_garage_infos") || "{}");
+        } catch (e) {
+          return {};
+        }
+      }
 
-      const factureData = {
-        id: Date.now(),
-        client: devisData.client,
-        vehicule: devisData.vehicule,
-        reference: referenceFacture,
-        prestation: devisData.prestation,
-        prixHT: devisData.prixHT,
-        tva: devisData.tva,
-        prixTTC: devisData.prixTTC,
-        date: getDateFR()
-      };
+      function isGarageConfigured() {
+        const garage = getGarageInfos();
+        return !!(
+          garage.nomGarage &&
+          garage.adresse &&
+          garage.codePostal &&
+          garage.ville &&
+          garage.telephone &&
+          garage.email &&
+          garage.siret &&
+          garage.tva
+        );
+      }
 
-      const facturesList = getFacturesList();
-      facturesList.unshift(factureData);
-      saveFacturesList(facturesList);
-
-      afficherFacture(factureData);
-      afficherDocumentsRecents();
-      mettreAJourStats();
-    }
-
-    function afficherListeDevis() {
-      const devisList = getDevisList();
-      const container = document.getElementById("listeDevis");
-
-      if (!devisList.length) {
-        container.innerHTML = `<div class="empty-state">Aucun devis enregistré pour le moment.</div>`;
+      if (!isGarageConfigured()) {
+        window.location.replace("/setup.html");
         return;
       }
 
-      container.innerHTML = devisList.map(d => `
-        <div class="history-item">
-          <div class="history-top">
-            <div class="history-ref">${d.reference}</div>
-            <div class="history-date">${d.date}</div>
+      const email = localStorage.getItem("mlg_access_email") || "Abonné";
+      document.getElementById("userEmail").textContent = email;
+
+      function getGarageBlockHtml() {
+        const garage = getGarageInfos();
+
+        return `
+          <div class="doc-meta doc-company">
+            <strong>${garage.nomGarage || ""}</strong><br>
+            ${garage.adresse || ""}<br>
+            ${garage.codePostal || ""} ${garage.ville || ""}<br>
+            ${garage.telephone || ""}<br>
+            ${garage.email || ""}<br>
+            ${garage.siret ? `SIRET : ${garage.siret}<br>` : ""}
+            ${garage.tva ? `TVA : ${garage.tva}<br>` : ""}
           </div>
-          <div class="history-line"><strong>Client :</strong> ${d.client}</div>
-          <div class="history-line"><strong>Véhicule :</strong> ${d.vehicule}</div>
-          <div class="history-line"><strong>Total TTC :</strong> ${formatPrix(d.prixTTC)}</div>
-        </div>
-      `).join("");
-    }
-
-    function afficherDocumentsRecents() {
-      const devisList = getDevisList();
-      const facturesList = getFacturesList();
-      const tbody = document.getElementById("documentsRecents");
-
-      const lignes = [];
-
-      facturesList.slice(0, 3).forEach(f => {
-        lignes.push(`
-          <tr>
-            <td>${f.client}</td>
-            <td>${f.reference}</td>
-            <td>${f.vehicule}</td>
-            <td><span class="pill pill-orange">Facture</span></td>
-          </tr>
-        `);
-      });
-
-      devisList.slice(0, 3).forEach(d => {
-        lignes.push(`
-          <tr>
-            <td>${d.client}</td>
-            <td>${d.reference}</td>
-            <td>${d.vehicule}</td>
-            <td><span class="pill pill-blue">Devis</span></td>
-          </tr>
-        `);
-      });
-
-      if (!lignes.length) {
-        tbody.innerHTML = `
-          <tr>
-            <td colspan="4" class="muted">Aucun document récent.</td>
-          </tr>
         `;
-        return;
       }
 
-      tbody.innerHTML = lignes.slice(0, 6).join("");
-    }
+      function getFooterMentionsHtml() {
+        const garage = getGarageInfos();
+        const lignes = [];
 
-    function mettreAJourStats() {
-      const devisList = getDevisList();
-      const facturesList = getFacturesList();
+        if (garage.siret) lignes.push(`SIRET : ${garage.siret}`);
+        if (garage.tva) lignes.push(`TVA intracommunautaire : ${garage.tva}`);
+        lignes.push("Merci pour votre confiance.");
 
-      const totalCA = devisList.reduce((sum, devis) => sum + Number(devis.prixTTC || 0), 0);
+        return `<div class="doc-footer">${lignes.join("<br>")}</div>`;
+      }
 
-      document.getElementById("statDevis").textContent = devisList.length;
-      document.getElementById("statFactures").textContent = facturesList.length;
-      document.getElementById("statCA").textContent = formatPrix(totalCA);
-    }
+      window.scrollToSection = function (id) {
+        document.getElementById(id).scrollIntoView({ behavior: "smooth", block: "start" });
+      };
 
-    function viderDocuments() {
-      document.getElementById("resultatDevis").style.display = "none";
-      document.getElementById("resultatDevis").innerHTML = "";
-      document.getElementById("resultatFacture").style.display = "none";
-      document.getElementById("resultatFacture").innerHTML = "";
-      localStorage.removeItem("mlg_last_devis");
-    }
+      window.logout = function () {
+        localStorage.removeItem("premium_access");
+        localStorage.removeItem("mlg_access_email");
+        window.location.replace("/");
+      };
 
-    document.addEventListener("DOMContentLoaded", () => {
-      afficherListeDevis();
-      afficherDocumentsRecents();
-      mettreAJourStats();
-    });
+      function formatPrix(value) {
+        return Number(value).toLocaleString("fr-FR", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+        }) + " €";
+      }
+
+      function getDateFR() {
+        return new Date().toLocaleDateString("fr-FR");
+      }
+
+      function getDevisList() {
+        try {
+          return JSON.parse(localStorage.getItem("mlg_devis_list") || "[]");
+        } catch (e) {
+          return [];
+        }
+      }
+
+      function saveDevisList(list) {
+        localStorage.setItem("mlg_devis_list", JSON.stringify(list));
+      }
+
+      function getFacturesList() {
+        try {
+          return JSON.parse(localStorage.getItem("mlg_factures_list") || "[]");
+        } catch (e) {
+          return [];
+        }
+      }
+
+      function saveFacturesList(list) {
+        localStorage.setItem("mlg_factures_list", JSON.stringify(list));
+      }
+
+      function getNextDevisReference() {
+        const devisList = getDevisList();
+        const nextNumber = devisList.length + 1;
+        return "DEV-2026-" + String(nextNumber).padStart(4, "0");
+      }
+
+      function afficherDevis(devisData) {
+        const html = `
+          <div class="doc-header">
+            <div>
+              <div class="doc-title">DEVIS</div>
+              <div class="doc-meta">
+                Réf. : ${devisData.reference}<br>
+                Date : ${devisData.date}
+              </div>
+            </div>
+            ${getGarageBlockHtml()}
+          </div>
+
+          <div class="doc-section">
+            <p><strong>Client :</strong> ${devisData.client}</p>
+            <p><strong>Véhicule :</strong> ${devisData.vehicule}</p>
+          </div>
+
+          <div class="doc-section">
+            <p><strong>Prestation :</strong></p>
+            <p>${devisData.prestation.replace(/\n/g, "<br>")}</p>
+          </div>
+
+          <div class="doc-section">
+            <p><strong>Montant HT :</strong> ${formatPrix(devisData.prixHT)}</p>
+            <p><strong>TVA 20 % :</strong> ${formatPrix(devisData.tva)}</p>
+          </div>
+
+          <div class="doc-total">
+            Total TTC : ${formatPrix(devisData.prixTTC)}
+          </div>
+
+          ${getFooterMentionsHtml()}
+
+          <div class="small-actions">
+            <button class="btn" onclick="window.print()">Imprimer le devis</button>
+          </div>
+        `;
+
+        const box = document.getElementById("resultatDevis");
+        box.innerHTML = html;
+        box.style.display = "block";
+        document.getElementById("resultatFacture").style.display = "none";
+        document.getElementById("resultatFacture").innerHTML = "";
+      }
+
+      function afficherFacture(factureData) {
+        const html = `
+          <div class="doc-header">
+            <div>
+              <div class="doc-title">FACTURE</div>
+              <div class="doc-meta">
+                Réf. : ${factureData.reference}<br>
+                Date : ${factureData.date}
+              </div>
+            </div>
+            ${getGarageBlockHtml()}
+          </div>
+
+          <div class="doc-section">
+            <p><strong>Client :</strong> ${factureData.client}</p>
+            <p><strong>Véhicule :</strong> ${factureData.vehicule}</p>
+          </div>
+
+          <div class="doc-section">
+            <p><strong>Prestation facturée :</strong></p>
+            <p>${factureData.prestation.replace(/\n/g, "<br>")}</p>
+          </div>
+
+          <div class="doc-section">
+            <p><strong>Montant HT :</strong> ${formatPrix(factureData.prixHT)}</p>
+            <p><strong>TVA 20 % :</strong> ${formatPrix(factureData.tva)}</p>
+          </div>
+
+          <div class="doc-total">
+            Total TTC à payer : ${formatPrix(factureData.prixTTC)}
+          </div>
+
+          ${getFooterMentionsHtml()}
+
+          <div class="small-actions">
+            <button class="btn" onclick="window.print()">Imprimer la facture</button>
+          </div>
+        `;
+
+        const box = document.getElementById("resultatFacture");
+        box.innerHTML = html;
+        box.style.display = "block";
+        document.getElementById("resultatDevis").style.display = "none";
+        document.getElementById("resultatDevis").innerHTML = "";
+      }
+
+      window.genererDevis = function () {
+        const client = document.getElementById("devisClient").value.trim();
+        const vehicule = document.getElementById("devisVehicule").value.trim();
+        const reference = document.getElementById("devisReference").value.trim() || getNextDevisReference();
+        const prestation = document.getElementById("devisPrestation").value.trim();
+        const prixHT = parseFloat(document.getElementById("devisPrixHT").value);
+
+        if (!client || !vehicule || !prestation || isNaN(prixHT)) {
+          alert("Merci de remplir tous les champs du devis.");
+          return;
+        }
+
+        const tva = prixHT * 0.20;
+        const prixTTC = prixHT + tva;
+
+        const devisData = {
+          id: Date.now(),
+          client,
+          vehicule,
+          reference,
+          prestation,
+          prixHT,
+          tva,
+          prixTTC,
+          date: getDateFR()
+        };
+
+        localStorage.setItem("mlg_last_devis", JSON.stringify(devisData));
+
+        const devisList = getDevisList();
+        devisList.unshift(devisData);
+        saveDevisList(devisList);
+
+        afficherDevis(devisData);
+        afficherListeDevis();
+        afficherDocumentsRecents();
+        mettreAJourStats();
+
+        document.getElementById("devisClient").value = "";
+        document.getElementById("devisVehicule").value = "";
+        document.getElementById("devisReference").value = "";
+        document.getElementById("devisPrestation").value = "";
+        document.getElementById("devisPrixHT").value = "";
+      };
+
+      window.genererFacture = function () {
+        const stored = localStorage.getItem("mlg_last_devis");
+
+        if (!stored) {
+          alert("Aucun devis disponible. Générez d'abord un devis.");
+          return;
+        }
+
+        const devisData = JSON.parse(stored);
+        const referenceFacture = devisData.reference.replace("DEV", "FAC");
+
+        const factureData = {
+          id: Date.now(),
+          client: devisData.client,
+          vehicule: devisData.vehicule,
+          reference: referenceFacture,
+          prestation: devisData.prestation,
+          prixHT: devisData.prixHT,
+          tva: devisData.tva,
+          prixTTC: devisData.prixTTC,
+          date: getDateFR()
+        };
+
+        const facturesList = getFacturesList();
+        facturesList.unshift(factureData);
+        saveFacturesList(facturesList);
+
+        afficherFacture(factureData);
+        afficherDocumentsRecents();
+        mettreAJourStats();
+      };
+
+      function afficherListeDevis() {
+        const devisList = getDevisList();
+        const container = document.getElementById("listeDevis");
+
+        if (!devisList.length) {
+          container.innerHTML = `<div class="empty-state">Aucun devis enregistré pour le moment.</div>`;
+          return;
+        }
+
+        container.innerHTML = devisList.map(d => `
+          <div class="history-item">
+            <div class="history-top">
+              <div class="history-ref">${d.reference}</div>
+              <div class="history-date">${d.date}</div>
+            </div>
+            <div class="history-line"><strong>Client :</strong> ${d.client}</div>
+            <div class="history-line"><strong>Véhicule :</strong> ${d.vehicule}</div>
+            <div class="history-line"><strong>Total TTC :</strong> ${formatPrix(d.prixTTC)}</div>
+          </div>
+        `).join("");
+      }
+
+      function afficherDocumentsRecents() {
+        const devisList = getDevisList();
+        const facturesList = getFacturesList();
+        const tbody = document.getElementById("documentsRecents");
+
+        const lignes = [];
+
+        facturesList.slice(0, 3).forEach(f => {
+          lignes.push(`
+            <tr>
+              <td>${f.client}</td>
+              <td>${f.reference}</td>
+              <td>${f.vehicule}</td>
+              <td><span class="pill pill-orange">Facture</span></td>
+            </tr>
+          `);
+        });
+
+        devisList.slice(0, 3).forEach(d => {
+          lignes.push(`
+            <tr>
+              <td>${d.client}</td>
+              <td>${d.reference}</td>
+              <td>${d.vehicule}</td>
+              <td><span class="pill pill-blue">Devis</span></td>
+            </tr>
+          `);
+        });
+
+        if (!lignes.length) {
+          tbody.innerHTML = `
+            <tr>
+              <td colspan="4" class="muted">Aucun document récent.</td>
+            </tr>
+          `;
+          return;
+        }
+
+        tbody.innerHTML = lignes.slice(0, 6).join("");
+      }
+
+      function mettreAJourStats() {
+        const devisList = getDevisList();
+        const facturesList = getFacturesList();
+
+        const totalCA = devisList.reduce((sum, devis) => sum + Number(devis.prixTTC || 0), 0);
+
+        document.getElementById("statDevis").textContent = devisList.length;
+        document.getElementById("statFactures").textContent = facturesList.length;
+        document.getElementById("statCA").textContent = formatPrix(totalCA);
+      }
+
+      window.viderDocuments = function () {
+        document.getElementById("resultatDevis").style.display = "none";
+        document.getElementById("resultatDevis").innerHTML = "";
+        document.getElementById("resultatFacture").style.display = "none";
+        document.getElementById("resultatFacture").innerHTML = "";
+        localStorage.removeItem("mlg_last_devis");
+      };
+
+      document.addEventListener("DOMContentLoaded", () => {
+        afficherListeDevis();
+        afficherDocumentsRecents();
+        mettreAJourStats();
+      });
+    })();
   </script>
 </body>
 </html>
