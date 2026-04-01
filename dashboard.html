@@ -16,6 +16,7 @@
       --green-dark: #15803d;
       --blue: #60a5fa;
       --red: #ef4444;
+      --orange: #f59e0b;
       --shadow: 0 20px 60px rgba(0,0,0,0.28);
       --radius: 22px;
     }
@@ -114,6 +115,13 @@
       grid-template-columns: 1fr 1fr;
       gap: 18px;
       margin-top: 18px;
+      margin-bottom: 18px;
+    }
+
+    .bottom-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
     }
 
     h2 {
@@ -151,6 +159,16 @@
       font-weight: 700;
       background: rgba(34,197,94,0.15);
       color: #d7ffe4;
+    }
+
+    .pill-orange {
+      background: rgba(245,158,11,0.15);
+      color: #ffe7ba;
+    }
+
+    .pill-blue {
+      background: rgba(96,165,250,0.15);
+      color: #dbeafe;
     }
 
     .actions {
@@ -277,6 +295,48 @@
       min-width: 160px;
     }
 
+    .history-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .history-item {
+      padding: 16px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.04);
+    }
+
+    .history-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      margin-bottom: 8px;
+    }
+
+    .history-ref {
+      font-weight: 700;
+      font-size: 16px;
+    }
+
+    .history-date {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .history-line {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .empty-state {
+      color: var(--muted);
+      padding: 12px 0;
+    }
+
     @media print {
       body {
         background: white;
@@ -287,6 +347,7 @@
       .grid,
       .main,
       .modules > .card:not(.printable),
+      .bottom-grid,
       .logout-btn,
       .small-actions,
       .actions {
@@ -309,6 +370,11 @@
 
       .printable {
         display: block !important;
+      }
+
+      .doc-meta,
+      .history-line {
+        color: #333 !important;
       }
     }
 
@@ -342,16 +408,16 @@
 
     <div class="grid">
       <div class="card">
-        <div class="stat-label">Devis du jour</div>
-        <div class="stat-value" id="statDevis">12</div>
+        <div class="stat-label">Devis enregistrés</div>
+        <div class="stat-value" id="statDevis">0</div>
       </div>
       <div class="card">
         <div class="stat-label">Factures émises</div>
-        <div class="stat-value" id="statFactures">8</div>
+        <div class="stat-value" id="statFactures">0</div>
       </div>
       <div class="card">
-        <div class="stat-label">CA du jour</div>
-        <div class="stat-value" id="statCA">2 480€</div>
+        <div class="stat-label">CA potentiel TTC</div>
+        <div class="stat-value" id="statCA">0 €</div>
       </div>
       <div class="card">
         <div class="stat-label">Véhicules en atelier</div>
@@ -371,26 +437,7 @@
               <th>Statut</th>
             </tr>
           </thead>
-          <tbody id="documentsRecents">
-            <tr>
-              <td>Jean Martin</td>
-              <td>DEV-2026-0024</td>
-              <td>AB-123-CD</td>
-              <td><span class="pill">Accepté</span></td>
-            </tr>
-            <tr>
-              <td>Garage Dupont</td>
-              <td>FAC-2026-0017</td>
-              <td>Renault Master</td>
-              <td><span class="pill">Payée</span></td>
-            </tr>
-            <tr>
-              <td>Mme Leroy</td>
-              <td>OR-2026-0006</td>
-              <td>Peugeot 208</td>
-              <td><span class="pill">En cours</span></td>
-            </tr>
-          </tbody>
+          <tbody id="documentsRecents"></tbody>
         </table>
       </div>
 
@@ -398,7 +445,7 @@
         <h2>Espace abonné</h2>
         <p class="muted">
           Bienvenue dans votre espace privé. Vous pouvez maintenant créer un devis,
-          le transformer en facture et imprimer vos documents.
+          le transformer en facture, retrouver votre historique et imprimer vos documents.
         </p>
 
         <div class="actions">
@@ -417,7 +464,7 @@
         <div class="form-grid">
           <input type="text" id="devisClient" placeholder="Nom du client" />
           <input type="text" id="devisVehicule" placeholder="Véhicule / immatriculation" />
-          <input type="text" id="devisReference" placeholder="Référence devis (ex: DEV-2026-0001)" />
+          <input type="text" id="devisReference" placeholder="Référence devis (laisser vide pour automatique)" />
           <textarea id="devisPrestation" placeholder="Détail de la prestation"></textarea>
           <input type="number" id="devisPrixHT" placeholder="Montant HT (€)" />
           <button class="btn" onclick="genererDevis()">Générer le devis</button>
@@ -439,6 +486,13 @@
         </div>
 
         <div class="result-box printable" id="resultatFacture" style="display:none;"></div>
+      </div>
+    </div>
+
+    <div class="bottom-grid">
+      <div class="card">
+        <h2>Historique des devis</h2>
+        <div id="listeDevis" class="history-list"></div>
       </div>
     </div>
   </div>
@@ -474,34 +528,29 @@
       return new Date().toLocaleDateString("fr-FR");
     }
 
-    function genererDevis() {
-      const client = document.getElementById("devisClient").value.trim();
-      const vehicule = document.getElementById("devisVehicule").value.trim();
-      const reference = document.getElementById("devisReference").value.trim() || "DEV-2026-0001";
-      const prestation = document.getElementById("devisPrestation").value.trim();
-      const prixHT = parseFloat(document.getElementById("devisPrixHT").value);
+    function getDevisList() {
+      return JSON.parse(localStorage.getItem("mlg_devis_list") || "[]");
+    }
 
-      if (!client || !vehicule || !prestation || isNaN(prixHT)) {
-        alert("Merci de remplir tous les champs du devis.");
-        return;
-      }
+    function saveDevisList(list) {
+      localStorage.setItem("mlg_devis_list", JSON.stringify(list));
+    }
 
-      const tva = prixHT * 0.20;
-      const prixTTC = prixHT + tva;
+    function getFacturesList() {
+      return JSON.parse(localStorage.getItem("mlg_factures_list") || "[]");
+    }
 
-      const devisData = {
-        client,
-        vehicule,
-        reference,
-        prestation,
-        prixHT,
-        tva,
-        prixTTC,
-        date: getDateFR()
-      };
+    function saveFacturesList(list) {
+      localStorage.setItem("mlg_factures_list", JSON.stringify(list));
+    }
 
-      localStorage.setItem("mlg_last_devis", JSON.stringify(devisData));
+    function getNextDevisReference() {
+      const devisList = getDevisList();
+      const nextNumber = devisList.length + 1;
+      return "DEV-2026-" + String(nextNumber).padStart(4, "0");
+    }
 
+    function afficherDevis(devisData) {
       const html = `
         <div class="doc-header">
           <div>
@@ -544,30 +593,96 @@
       const box = document.getElementById("resultatDevis");
       box.innerHTML = html;
       box.style.display = "block";
+    }
 
-      document.getElementById("documentsRecents").innerHTML = `
-        <tr>
-          <td>${devisData.client}</td>
-          <td>${devisData.reference}</td>
-          <td>${devisData.vehicule}</td>
-          <td><span class="pill">Créé</span></td>
-        </tr>
-        <tr>
-          <td>Jean Martin</td>
-          <td>DEV-2026-0024</td>
-          <td>AB-123-CD</td>
-          <td><span class="pill">Accepté</span></td>
-        </tr>
-        <tr>
-          <td>Garage Dupont</td>
-          <td>FAC-2026-0017</td>
-          <td>Renault Master</td>
-          <td><span class="pill">Payée</span></td>
-        </tr>
+    function afficherFacture(factureData) {
+      const html = `
+        <div class="doc-header">
+          <div>
+            <div class="doc-title">FACTURE</div>
+            <div class="doc-meta">
+              Réf. : ${factureData.reference}<br>
+              Date : ${factureData.date}
+            </div>
+          </div>
+          <div class="doc-meta">
+            <strong>Mon Logiciel Garage</strong><br>
+            Document généré automatiquement
+          </div>
+        </div>
+
+        <div class="doc-section">
+          <p><strong>Client :</strong> ${factureData.client}</p>
+          <p><strong>Véhicule :</strong> ${factureData.vehicule}</p>
+        </div>
+
+        <div class="doc-section">
+          <p><strong>Prestation facturée :</strong></p>
+          <p>${factureData.prestation.replace(/\n/g, "<br>")}</p>
+        </div>
+
+        <div class="doc-section">
+          <p><strong>Montant HT :</strong> ${formatPrix(factureData.prixHT)}</p>
+          <p><strong>TVA 20 % :</strong> ${formatPrix(factureData.tva)}</p>
+        </div>
+
+        <div class="doc-total">
+          Total TTC à payer : ${formatPrix(factureData.prixTTC)}
+        </div>
+
+        <div class="small-actions">
+          <button class="btn" onclick="window.print()">Imprimer la facture</button>
+        </div>
       `;
 
-      document.getElementById("statDevis").textContent = "13";
-      document.getElementById("statCA").textContent = formatPrix(prixTTC).replace(",00", "");
+      const box = document.getElementById("resultatFacture");
+      box.innerHTML = html;
+      box.style.display = "block";
+    }
+
+    function genererDevis() {
+      const client = document.getElementById("devisClient").value.trim();
+      const vehicule = document.getElementById("devisVehicule").value.trim();
+      const reference = document.getElementById("devisReference").value.trim() || getNextDevisReference();
+      const prestation = document.getElementById("devisPrestation").value.trim();
+      const prixHT = parseFloat(document.getElementById("devisPrixHT").value);
+
+      if (!client || !vehicule || !prestation || isNaN(prixHT)) {
+        alert("Merci de remplir tous les champs du devis.");
+        return;
+      }
+
+      const tva = prixHT * 0.20;
+      const prixTTC = prixHT + tva;
+
+      const devisData = {
+        id: Date.now(),
+        client,
+        vehicule,
+        reference,
+        prestation,
+        prixHT,
+        tva,
+        prixTTC,
+        date: getDateFR()
+      };
+
+      localStorage.setItem("mlg_last_devis", JSON.stringify(devisData));
+
+      const devisList = getDevisList();
+      devisList.unshift(devisData);
+      saveDevisList(devisList);
+
+      afficherDevis(devisData);
+      afficherListeDevis();
+      afficherDocumentsRecents();
+      mettreAJourStats();
+
+      document.getElementById("devisClient").value = "";
+      document.getElementById("devisVehicule").value = "";
+      document.getElementById("devisReference").value = "";
+      document.getElementById("devisPrestation").value = "";
+      document.getElementById("devisPrixHT").value = "";
     }
 
     function genererFacture() {
@@ -581,71 +696,99 @@
       const devisData = JSON.parse(stored);
       const referenceFacture = devisData.reference.replace("DEV", "FAC");
 
-      const html = `
-        <div class="doc-header">
-          <div>
-            <div class="doc-title">FACTURE</div>
-            <div class="doc-meta">
-              Réf. : ${referenceFacture}<br>
-              Date : ${getDateFR()}
-            </div>
+      const factureData = {
+        id: Date.now(),
+        client: devisData.client,
+        vehicule: devisData.vehicule,
+        reference: referenceFacture,
+        prestation: devisData.prestation,
+        prixHT: devisData.prixHT,
+        tva: devisData.tva,
+        prixTTC: devisData.prixTTC,
+        date: getDateFR()
+      };
+
+      const facturesList = getFacturesList();
+      facturesList.unshift(factureData);
+      saveFacturesList(facturesList);
+
+      afficherFacture(factureData);
+      afficherDocumentsRecents();
+      mettreAJourStats();
+    }
+
+    function afficherListeDevis() {
+      const devisList = getDevisList();
+      const container = document.getElementById("listeDevis");
+
+      if (!devisList.length) {
+        container.innerHTML = `<div class="empty-state">Aucun devis enregistré pour le moment.</div>`;
+        return;
+      }
+
+      container.innerHTML = devisList.map(d => `
+        <div class="history-item">
+          <div class="history-top">
+            <div class="history-ref">${d.reference}</div>
+            <div class="history-date">${d.date}</div>
           </div>
-          <div class="doc-meta">
-            <strong>Mon Logiciel Garage</strong><br>
-            Document généré automatiquement
-          </div>
+          <div class="history-line"><strong>Client :</strong> ${d.client}</div>
+          <div class="history-line"><strong>Véhicule :</strong> ${d.vehicule}</div>
+          <div class="history-line"><strong>Total TTC :</strong> ${formatPrix(d.prixTTC)}</div>
         </div>
+      `).join("");
+    }
 
-        <div class="doc-section">
-          <p><strong>Client :</strong> ${devisData.client}</p>
-          <p><strong>Véhicule :</strong> ${devisData.vehicule}</p>
-        </div>
+    function afficherDocumentsRecents() {
+      const devisList = getDevisList();
+      const facturesList = getFacturesList();
+      const tbody = document.getElementById("documentsRecents");
 
-        <div class="doc-section">
-          <p><strong>Prestation facturée :</strong></p>
-          <p>${devisData.prestation.replace(/\n/g, "<br>")}</p>
-        </div>
+      const lignes = [];
 
-        <div class="doc-section">
-          <p><strong>Montant HT :</strong> ${formatPrix(devisData.prixHT)}</p>
-          <p><strong>TVA 20 % :</strong> ${formatPrix(devisData.tva)}</p>
-        </div>
+      facturesList.slice(0, 3).forEach(f => {
+        lignes.push(`
+          <tr>
+            <td>${f.client}</td>
+            <td>${f.reference}</td>
+            <td>${f.vehicule}</td>
+            <td><span class="pill pill-orange">Facture</span></td>
+          </tr>
+        `);
+      });
 
-        <div class="doc-total">
-          Total TTC à payer : ${formatPrix(devisData.prixTTC)}
-        </div>
+      devisList.slice(0, 3).forEach(d => {
+        lignes.push(`
+          <tr>
+            <td>${d.client}</td>
+            <td>${d.reference}</td>
+            <td>${d.vehicule}</td>
+            <td><span class="pill pill-blue">Devis</span></td>
+          </tr>
+        `);
+      });
 
-        <div class="small-actions">
-          <button class="btn" onclick="window.print()">Imprimer la facture</button>
-        </div>
-      `;
+      if (!lignes.length) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="4" class="muted">Aucun document récent.</td>
+          </tr>
+        `;
+        return;
+      }
 
-      const box = document.getElementById("resultatFacture");
-      box.innerHTML = html;
-      box.style.display = "block";
+      tbody.innerHTML = lignes.slice(0, 6).join("");
+    }
 
-      document.getElementById("documentsRecents").innerHTML = `
-        <tr>
-          <td>${devisData.client}</td>
-          <td>${referenceFacture}</td>
-          <td>${devisData.vehicule}</td>
-          <td><span class="pill">À payer</span></td>
-        </tr>
-        <tr>
-          <td>${devisData.client}</td>
-          <td>${devisData.reference}</td>
-          <td>${devisData.vehicule}</td>
-          <td><span class="pill">Créé</span></td>
-        </tr>
-        <tr>
-          <td>Garage Dupont</td>
-          <td>FAC-2026-0017</td>
-          <td>Renault Master</td>
-          <td><span class="pill">Payée</span></td>
-        </tr>
-      `;
+    function mettreAJourStats() {
+      const devisList = getDevisList();
+      const facturesList = getFacturesList();
 
-      document.getElementById("statFactures").textContent = "9";
+      const totalCA = devisList.reduce((sum, devis) => sum + Number(devis.prixTTC || 0), 0);
+
+      document.getElementById("statDevis").textContent = devisList.length;
+      document.getElementById("statFactures").textContent = facturesList.length;
+      document.getElementById("statCA").textContent = formatPrix(totalCA);
     }
 
     function viderDocuments() {
@@ -655,6 +798,12 @@
       document.getElementById("resultatFacture").innerHTML = "";
       localStorage.removeItem("mlg_last_devis");
     }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      afficherListeDevis();
+      afficherDocumentsRecents();
+      mettreAJourStats();
+    });
   </script>
 </body>
 </html>
