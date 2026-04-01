@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Merci | Mon Logiciel Garage</title>
+  <title>Accès sécurisé | Mon Logiciel Garage</title>
   <meta
     name="description"
-    content="Merci pour votre abonnement à Mon Logiciel Garage. Votre paiement a bien été pris en compte."
+    content="Accès sécurisé à Mon Logiciel Garage."
   />
   <meta name="robots" content="noindex, nofollow" />
 
@@ -19,6 +19,8 @@
       --muted: #b8c4d6;
       --green: #22c55e;
       --green-hover: #2dd563;
+      --red: #ef4444;
+      --yellow: #f59e0b;
       --max: 1120px;
       --shadow: 0 20px 60px rgba(0,0,0,0.28);
       --radius: 24px;
@@ -30,47 +32,94 @@
       margin: 0;
       font-family: Arial, Helvetica, sans-serif;
       color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       background:
         radial-gradient(circle at top right, rgba(34,197,94,0.15), transparent 25%),
         radial-gradient(circle at top left, rgba(96,165,250,0.12), transparent 30%),
         linear-gradient(180deg, #07101d 0%, #0a1424 100%);
+      padding: 16px;
     }
 
     .container {
-      width: min(var(--max), calc(100% - 32px));
+      width: min(760px, 100%);
       margin: 0 auto;
     }
 
-    .hero {
-      padding: 80px 20px 40px;
+    .card {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 40px 28px;
       text-align: center;
+      backdrop-filter: blur(10px);
     }
 
     .badge {
       display: inline-block;
       padding: 10px 16px;
       border-radius: 999px;
-      background: rgba(34,197,94,0.12);
-      border: 1px solid rgba(34,197,94,0.28);
-      color: #c9f7d8;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: #dbe7f5;
       font-weight: 700;
       margin-bottom: 20px;
     }
 
     h1 {
-      font-size: 48px;
-      margin-bottom: 15px;
+      font-size: 40px;
+      margin: 0 0 16px;
+      line-height: 1.1;
     }
 
     p {
       color: var(--muted);
-      max-width: 600px;
-      margin: auto;
+      max-width: 580px;
+      margin: 0 auto 14px;
       font-size: 18px;
+      line-height: 1.6;
+    }
+
+    .status {
+      margin: 26px auto 0;
+      padding: 18px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      max-width: 620px;
+      text-align: left;
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--muted);
+    }
+
+    .status.success {
+      border-color: rgba(34,197,94,0.30);
+      background: rgba(34,197,94,0.08);
+      color: #d8fbe4;
+    }
+
+    .status.error {
+      border-color: rgba(239,68,68,0.30);
+      background: rgba(239,68,68,0.08);
+      color: #ffd9d9;
+    }
+
+    .status.warning {
+      border-color: rgba(245,158,11,0.30);
+      background: rgba(245,158,11,0.08);
+      color: #ffe8bf;
     }
 
     .actions {
-      margin-top: 30px;
+      margin-top: 28px;
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
     }
 
     .btn {
@@ -81,42 +130,172 @@
       color: #05210f;
       font-weight: bold;
       text-decoration: none;
+      transition: 0.2s ease;
+      border: none;
+      cursor: pointer;
     }
 
     .btn:hover {
       background: var(--green-hover);
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: white;
+      border: 1px solid rgba(255,255,255,0.18);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255,255,255,0.06);
+      color: white;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .loader {
+      width: 42px;
+      height: 42px;
+      border: 4px solid rgba(255,255,255,0.18);
+      border-top-color: #22c55e;
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+      margin: 0 auto 22px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 640px) {
+      h1 {
+        font-size: 30px;
+      }
+
+      p {
+        font-size: 16px;
+      }
+
+      .card {
+        padding: 28px 18px;
+      }
     }
   </style>
 </head>
-
 <body>
+  <div class="container">
+    <div class="card">
+      <div id="loadingBlock">
+        <div class="loader"></div>
+        <div class="badge">Vérification de votre accès</div>
+        <h1>Connexion sécurisée en cours</h1>
+        <p>
+          Nous vérifions votre lien d’accès sécurisé.
+        </p>
+      </div>
 
-  <section class="hero">
-    <div class="container">
-      <div class="badge">✅ Paiement confirmé</div>
+      <div id="successBlock" class="hidden">
+        <div class="badge">✅ Accès autorisé</div>
+        <h1>Bienvenue dans Mon Logiciel Garage</h1>
+        <p>
+          Votre abonnement est bien actif.
+        </p>
+        <div id="successStatus" class="status success">
+          Accès validé.
+        </div>
 
-      <h1>Merci pour votre abonnement</h1>
+        <div class="actions">
+          <a class="btn" href="/app/">Ouvrir le logiciel</a>
+          <a class="btn btn-secondary" href="/">Retour à l’accueil</a>
+        </div>
+      </div>
 
-      <p>
-        Votre paiement a bien été pris en compte.<br>
-        Votre accès est maintenant activé.
-      </p>
+      <div id="errorBlock" class="hidden">
+        <div class="badge">⛔ Accès refusé</div>
+        <h1>Lien invalide ou expiré</h1>
+        <p>
+          Nous n’avons pas pu valider votre accès.
+        </p>
+        <div id="errorStatus" class="status error">
+          Vérification impossible.
+        </div>
 
-      <div class="actions">
-        <a class="btn" href="/acces.html">Accéder au logiciel</a>
+        <div class="actions">
+          <a class="btn btn-secondary" href="/">Retour à l’accueil</a>
+          <a class="btn btn-secondary" href="mailto:contact@monlogicielgarage.fr">Contacter le support</a>
+        </div>
       </div>
     </div>
-  </section>
+  </div>
 
-  <!-- 🔥 TRÈS IMPORTANT : activation accès -->
   <script>
-    localStorage.setItem("paid", "true");
+    async function checkAccess() {
+      const params = new URLSearchParams(window.location.search);
+      const token = params.get("token");
 
-    // option bonus : redirection automatique après 2 secondes
-    setTimeout(() => {
-      window.location.href = "/acces.html";
-    }, 2000);
+      const loadingBlock = document.getElementById("loadingBlock");
+      const successBlock = document.getElementById("successBlock");
+      const errorBlock = document.getElementById("errorBlock");
+      const successStatus = document.getElementById("successStatus");
+      const errorStatus = document.getElementById("errorStatus");
+
+      if (!token) {
+        loadingBlock.classList.add("hidden");
+        errorBlock.classList.remove("hidden");
+        errorStatus.className = "status warning";
+        errorStatus.innerHTML = `
+          Aucun token d'accès n'a été trouvé dans l'URL.<br>
+          Utilisez le lien sécurisé reçu par email.
+        `;
+        return;
+      }
+
+      try {
+        const res = await fetch(`/.netlify/functions/check-access?token=${encodeURIComponent(token)}`);
+        const data = await res.json();
+
+        loadingBlock.classList.add("hidden");
+
+        if (data.ok) {
+          successBlock.classList.remove("hidden");
+          successStatus.innerHTML = `
+            Accès validé pour : <strong>${data.email}</strong><br>
+            Vous pouvez maintenant ouvrir votre logiciel.
+          `;
+
+          // on garde le token si besoin pour l'app
+          localStorage.setItem("mlg_access_token", token);
+          localStorage.setItem("mlg_access_email", data.email || "");
+        } else {
+          errorBlock.classList.remove("hidden");
+
+          let message = "Votre accès n'a pas pu être validé.";
+
+          if (data.reason === "missing_token") {
+            message = "Aucun token d'accès n'a été fourni.";
+          } else if (data.reason === "invalid_token") {
+            message = "Le token fourni est invalide.";
+          } else if (data.reason === "not_paid") {
+            message = "Aucun abonnement actif n'a été trouvé pour ce lien.";
+          } else if (data.reason === "forbidden") {
+            message = "Le lien est invalide, expiré ou non autorisé.";
+          }
+
+          errorStatus.innerHTML = message + "<br>Veuillez utiliser le lien reçu par email.";
+        }
+      } catch (err) {
+        loadingBlock.classList.add("hidden");
+        errorBlock.classList.remove("hidden");
+        errorStatus.innerHTML = `
+          Une erreur technique est survenue pendant la vérification.<br>
+          Veuillez réessayer ou contacter le support.
+        `;
+      }
+    }
+
+    checkAccess();
   </script>
-
 </body>
 </html>
