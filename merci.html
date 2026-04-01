@@ -4,63 +4,170 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Merci | Mon Logiciel Garage</title>
-  <meta name="description" content="Paiement confirmé pour Mon Logiciel Garage." />
+  <meta
+    name="description"
+    content="Merci pour votre abonnement à Mon Logiciel Garage. Votre paiement a bien été pris en compte."
+  />
   <meta name="robots" content="noindex, nofollow" />
+
   <style>
-    body{
-      margin:0;
-      font-family:Arial, Helvetica, sans-serif;
-      background:linear-gradient(180deg,#07101d 0%,#0a1424 100%);
-      color:#fff;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      min-height:100vh;
-      padding:20px;
-      text-align:center;
+    :root {
+      --bg: #081120;
+      --card: rgba(255,255,255,0.06);
+      --card-border: rgba(255,255,255,0.12);
+      --text: #ffffff;
+      --muted: #b8c4d6;
+      --green: #22c55e;
+      --green-hover: #2dd563;
+      --max: 1120px;
+      --shadow: 0 20px 60px rgba(0,0,0,0.28);
+      --radius: 24px;
     }
-    .box{
-      max-width:760px;
-      background:rgba(255,255,255,0.06);
-      border:1px solid rgba(255,255,255,0.10);
-      padding:40px 28px;
-      border-radius:22px;
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background:
+        radial-gradient(circle at top right, rgba(34,197,94,0.15), transparent 25%),
+        radial-gradient(circle at top left, rgba(96,165,250,0.12), transparent 30%),
+        linear-gradient(180deg, #07101d 0%, #0a1424 100%);
     }
-    .badge{
-      display:inline-block;
-      padding:10px 14px;
-      border-radius:999px;
-      background:rgba(34,197,94,0.12);
-      border:1px solid rgba(34,197,94,0.28);
-      color:#d8ffe6;
-      font-weight:700;
-      margin-bottom:18px;
+
+    .container {
+      width: min(760px, calc(100% - 32px));
+      margin: 0 auto;
     }
-    h1{
-      margin:0 0 14px;
-      font-size:42px;
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 40px 28px;
+      text-align: center;
+      backdrop-filter: blur(10px);
     }
-    p{
-      color:#c6d1e2;
-      font-size:18px;
-      line-height:1.6;
-      margin:0 0 12px;
+
+    .badge {
+      display: inline-block;
+      padding: 10px 16px;
+      border-radius: 999px;
+      background: rgba(34,197,94,0.12);
+      border: 1px solid rgba(34,197,94,0.28);
+      color: #c9f7d8;
+      font-weight: 700;
+      margin-bottom: 20px;
     }
-    .small{
-      font-size:14px;
-      color:#9fb0c7;
-      margin-top:18px;
+
+    h1 {
+      font-size: 42px;
+      margin: 0 0 16px;
+      line-height: 1.1;
+    }
+
+    p {
+      color: var(--muted);
+      max-width: 560px;
+      margin: 0 auto 14px;
+      font-size: 18px;
+      line-height: 1.6;
+    }
+
+    .info {
+      margin-top: 28px;
+      padding: 18px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      text-align: left;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .actions {
+      margin-top: 28px;
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 16px 26px;
+      border-radius: 12px;
+      background: var(--green);
+      color: #05210f;
+      font-weight: bold;
+      text-decoration: none;
+      transition: 0.2s ease;
+    }
+
+    .btn:hover {
+      background: var(--green-hover);
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: white;
+      border: 1px solid rgba(255,255,255,0.18);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255,255,255,0.06);
+      color: white;
+    }
+
+    @media (max-width: 640px) {
+      h1 {
+        font-size: 32px;
+      }
+
+      p {
+        font-size: 16px;
+      }
+
+      .card {
+        padding: 28px 18px;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="box">
-    <div class="badge">✅ Paiement confirmé</div>
-    <h1>Merci pour votre abonnement</h1>
-    <p>Votre paiement a bien été pris en compte.</p>
-    <p>Votre lien d’accès sécurisé vous est envoyé automatiquement par email.</p>
-    <p>Vérifiez votre boîte de réception et vos courriers indésirables.</p>
-    <p class="small">Si vous ne recevez rien sous quelques minutes, contactez : support@monlogicielgarage.fr</p>
+  <div class="container">
+    <div class="card">
+      <div class="badge">✅ Paiement confirmé</div>
+
+      <h1>Merci pour votre abonnement</h1>
+
+      <p>
+        Votre paiement a bien été pris en compte.
+      </p>
+
+      <p>
+        Votre lien d’accès sécurisé vous est envoyé par email automatiquement.
+      </p>
+
+      <div class="info">
+        <strong>Important :</strong><br>
+        Si vous ne recevez rien dans les prochaines minutes, vérifiez aussi vos spams / courriers indésirables.
+        L’accès au logiciel se fait uniquement via le lien sécurisé reçu par email.
+      </div>
+
+      <div class="actions">
+        <a class="btn" href="/">Retour à l’accueil</a>
+        <a class="btn btn-secondary" href="mailto:contact@monlogicielgarage.fr">Contacter le support</a>
+      </div>
+    </div>
   </div>
 </body>
 </html>
