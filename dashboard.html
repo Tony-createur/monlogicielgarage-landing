@@ -13,6 +13,9 @@
       --text: #ffffff;
       --muted: #b8c4d6;
       --green: #22c55e;
+      --green-dark: #15803d;
+      --blue: #60a5fa;
+      --red: #ef4444;
       --shadow: 0 20px 60px rgba(0,0,0,0.28);
       --radius: 22px;
     }
@@ -49,9 +52,27 @@
       font-weight: 700;
     }
 
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
     .user {
       color: var(--muted);
       font-size: 14px;
+    }
+
+    .logout-btn {
+      border: 0;
+      border-radius: 12px;
+      padding: 10px 14px;
+      font-weight: 700;
+      cursor: pointer;
+      background: rgba(255,255,255,0.08);
+      color: white;
+      border: 1px solid rgba(255,255,255,0.12);
     }
 
     .grid {
@@ -85,11 +106,24 @@
       display: grid;
       grid-template-columns: 1.2fr 0.8fr;
       gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    .modules {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-top: 18px;
     }
 
     h2 {
       margin: 0 0 18px;
       font-size: 22px;
+    }
+
+    h3 {
+      margin: 0 0 14px;
+      font-size: 18px;
     }
 
     table {
@@ -126,6 +160,7 @@
 
     .btn {
       display: block;
+      width: 100%;
       text-align: center;
       padding: 14px 16px;
       border-radius: 12px;
@@ -133,6 +168,12 @@
       color: #05210f;
       text-decoration: none;
       font-weight: 700;
+      border: 0;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      background: #34d399;
     }
 
     .btn-secondary {
@@ -141,10 +182,134 @@
       border: 1px solid rgba(255,255,255,0.16);
     }
 
+    .btn-danger {
+      background: var(--red);
+      color: white;
+    }
+
     .muted {
       color: var(--muted);
       line-height: 1.6;
       font-size: 15px;
+    }
+
+    .form-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .form-grid input,
+    .form-grid textarea,
+    .form-grid select {
+      width: 100%;
+      padding: 14px 14px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.05);
+      color: white;
+      font-size: 14px;
+      outline: none;
+    }
+
+    .form-grid input::placeholder,
+    .form-grid textarea::placeholder {
+      color: #a9b6c8;
+    }
+
+    .form-grid textarea {
+      min-height: 110px;
+      resize: vertical;
+    }
+
+    .result-box {
+      margin-top: 18px;
+      padding: 18px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .doc-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .doc-title {
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .doc-meta {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .doc-section {
+      margin-bottom: 16px;
+    }
+
+    .doc-section p {
+      margin: 6px 0;
+      line-height: 1.6;
+    }
+
+    .doc-total {
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(255,255,255,0.12);
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .small-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+
+    .small-actions .btn {
+      width: auto;
+      min-width: 160px;
+    }
+
+    @media print {
+      body {
+        background: white;
+        color: black;
+      }
+
+      .topbar,
+      .grid,
+      .main,
+      .modules > .card:not(.printable),
+      .logout-btn,
+      .small-actions,
+      .actions {
+        display: none !important;
+      }
+
+      .wrap {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+      }
+
+      .card,
+      .result-box {
+        background: white !important;
+        color: black !important;
+        border: 0 !important;
+        box-shadow: none !important;
+      }
+
+      .printable {
+        display: block !important;
+      }
     }
 
     @media (max-width: 980px) {
@@ -152,7 +317,8 @@
         grid-template-columns: repeat(2, 1fr);
       }
 
-      .main {
+      .main,
+      .modules {
         grid-template-columns: 1fr;
       }
     }
@@ -168,21 +334,24 @@
   <div class="wrap">
     <div class="topbar">
       <div class="brand">Mon Logiciel Garage</div>
-      <div class="user" id="userEmail">Chargement...</div>
+      <div class="topbar-right">
+        <div class="user" id="userEmail">Chargement...</div>
+        <button class="logout-btn" onclick="logout()">Déconnexion</button>
+      </div>
     </div>
 
     <div class="grid">
       <div class="card">
         <div class="stat-label">Devis du jour</div>
-        <div class="stat-value">12</div>
+        <div class="stat-value" id="statDevis">12</div>
       </div>
       <div class="card">
         <div class="stat-label">Factures émises</div>
-        <div class="stat-value">8</div>
+        <div class="stat-value" id="statFactures">8</div>
       </div>
       <div class="card">
         <div class="stat-label">CA du jour</div>
-        <div class="stat-value">2 480€</div>
+        <div class="stat-value" id="statCA">2 480€</div>
       </div>
       <div class="card">
         <div class="stat-label">Véhicules en atelier</div>
@@ -202,7 +371,7 @@
               <th>Statut</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody id="documentsRecents">
             <tr>
               <td>Jean Martin</td>
               <td>DEV-2026-0024</td>
@@ -228,23 +397,264 @@
       <div class="card">
         <h2>Espace abonné</h2>
         <p class="muted">
-          Bienvenue dans votre espace privé. Cette page sert de tableau de bord provisoire
-          pendant qu’on met en place la vraie application complète.
+          Bienvenue dans votre espace privé. Vous pouvez maintenant créer un devis,
+          le transformer en facture et imprimer vos documents.
         </p>
 
         <div class="actions">
-          <a class="btn" href="#">Nouveau devis</a>
-          <a class="btn btn-secondary" href="#">Nouvelle facture</a>
-          <a class="btn btn-secondary" href="#">Fiche client</a>
+          <button class="btn" onclick="scrollToSection('moduleDevis')">Nouveau devis</button>
+          <button class="btn btn-secondary" onclick="scrollToSection('moduleFacture')">Nouvelle facture</button>
+          <button class="btn btn-secondary" onclick="window.print()">Imprimer le document affiché</button>
           <a class="btn btn-secondary" href="/">Retour au site</a>
         </div>
+      </div>
+    </div>
+
+    <div class="modules">
+      <div class="card" id="moduleDevis">
+        <h2>Créer un devis</h2>
+
+        <div class="form-grid">
+          <input type="text" id="devisClient" placeholder="Nom du client" />
+          <input type="text" id="devisVehicule" placeholder="Véhicule / immatriculation" />
+          <input type="text" id="devisReference" placeholder="Référence devis (ex: DEV-2026-0001)" />
+          <textarea id="devisPrestation" placeholder="Détail de la prestation"></textarea>
+          <input type="number" id="devisPrixHT" placeholder="Montant HT (€)" />
+          <button class="btn" onclick="genererDevis()">Générer le devis</button>
+        </div>
+
+        <div class="result-box printable" id="resultatDevis" style="display:none;"></div>
+      </div>
+
+      <div class="card" id="moduleFacture">
+        <h2>Créer une facture</h2>
+
+        <p class="muted">
+          Clique sur le bouton ci-dessous pour transformer le dernier devis généré en facture.
+        </p>
+
+        <div class="actions">
+          <button class="btn btn-secondary" onclick="genererFacture()">Transformer le devis en facture</button>
+          <button class="btn btn-danger" onclick="viderDocuments()">Vider les documents affichés</button>
+        </div>
+
+        <div class="result-box printable" id="resultatFacture" style="display:none;"></div>
       </div>
     </div>
   </div>
 
   <script>
+    const isPremium = localStorage.getItem("premium_access");
+
+    if (!isPremium) {
+      window.location.href = "/";
+    }
+
     const email = localStorage.getItem("mlg_access_email") || "Abonné";
     document.getElementById("userEmail").textContent = email;
+
+    function scrollToSection(id) {
+      document.getElementById(id).scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    function logout() {
+      localStorage.removeItem("premium_access");
+      localStorage.removeItem("mlg_access_email");
+      window.location.href = "/";
+    }
+
+    function formatPrix(value) {
+      return Number(value).toLocaleString("fr-FR", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      }) + " €";
+    }
+
+    function getDateFR() {
+      return new Date().toLocaleDateString("fr-FR");
+    }
+
+    function genererDevis() {
+      const client = document.getElementById("devisClient").value.trim();
+      const vehicule = document.getElementById("devisVehicule").value.trim();
+      const reference = document.getElementById("devisReference").value.trim() || "DEV-2026-0001";
+      const prestation = document.getElementById("devisPrestation").value.trim();
+      const prixHT = parseFloat(document.getElementById("devisPrixHT").value);
+
+      if (!client || !vehicule || !prestation || isNaN(prixHT)) {
+        alert("Merci de remplir tous les champs du devis.");
+        return;
+      }
+
+      const tva = prixHT * 0.20;
+      const prixTTC = prixHT + tva;
+
+      const devisData = {
+        client,
+        vehicule,
+        reference,
+        prestation,
+        prixHT,
+        tva,
+        prixTTC,
+        date: getDateFR()
+      };
+
+      localStorage.setItem("mlg_last_devis", JSON.stringify(devisData));
+
+      const html = `
+        <div class="doc-header">
+          <div>
+            <div class="doc-title">DEVIS</div>
+            <div class="doc-meta">
+              Réf. : ${devisData.reference}<br>
+              Date : ${devisData.date}
+            </div>
+          </div>
+          <div class="doc-meta">
+            <strong>Mon Logiciel Garage</strong><br>
+            Document généré automatiquement
+          </div>
+        </div>
+
+        <div class="doc-section">
+          <p><strong>Client :</strong> ${devisData.client}</p>
+          <p><strong>Véhicule :</strong> ${devisData.vehicule}</p>
+        </div>
+
+        <div class="doc-section">
+          <p><strong>Prestation :</strong></p>
+          <p>${devisData.prestation.replace(/\n/g, "<br>")}</p>
+        </div>
+
+        <div class="doc-section">
+          <p><strong>Montant HT :</strong> ${formatPrix(devisData.prixHT)}</p>
+          <p><strong>TVA 20 % :</strong> ${formatPrix(devisData.tva)}</p>
+        </div>
+
+        <div class="doc-total">
+          Total TTC : ${formatPrix(devisData.prixTTC)}
+        </div>
+
+        <div class="small-actions">
+          <button class="btn" onclick="window.print()">Imprimer le devis</button>
+        </div>
+      `;
+
+      const box = document.getElementById("resultatDevis");
+      box.innerHTML = html;
+      box.style.display = "block";
+
+      document.getElementById("documentsRecents").innerHTML = `
+        <tr>
+          <td>${devisData.client}</td>
+          <td>${devisData.reference}</td>
+          <td>${devisData.vehicule}</td>
+          <td><span class="pill">Créé</span></td>
+        </tr>
+        <tr>
+          <td>Jean Martin</td>
+          <td>DEV-2026-0024</td>
+          <td>AB-123-CD</td>
+          <td><span class="pill">Accepté</span></td>
+        </tr>
+        <tr>
+          <td>Garage Dupont</td>
+          <td>FAC-2026-0017</td>
+          <td>Renault Master</td>
+          <td><span class="pill">Payée</span></td>
+        </tr>
+      `;
+
+      document.getElementById("statDevis").textContent = "13";
+      document.getElementById("statCA").textContent = formatPrix(prixTTC).replace(",00", "");
+    }
+
+    function genererFacture() {
+      const stored = localStorage.getItem("mlg_last_devis");
+
+      if (!stored) {
+        alert("Aucun devis disponible. Générez d'abord un devis.");
+        return;
+      }
+
+      const devisData = JSON.parse(stored);
+      const referenceFacture = devisData.reference.replace("DEV", "FAC");
+
+      const html = `
+        <div class="doc-header">
+          <div>
+            <div class="doc-title">FACTURE</div>
+            <div class="doc-meta">
+              Réf. : ${referenceFacture}<br>
+              Date : ${getDateFR()}
+            </div>
+          </div>
+          <div class="doc-meta">
+            <strong>Mon Logiciel Garage</strong><br>
+            Document généré automatiquement
+          </div>
+        </div>
+
+        <div class="doc-section">
+          <p><strong>Client :</strong> ${devisData.client}</p>
+          <p><strong>Véhicule :</strong> ${devisData.vehicule}</p>
+        </div>
+
+        <div class="doc-section">
+          <p><strong>Prestation facturée :</strong></p>
+          <p>${devisData.prestation.replace(/\n/g, "<br>")}</p>
+        </div>
+
+        <div class="doc-section">
+          <p><strong>Montant HT :</strong> ${formatPrix(devisData.prixHT)}</p>
+          <p><strong>TVA 20 % :</strong> ${formatPrix(devisData.tva)}</p>
+        </div>
+
+        <div class="doc-total">
+          Total TTC à payer : ${formatPrix(devisData.prixTTC)}
+        </div>
+
+        <div class="small-actions">
+          <button class="btn" onclick="window.print()">Imprimer la facture</button>
+        </div>
+      `;
+
+      const box = document.getElementById("resultatFacture");
+      box.innerHTML = html;
+      box.style.display = "block";
+
+      document.getElementById("documentsRecents").innerHTML = `
+        <tr>
+          <td>${devisData.client}</td>
+          <td>${referenceFacture}</td>
+          <td>${devisData.vehicule}</td>
+          <td><span class="pill">À payer</span></td>
+        </tr>
+        <tr>
+          <td>${devisData.client}</td>
+          <td>${devisData.reference}</td>
+          <td>${devisData.vehicule}</td>
+          <td><span class="pill">Créé</span></td>
+        </tr>
+        <tr>
+          <td>Garage Dupont</td>
+          <td>FAC-2026-0017</td>
+          <td>Renault Master</td>
+          <td><span class="pill">Payée</span></td>
+        </tr>
+      `;
+
+      document.getElementById("statFactures").textContent = "9";
+    }
+
+    function viderDocuments() {
+      document.getElementById("resultatDevis").style.display = "none";
+      document.getElementById("resultatDevis").innerHTML = "";
+      document.getElementById("resultatFacture").style.display = "none";
+      document.getElementById("resultatFacture").innerHTML = "";
+      localStorage.removeItem("mlg_last_devis");
+    }
   </script>
 </body>
 </html>
