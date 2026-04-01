@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Première configuration | Mon Logiciel Garage</title>
+  <meta
+    name="description"
+    content="Première configuration de votre garage sur Mon Logiciel Garage."
+  />
+  <meta name="robots" content="noindex, nofollow" />
+
+  <style>
+    :root {
+      --bg: #081120;
+      --bg-2: #0d1728;
+      --card: rgba(255, 255, 255, 0.06);
+      --card-border: rgba(255, 255, 255, 0.12);
+      --text: #ffffff;
+      --muted: #b8c4d6;
+      --green: #22c55e;
+      --green-dark: #15803d;
+      --blue: #60a5fa;
+      --shadow: 0 20px 60px rgba(0, 0, 0, 0.28);
+      --radius: 24px;
+      --input-bg: rgba(255, 255, 255, 0.07);
+      --input-border: rgba(255, 255, 255, 0.14);
+      --input-focus: rgba(96, 165, 250, 0.7);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(96, 165, 250, 0.18), transparent 28%),
+        radial-gradient(circle at top right, rgba(34, 197, 94, 0.14), transparent 22%),
+        linear-gradient(180deg, var(--bg), var(--bg-2));
+      color: var(--text);
+      min-height: 100%;
+    }
+
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 18px;
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: 760px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 18px;
+      color: #fff;
+      font-weight: 800;
+      letter-spacing: 0.2px;
+      font-size: 1.1rem;
+    }
+
+    .brand-badge {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, var(--green), var(--blue));
+      box-shadow: var(--shadow);
+      font-weight: 900;
+      color: #081120;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      overflow: hidden;
+    }
+
+    .card-top {
+      padding: 30px 28px 18px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(34, 197, 94, 0.12);
+      border: 1px solid rgba(34, 197, 94, 0.22);
+      color: #d9ffe7;
+      font-size: 0.86rem;
+      font-weight: 700;
+      margin-bottom: 14px;
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: clamp(1.8rem, 3vw, 2.45rem);
+      line-height: 1.08;
+      letter-spacing: -0.02em;
+    }
+
+    .subtitle {
+      margin: 0;
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.6;
+      max-width: 620px;
+    }
+
+    .content {
+      padding: 28px;
+    }
+
+    form {
+      display: grid;
+      gap: 18px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .field.full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #f8fbff;
+    }
+
+    input {
+      width: 100%;
+      min-height: 54px;
+      border-radius: 16px;
+      border: 1px solid var(--input-border);
+      background: var(--input-bg);
+      color: #fff;
+      padding: 0 16px;
+      outline: none;
+      font-size: 0.98rem;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+    }
+
+    input::placeholder {
+      color: rgba(184, 196, 214, 0.72);
+    }
+
+    input:focus {
+      border-color: var(--input-focus);
+      box-shadow: 0 0 0 4px rgba(96, 165, 250, 0.14);
+      transform: translateY(-1px);
+    }
+
+    .help {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 14px;
+      margin-top: 8px;
+    }
+
+    .btn {
+      appearance: none;
+      border: none;
+      cursor: pointer;
+      min-height: 56px;
+      padding: 0 22px;
+      border-radius: 16px;
+      font-size: 1rem;
+      font-weight: 800;
+      color: #06111f;
+      background: linear-gradient(135deg, var(--green), #4ade80);
+      box-shadow: 0 14px 34px rgba(34, 197, 94, 0.28);
+      transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 18px 42px rgba(34, 197, 94, 0.34);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .btn:disabled {
+      opacity: 0.7;
+      cursor: wait;
+    }
+
+    .status {
+      min-height: 24px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #d7e8ff;
+    }
+
+    .status.success {
+      color: #a7f3d0;
+    }
+
+    .status.error {
+      color: #fecaca;
+    }
+
+    .footer-note {
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 0.88rem;
+      line-height: 1.6;
+    }
+
+    .loading-screen {
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(circle at top left, rgba(96, 165, 250, 0.18), transparent 28%),
+        radial-gradient(circle at top right, rgba(34, 197, 94, 0.14), transparent 22%),
+        linear-gradient(180deg, var(--bg), var(--bg-2));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 30;
+      transition: opacity 0.25s ease, visibility 0.25s ease;
+    }
+
+    .loading-screen.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .loading-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      color: #fff;
+    }
+
+    .spinner {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      border: 4px solid rgba(255,255,255,0.12);
+      border-top-color: var(--green);
+      animation: spin 0.9s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 720px) {
+      body {
+        padding: 18px 14px;
+      }
+
+      .card-top,
+      .content {
+        padding: 22px 18px;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="loading-screen" id="loadingScreen">
+    <div class="loading-box">
+      <div class="spinner"></div>
+      <div>Vérification de votre accès…</div>
+    </div>
+  </div>
+
+  <main class="wrap">
+    <div class="brand">
+      <div class="brand-badge">MG</div>
+      <div>Mon Logiciel Garage</div>
+    </div>
+
+    <section class="card">
+      <div class="card-top">
+        <div class="eyebrow">Configuration initiale</div>
+        <h1>Configurez votre garage en 1 minute</h1>
+        <p class="subtitle">
+          Renseignez vos informations une seule fois. Elles seront ensuite utilisées
+          automatiquement dans votre logiciel, vos devis et vos factures.
+        </p>
+      </div>
+
+      <div class="content">
+        <form id="setupForm">
+          <div class="grid">
+            <div class="field full">
+              <label for="nomGarage">Nom du garage / raison sociale</label>
+              <input
+                id="nomGarage"
+                name="nomGarage"
+                type="text"
+                placeholder="Ex. Garage Martin Auto"
+                required
+                autocomplete="organization"
+              />
+            </div>
+
+            <div class="field full">
+              <label for="adresse">Adresse</label>
+              <input
+                id="adresse"
+                name="adresse"
+                type="text"
+                placeholder="Ex. 12 rue de l’Atelier"
+                required
+                autocomplete="street-address"
+              />
+            </div>
+
+            <div class="field">
+              <label for="codePostal">Code postal</label>
+              <input
+                id="codePostal"
+                name="codePostal"
+                type="text"
+                placeholder="Ex. 58660"
+                required
+                autocomplete="postal-code"
+              />
+            </div>
+
+            <div class="field">
+              <label for="ville">Ville</label>
+              <input
+                id="ville"
+                name="ville"
+                type="text"
+                placeholder="Ex. Coulanges-lès-Nevers"
+                required
+                autocomplete="address-level2"
+              />
+            </div>
+
+            <div class="field">
+              <label for="telephone">Téléphone</label>
+              <input
+                id="telephone"
+                name="telephone"
+                type="tel"
+                placeholder="Ex. 03 86 00 00 00"
+                required
+                autocomplete="tel"
+              />
+            </div>
+
+            <div class="field">
+              <label for="email">Email</label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                placeholder="Ex. contact@garage.fr"
+                required
+                autocomplete="email"
+              />
+            </div>
+
+            <div class="field">
+              <label for="siret">SIRET</label>
+              <input
+                id="siret"
+                name="siret"
+                type="text"
+                placeholder="Ex. 12345678900012"
+                required
+              />
+            </div>
+
+            <div class="field">
+              <label for="tva">TVA intracommunautaire</label>
+              <input
+                id="tva"
+                name="tva"
+                type="text"
+                placeholder="Ex. FR12123456789"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="actions">
+            <button class="btn" id="submitBtn" type="submit">
+              Enregistrer et accéder au logiciel
+            </button>
+          </div>
+
+          <div class="status" id="status"></div>
+
+          <p class="footer-note">
+            Ces informations sont stockées localement dans votre navigateur pour
+            alimenter automatiquement votre espace de gestion.
+          </p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      const STORAGE_ACCESS_KEY = "premium_access";
+      const STORAGE_GARAGE_KEY = "mlg_garage_infos";
+
+      const loadingScreen = document.getElementById("loadingScreen");
+      const form = document.getElementById("setupForm");
+      const statusEl = document.getElementById("status");
+      const submitBtn = document.getElementById("submitBtn");
+
+      function hideLoader() {
+        loadingScreen.classList.add("hidden");
+      }
+
+      function redirectTo(url) {
+        window.location.replace(url);
+      }
+
+      function hasPremiumAccess() {
+        const access = localStorage.getItem(STORAGE_ACCESS_KEY);
+        return access === "true";
+      }
+
+      function hasGarageInfos() {
+        const raw = localStorage.getItem(STORAGE_GARAGE_KEY);
+        if (!raw) return false;
+
+        try {
+          const data = JSON.parse(raw);
+          return !!(
+            data &&
+            data.nomGarage &&
+            data.adresse &&
+            data.codePostal &&
+            data.ville &&
+            data.telephone &&
+            data.email &&
+            data.siret &&
+            data.tva
+          );
+        } catch (e) {
+          return false;
+        }
+      }
+
+      function sanitize(value) {
+        return String(value || "").trim();
+      }
+
+      function showStatus(message, type) {
+        statusEl.textContent = message;
+        statusEl.className = "status" + (type ? " " + type : "");
+      }
+
+      function initPage() {
+        if (!hasPremiumAccess()) {
+          redirectTo("/");
+          return;
+        }
+
+        if (hasGarageInfos()) {
+          redirectTo("/dashboard.html");
+          return;
+        }
+
+        hideLoader();
+      }
+
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        const garageInfos = {
+          nomGarage: sanitize(document.getElementById("nomGarage").value),
+          adresse: sanitize(document.getElementById("adresse").value),
+          codePostal: sanitize(document.getElementById("codePostal").value),
+          ville: sanitize(document.getElementById("ville").value),
+          telephone: sanitize(document.getElementById("telephone").value),
+          email: sanitize(document.getElementById("email").value),
+          siret: sanitize(document.getElementById("siret").value),
+          tva: sanitize(document.getElementById("tva").value)
+        };
+
+        const missingField = Object.values(garageInfos).some(function (value) {
+          return !value;
+        });
+
+        if (missingField) {
+          showStatus("Merci de remplir tous les champs.", "error");
+          return;
+        }
+
+        submitBtn.disabled = true;
+        showStatus("Enregistrement en cours…");
+
+        try {
+          localStorage.setItem(STORAGE_GARAGE_KEY, JSON.stringify(garageInfos));
+          showStatus("Configuration enregistrée. Redirection vers le logiciel…", "success");
+
+          setTimeout(function () {
+            redirectTo("/dashboard.html");
+          }, 500);
+        } catch (error) {
+          console.error(error);
+          submitBtn.disabled = false;
+          showStatus("Impossible d’enregistrer les informations. Réessayez.", "error");
+        }
+      });
+
+      initPage();
+    })();
+  </script>
+</body>
+</html>
