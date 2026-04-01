@@ -1,6 +1,5 @@
 const Stripe = require("stripe");
 const jwt = require("jsonwebtoken");
-const { getStore } = require("@netlify/blobs");
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -10,48 +9,6 @@ exports.handler = async (event) => {
       return {
         statusCode: 200,
         body: "Webhook OK",
-      };
-    }
-
-    if (!process.env.STRIPE_SECRET_KEY) {
-      return {
-        statusCode: 500,
-        body: "Missing STRIPE_SECRET_KEY",
-      };
-    }
-
-    if (!process.env.STRIPE_WEBHOOK_SECRET) {
-      return {
-        statusCode: 500,
-        body: "Missing STRIPE_WEBHOOK_SECRET",
-      };
-    }
-
-    if (!process.env.JWT_SECRET) {
-      return {
-        statusCode: 500,
-        body: "Missing JWT_SECRET",
-      };
-    }
-
-    if (!process.env.RESEND_API_KEY) {
-      return {
-        statusCode: 500,
-        body: "Missing RESEND_API_KEY",
-      };
-    }
-
-    if (!process.env.MAIL_FROM) {
-      return {
-        statusCode: 500,
-        body: "Missing MAIL_FROM",
-      };
-    }
-
-    if (!process.env.APP_BASE_URL) {
-      return {
-        statusCode: 500,
-        body: "Missing APP_BASE_URL",
       };
     }
 
@@ -87,7 +44,6 @@ exports.handler = async (event) => {
       ).toLowerCase().trim();
 
       if (!email) {
-        console.error("❌ Aucun email trouvé dans la session");
         return {
           statusCode: 400,
           body: "No email in checkout session",
@@ -96,25 +52,16 @@ exports.handler = async (event) => {
 
       console.log("✅ Paiement réussi :", session.id, email);
 
-      const customers = getStore("paid-customers");
-      await customers.set(
-        email,
-        JSON.stringify({
-          paid: true,
+      const token = jwt.sign(
+        {
           email,
-          sessionId: session.id,
-          paidAt: new Date().toISOString(),
-        })
+          paid: true
+        },
+        process.env.JWT_SECRET,
+        { expiresIn: "30d" }
       );
 
-      console.log("💾 Client sauvegardé");
-
-      const token = jwt.sign({ email }, process.env.JWT_SECRET, {
-        expiresIn: "30d",
-      });
-
       const accessUrl = `${process.env.APP_BASE_URL}/acces.html?token=${encodeURIComponent(token)}`;
-      console.log("🔗 Lien généré");
 
       const resendResponse = await fetch("https://api.resend.com/emails", {
         method: "POST",
