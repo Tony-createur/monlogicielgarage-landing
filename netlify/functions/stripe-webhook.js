@@ -12,6 +12,48 @@ exports.handler = async (event) => {
       };
     }
 
+    if (!process.env.STRIPE_SECRET_KEY) {
+      return {
+        statusCode: 500,
+        body: "Missing STRIPE_SECRET_KEY",
+      };
+    }
+
+    if (!process.env.STRIPE_WEBHOOK_SECRET) {
+      return {
+        statusCode: 500,
+        body: "Missing STRIPE_WEBHOOK_SECRET",
+      };
+    }
+
+    if (!process.env.JWT_SECRET) {
+      return {
+        statusCode: 500,
+        body: "Missing JWT_SECRET",
+      };
+    }
+
+    if (!process.env.RESEND_API_KEY) {
+      return {
+        statusCode: 500,
+        body: "Missing RESEND_API_KEY",
+      };
+    }
+
+    if (!process.env.MAIL_FROM) {
+      return {
+        statusCode: 500,
+        body: "Missing MAIL_FROM",
+      };
+    }
+
+    if (!process.env.APP_BASE_URL) {
+      return {
+        statusCode: 500,
+        body: "Missing APP_BASE_URL",
+      };
+    }
+
     const signature =
       event.headers["stripe-signature"] || event.headers["Stripe-Signature"];
 
@@ -55,13 +97,15 @@ exports.handler = async (event) => {
       const token = jwt.sign(
         {
           email,
-          paid: true
+          paid: true,
+          sessionId: session.id,
         },
         process.env.JWT_SECRET,
         { expiresIn: "30d" }
       );
 
-      const accessUrl = `${process.env.APP_BASE_URL}/acces.html?token=${encodeURIComponent(token)}`;
+      const baseUrl = process.env.APP_BASE_URL.replace(/\/$/, "");
+      const accessUrl = `${baseUrl}/acces.html?token=${encodeURIComponent(token)}`;
 
       const resendResponse = await fetch("https://api.resend.com/emails", {
         method: "POST",
@@ -77,14 +121,15 @@ exports.handler = async (event) => {
             <div style="font-family:Arial,sans-serif;line-height:1.6;color:#111">
               <h2>Merci pour votre abonnement</h2>
               <p>Votre paiement a bien été validé.</p>
-              <p>Voici votre lien d’accès :</p>
+              <p>Voici votre lien d’accès sécurisé :</p>
               <p>
                 <a href="${accessUrl}" style="display:inline-block;padding:12px 18px;background:#111;color:#fff;text-decoration:none;border-radius:8px">
                   Accéder au logiciel
                 </a>
               </p>
-              <p>Ou copiez ce lien :</p>
+              <p>Si le bouton ne fonctionne pas, copiez ce lien dans votre navigateur :</p>
               <p>${accessUrl}</p>
+              <p>Ce lien est personnel et valable 30 jours.</p>
             </div>
           `,
         }),
@@ -101,7 +146,7 @@ exports.handler = async (event) => {
         };
       }
 
-      console.log("✅ Email envoyé");
+      console.log("✅ Email envoyé à :", email);
     }
 
     return {
