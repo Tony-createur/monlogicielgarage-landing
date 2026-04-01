@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dashboard | Mon Logiciel Garage</title>
+  <title>Dashboard V2 | Mon Logiciel Garage</title>
   <meta name="robots" content="noindex, nofollow" />
   <style>
     :root {
       --bg: #081120;
       --bg-soft: #0d1a2d;
       --card: rgba(255,255,255,0.06);
-      --card-strong: rgba(255,255,255,0.1);
+      --card-strong: rgba(255,255,255,0.10);
       --border: rgba(255,255,255,0.12);
       --text: #ffffff;
       --muted: #b8c4d6;
@@ -29,31 +29,35 @@
     body {
       margin: 0;
       font-family: Inter, Arial, sans-serif;
-      background:
-        radial-gradient(circle at top left, rgba(96,165,250,0.14), transparent 30%),
-        radial-gradient(circle at top right, rgba(34,197,94,0.14), transparent 30%),
-        linear-gradient(180deg, #07101d 0%, #081120 100%);
       color: var(--text);
       min-height: 100vh;
+      background:
+        radial-gradient(circle at top left, rgba(96,165,250,0.14), transparent 30%),
+        radial-gradient(circle at top right, rgba(34,197,94,0.12), transparent 28%),
+        linear-gradient(180deg, #07101d 0%, #081120 100%);
     }
 
     a { color: inherit; text-decoration: none; }
 
     .app {
       display: grid;
-      grid-template-columns: 320px 1fr;
+      grid-template-columns: 340px 1fr;
       min-height: 100vh;
     }
 
     .sidebar {
       border-right: 1px solid var(--border);
-      background: rgba(5,10,18,0.65);
+      background: rgba(5,10,18,0.68);
       backdrop-filter: blur(16px);
       padding: 24px;
       position: sticky;
       top: 0;
       height: 100vh;
       overflow: auto;
+    }
+
+    .content {
+      padding: 26px;
     }
 
     .brand {
@@ -64,14 +68,13 @@
     }
 
     .brand-badge {
-      width: 46px;
-      height: 46px;
-      border-radius: 14px;
+      width: 48px;
+      height: 48px;
+      border-radius: 15px;
       background: linear-gradient(135deg, var(--blue), var(--green));
       display: grid;
       place-items: center;
       font-weight: 800;
-      color: white;
       box-shadow: var(--shadow);
     }
 
@@ -87,18 +90,29 @@
       font-size: 0.9rem;
     }
 
-    .side-card {
+    .side-card,
+    .panel {
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      padding: 18px;
       box-shadow: var(--shadow);
+    }
+
+    .side-card {
+      padding: 18px;
       margin-bottom: 18px;
     }
 
-    .side-card h3 {
-      margin: 0 0 14px;
-      font-size: 0.98rem;
+    .panel {
+      padding: 22px;
+      margin-bottom: 20px;
+    }
+
+    .side-card h3,
+    .panel h3 {
+      margin-top: 0;
+      margin-bottom: 16px;
+      font-size: 1.03rem;
     }
 
     .small {
@@ -108,7 +122,6 @@
 
     .stats {
       display: grid;
-      grid-template-columns: 1fr;
       gap: 10px;
     }
 
@@ -125,91 +138,18 @@
       margin-top: 6px;
     }
 
-    .history-list {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      max-height: 48vh;
-      overflow: auto;
-      padding-right: 4px;
-    }
-
-    .history-item {
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.04);
-      border-radius: 16px;
-      padding: 12px;
-      cursor: pointer;
-      transition: 0.2s ease;
-    }
-
-    .history-item:hover {
-      transform: translateY(-1px);
-      background: rgba(255,255,255,0.07);
-      border-color: rgba(255,255,255,0.14);
-    }
-
-    .history-top {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      align-items: center;
-      margin-bottom: 6px;
-    }
-
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 7px 10px;
-      border-radius: 999px;
-      font-size: 0.76rem;
-      font-weight: 700;
-      letter-spacing: 0.02em;
-      border: 1px solid transparent;
-      white-space: nowrap;
-    }
-
-    .badge.devis {
-      background: rgba(96,165,250,0.12);
-      color: #cfe3ff;
-      border-color: rgba(96,165,250,0.25);
-    }
-
-    .badge.facture {
-      background: rgba(245,158,11,0.12);
-      color: #ffe7bb;
-      border-color: rgba(245,158,11,0.25);
-    }
-
-    .badge.paye {
-      background: rgba(34,197,94,0.13);
-      color: #d7ffe1;
-      border-color: rgba(34,197,94,0.25);
-    }
-
-    .badge.impaye {
-      background: rgba(239,68,68,0.13);
-      color: #ffd6d6;
-      border-color: rgba(239,68,68,0.25);
-    }
-
-    .content {
-      padding: 26px;
-    }
-
     .topbar {
       display: flex;
       flex-wrap: wrap;
-      align-items: center;
       justify-content: space-between;
       gap: 14px;
+      align-items: center;
       margin-bottom: 22px;
     }
 
     .topbar h2 {
       margin: 0;
-      font-size: 1.5rem;
+      font-size: 1.55rem;
     }
 
     .topbar p {
@@ -217,13 +157,16 @@
       color: var(--muted);
     }
 
-    .actions {
+    .actions,
+    .toolbar,
+    .filter-row,
+    .tabs {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
     }
 
-    button, .btn {
+    button {
       appearance: none;
       border: 0;
       cursor: pointer;
@@ -232,6 +175,10 @@
       font-weight: 700;
       font-size: 0.95rem;
       transition: 0.2s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
     }
 
     .btn-primary {
@@ -247,26 +194,27 @@
     }
 
     .btn-danger {
-      background: rgba(239,68,68,0.15);
-      color: #ffd1d1;
+      background: rgba(239,68,68,0.16);
+      color: #ffd9d9;
       border: 1px solid rgba(239,68,68,0.25);
     }
 
-    button:hover, .btn:hover { transform: translateY(-1px); }
-
-    .panel {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 22px;
-      margin-bottom: 20px;
+    .btn-blue {
+      background: rgba(96,165,250,0.16);
+      color: #dcebff;
+      border: 1px solid rgba(96,165,250,0.25);
     }
 
-    .panel h3 {
-      margin-top: 0;
-      margin-bottom: 18px;
-      font-size: 1.05rem;
+    .btn-orange {
+      background: rgba(245,158,11,0.16);
+      color: #ffe7bc;
+      border: 1px solid rgba(245,158,11,0.25);
+    }
+
+    .tab-btn.active,
+    .filter-btn.active {
+      background: rgba(255,255,255,0.16);
+      border: 1px solid rgba(255,255,255,0.22);
     }
 
     .grid-2, .grid-3, .grid-4 {
@@ -296,13 +244,101 @@
       outline: none;
     }
 
-    input::placeholder, textarea::placeholder {
-      color: #a8b4c6;
-    }
-
     textarea {
       min-height: 92px;
       resize: vertical;
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+      color: #a8b4c6;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      white-space: nowrap;
+      border: 1px solid transparent;
+    }
+
+    .badge.devis {
+      background: rgba(96,165,250,0.12);
+      color: #d8e8ff;
+      border-color: rgba(96,165,250,0.22);
+    }
+
+    .badge.facture {
+      background: rgba(245,158,11,0.12);
+      color: #ffe5b6;
+      border-color: rgba(245,158,11,0.22);
+    }
+
+    .badge.paye {
+      background: rgba(34,197,94,0.12);
+      color: #dcffe5;
+      border-color: rgba(34,197,94,0.22);
+    }
+
+    .badge.impaye {
+      background: rgba(239,68,68,0.12);
+      color: #ffd7d7;
+      border-color: rgba(239,68,68,0.22);
+    }
+
+    .badge.echu {
+      background: rgba(245,158,11,0.14);
+      color: #ffe5b8;
+      border-color: rgba(245,158,11,0.24);
+    }
+
+    .history-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-height: 58vh;
+      overflow: auto;
+      padding-right: 4px;
+    }
+
+    .history-item {
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.04);
+      border-radius: 16px;
+      padding: 12px;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .history-item:hover {
+      transform: translateY(-1px);
+      background: rgba(255,255,255,0.07);
+      border-color: rgba(255,255,255,0.14);
+    }
+
+    .history-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .history-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .empty {
+      color: var(--muted);
+      font-size: 0.92rem;
+      padding: 10px 0;
     }
 
     .line-items {
@@ -320,7 +356,7 @@
 
     .line-grid {
       display: grid;
-      grid-template-columns: 1.2fr 2fr 0.85fr 0.95fr 0.85fr 1fr auto;
+      grid-template-columns: 1.1fr 2fr 0.8fr 0.95fr 0.85fr 1fr auto;
       gap: 10px;
       align-items: end;
     }
@@ -368,13 +404,6 @@
       font-size: 1.22rem;
     }
 
-    .toolbar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 18px;
-    }
-
     .muted-box {
       margin-top: 10px;
       padding: 12px 14px;
@@ -385,15 +414,13 @@
       font-size: 0.9rem;
     }
 
-    .empty {
-      color: var(--muted);
-      font-size: 0.92rem;
-      padding: 12px 0;
-    }
-
     .footer-note {
       color: var(--muted);
       font-size: 0.86rem;
+      margin-top: 12px;
+    }
+
+    .search-box {
       margin-top: 12px;
     }
 
@@ -409,9 +436,11 @@
         border-right: 0;
         border-bottom: 1px solid var(--border);
       }
-      .grid-4 { grid-template-columns: repeat(2, minmax(0,1fr)); }
       .line-grid {
         grid-template-columns: 1fr 1fr;
+      }
+      .grid-4 {
+        grid-template-columns: repeat(2, minmax(0,1fr));
       }
     }
 
@@ -419,9 +448,12 @@
       .content, .sidebar { padding: 18px; }
       .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
       .line-grid { grid-template-columns: 1fr; }
-      .topbar { align-items: flex-start; }
-      .actions, .toolbar { width: 100%; }
-      .actions button, .toolbar button { width: 100%; }
+      .actions button,
+      .toolbar button,
+      .tabs button,
+      .filter-row button {
+        width: 100%;
+      }
     }
 
     @media print {
@@ -431,19 +463,16 @@
       }
 
       .sidebar,
-      .topbar .actions,
+      .actions,
       .toolbar,
+      .filter-row,
+      .tabs,
       .hidden-print {
         display: none !important;
       }
 
-      .app {
-        display: block;
-      }
-
-      .content {
-        padding: 0;
-      }
+      .app { display: block; }
+      .content { padding: 0; }
 
       .panel,
       .line-item,
@@ -483,7 +512,7 @@
         <div class="brand-badge">MG</div>
         <div>
           <h1>Mon Logiciel Garage</h1>
-          <p>Devis, factures et suivi simple</p>
+          <p>Dashboard version 2</p>
         </div>
       </div>
 
@@ -499,15 +528,37 @@
             <strong id="nextInvoiceNumber">FA-0001</strong>
           </div>
           <div class="stat">
-            <div class="small">Documents enregistrés</div>
+            <div class="small">Documents</div>
             <strong id="docCount">0</strong>
+          </div>
+          <div class="stat">
+            <div class="small">CA factures payées</div>
+            <strong id="paidRevenue">0,00 €</strong>
           </div>
         </div>
       </div>
 
       <div class="side-card">
         <h3>Historique</h3>
-        <div id="historyList" class="history-list"></div>
+
+        <div class="tabs hidden-print">
+          <button class="btn-secondary tab-btn active" data-tab="all">Tout</button>
+          <button class="btn-secondary tab-btn" data-tab="devis">Devis</button>
+          <button class="btn-secondary tab-btn" data-tab="facture">Factures</button>
+        </div>
+
+        <div class="filter-row hidden-print" style="margin-top: 10px;">
+          <button class="btn-secondary filter-btn active" data-filter="all">Tous</button>
+          <button class="btn-secondary filter-btn" data-filter="non_paye">Non payés</button>
+          <button class="btn-secondary filter-btn" data-filter="paye">Payés</button>
+          <button class="btn-secondary filter-btn" data-filter="overdue">Échus</button>
+        </div>
+
+        <div class="search-box hidden-print">
+          <input id="historySearch" type="text" placeholder="Rechercher client, numéro, véhicule..." />
+        </div>
+
+        <div id="historyList" class="history-list" style="margin-top: 12px;"></div>
       </div>
     </aside>
 
@@ -515,7 +566,7 @@
       <div class="topbar">
         <div>
           <h2>Dashboard</h2>
-          <p>Gestion des devis et factures avec numérotation automatique, échéance, acompte et solde restant.</p>
+          <p>Devis, factures, échéances et suivi paiement.</p>
         </div>
         <div class="actions">
           <button class="btn-primary" id="newDocBtn">Nouveau document</button>
@@ -528,7 +579,7 @@
         <h3>Document</h3>
         <div class="grid-4">
           <div>
-            <label for="docType">Type de document</label>
+            <label for="docType">Type</label>
             <select id="docType">
               <option value="devis">Devis</option>
               <option value="facture">Facture</option>
@@ -558,7 +609,7 @@
           </div>
           <div>
             <label for="vehicle">Véhicule</label>
-            <input id="vehicle" type="text" placeholder="Ex. Renault Clio IV" />
+            <input id="vehicle" type="text" placeholder="Ex. Peugeot 308" />
           </div>
           <div>
             <label for="immatriculation">Immatriculation</label>
@@ -566,7 +617,7 @@
           </div>
           <div>
             <label for="mileage">Kilométrage</label>
-            <input id="mileage" type="text" placeholder="Ex. 154000 km" />
+            <input id="mileage" type="text" placeholder="Ex. 185000 km" />
           </div>
         </div>
       </section>
@@ -611,7 +662,7 @@
                 <input id="globalDiscount" type="number" min="0" step="0.01" value="0" />
               </div>
               <div>
-                <label for="deposit">Acompte déjà versé (€)</label>
+                <label for="deposit">Acompte versé (€)</label>
                 <input id="deposit" type="number" min="0" step="0.01" value="0" />
               </div>
               <div>
@@ -622,7 +673,7 @@
 
             <div class="muted-box">
               L’acompte est automatiquement déduit du total pour afficher le <strong>solde restant</strong>.  
-              Si le document est marqué <strong>Payé</strong>, le solde restant passe automatiquement à <strong>0 €</strong>.
+              Si le document est en <strong>Payé</strong>, le solde restant passe à <strong>0 €</strong>.
             </div>
           </div>
 
@@ -659,7 +710,9 @@
         </div>
 
         <div class="toolbar">
-          <button class="btn-primary" id="saveBtn">Enregistrer le document</button>
+          <button class="btn-primary" id="saveBtn">Enregistrer</button>
+          <button class="btn-blue" id="markPaidBtn">Marquer comme payé</button>
+          <button class="btn-orange" id="markUnpaidBtn">Marquer non payé</button>
           <button class="btn-secondary" id="duplicateBtn">Dupliquer</button>
           <button class="btn-secondary" id="convertBtn">Transformer en facture</button>
           <button class="btn-secondary" id="printBtn">Imprimer</button>
@@ -667,7 +720,7 @@
         </div>
 
         <div class="footer-note">
-          Sauvegarde locale automatique compatible avec l’existant via <strong>localStorage</strong>.
+          Sauvegarde locale via <strong>localStorage</strong>, compatible avec l’existant.
         </div>
       </section>
     </main>
@@ -686,7 +739,10 @@
 
     const state = {
       documents: [],
-      currentId: null
+      currentId: null,
+      activeTab: "all",
+      activeFilter: "all",
+      search: ""
     };
 
     function todayISO() {
@@ -711,6 +767,15 @@
 
     function uid() {
       return "doc_" + Date.now() + "_" + Math.random().toString(36).slice(2, 10);
+    }
+
+    function escapeHtml(str) {
+      return String(str || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
     }
 
     function getCounter(key) {
@@ -747,7 +812,7 @@
 
       state.documents.forEach(doc => {
         if (!doc.number) return;
-        const m = doc.number.match(/^(DV|FA)-(\d{1,})$/i);
+        const m = doc.number.match(/^(DV|FA)-(\d+)$/i);
         if (!m) return;
         const n = parseInt(m[2], 10);
         if (m[1].toUpperCase() === "DV" && n > maxQuote) maxQuote = n;
@@ -871,10 +936,10 @@
       renderHistory();
     }
 
-    function updateSidebarStats() {
-      document.getElementById("docCount").textContent = String(state.documents.length);
-      document.getElementById("nextQuoteNumber").textContent = nextNumberFor("devis");
-      document.getElementById("nextInvoiceNumber").textContent = nextNumberFor("facture");
+    function isOverdue(doc) {
+      if (doc.paymentStatus === "paye") return false;
+      if (!doc.dueDate) return false;
+      return doc.dueDate < todayISO();
     }
 
     function calculateLine(line) {
@@ -912,16 +977,93 @@
         totalVAT,
         totalTTCBeforeDiscount,
         globalDiscount,
-        netToPay,
         deposit,
+        netToPay,
         remainingBalance
       };
     }
 
-    function lineTypeLabel(type) {
-      if (type === "main_oeuvre") return "Main-d’œuvre";
-      if (type === "piece") return "Pièce";
-      return "Autre";
+    function updateSidebarStats() {
+      document.getElementById("docCount").textContent = String(state.documents.length);
+      document.getElementById("nextQuoteNumber").textContent = nextNumberFor("devis");
+      document.getElementById("nextInvoiceNumber").textContent = nextNumberFor("facture");
+
+      const paidRevenue = state.documents
+        .filter(doc => doc.type === "facture" && doc.paymentStatus === "paye")
+        .reduce((sum, doc) => sum + calculateDoc(doc).netToPay, 0);
+
+      document.getElementById("paidRevenue").textContent = formatCurrency(paidRevenue);
+    }
+
+    function renderLines(lines) {
+      const container = document.getElementById("lineItems");
+      container.innerHTML = "";
+
+      lines.forEach((line, index) => {
+        const calc = calculateLine(line);
+
+        const row = document.createElement("div");
+        row.className = "line-item";
+        row.innerHTML = `
+          <div class="line-grid">
+            <div>
+              <label>Type</label>
+              <select class="line-type">
+                <option value="main_oeuvre" ${line.type === "main_oeuvre" ? "selected" : ""}>Main-d’œuvre</option>
+                <option value="piece" ${line.type === "piece" ? "selected" : ""}>Pièce</option>
+                <option value="autre" ${line.type === "autre" ? "selected" : ""}>Autre</option>
+              </select>
+            </div>
+            <div>
+              <label>Description</label>
+              <input class="line-description" type="text" value="${escapeHtml(line.description)}" placeholder="Description de la ligne" />
+            </div>
+            <div>
+              <label>Qté</label>
+              <input class="line-qty" type="number" min="0" step="0.01" value="${toNumber(line.quantity)}" />
+            </div>
+            <div>
+              <label>PU HT (€)</label>
+              <input class="line-unit-price" type="number" min="0" step="0.01" value="${toNumber(line.unitPrice)}" />
+            </div>
+            <div>
+              <label>TVA (%)</label>
+              <input class="line-tva" type="number" min="0" step="0.01" value="${toNumber(line.tva)}" />
+            </div>
+            <div>
+              <label>Total TTC</label>
+              <div class="line-total">${formatCurrency(calc.ttc)}</div>
+            </div>
+            <div class="hidden-print">
+              <button class="btn-danger remove-line-btn" type="button">Suppr.</button>
+            </div>
+          </div>
+        `;
+
+        row.querySelectorAll("input, select").forEach(el => {
+          el.addEventListener("input", updateSummaryFromForm);
+          el.addEventListener("change", updateSummaryFromForm);
+        });
+
+        row.querySelector(".remove-line-btn").addEventListener("click", () => {
+          const lines = readLinesFromDOM();
+          lines.splice(index, 1);
+          renderLines(lines.length ? lines : [createEmptyLine()]);
+          updateSummaryFromForm();
+        });
+
+        container.appendChild(row);
+      });
+    }
+
+    function readLinesFromDOM() {
+      return Array.from(document.querySelectorAll(".line-item")).map(row => ({
+        type: row.querySelector(".line-type").value,
+        description: row.querySelector(".line-description").value.trim(),
+        quantity: toNumber(row.querySelector(".line-qty").value),
+        unitPrice: toNumber(row.querySelector(".line-unit-price").value),
+        tva: toNumber(row.querySelector(".line-tva").value)
+      }));
     }
 
     function fillForm(doc) {
@@ -948,7 +1090,6 @@
     }
 
     function readFormToDoc(existingDoc = null) {
-      const lines = readLinesFromDOM();
       const doc = existingDoc || createNewDocument(document.getElementById("docType").value);
 
       doc.type = document.getElementById("docType").value;
@@ -967,98 +1108,21 @@
       doc.notes = document.getElementById("notes").value.trim();
       doc.globalDiscount = toNumber(document.getElementById("globalDiscount").value);
       doc.deposit = toNumber(document.getElementById("deposit").value);
-      doc.lines = lines;
+      doc.lines = readLinesFromDOM();
       doc.updatedAt = new Date().toISOString();
 
       if (!doc.createdAt) doc.createdAt = doc.updatedAt;
-
       return doc;
     }
 
-    function renderLines(lines) {
-      const container = document.getElementById("lineItems");
-      container.innerHTML = "";
-
-      lines.forEach((line, index) => {
-        const calc = calculateLine(line);
-
-        const wrapper = document.createElement("div");
-        wrapper.className = "line-item";
-        wrapper.innerHTML = `
-          <div class="line-grid">
-            <div>
-              <label>Type</label>
-              <select class="line-type">
-                <option value="main_oeuvre" ${line.type === "main_oeuvre" ? "selected" : ""}>Main-d’œuvre</option>
-                <option value="piece" ${line.type === "piece" ? "selected" : ""}>Pièce</option>
-                <option value="autre" ${line.type === "autre" ? "selected" : ""}>Autre</option>
-              </select>
-            </div>
-            <div>
-              <label>Description</label>
-              <input class="line-description" type="text" placeholder="Description de la ligne" value="${escapeHtml(line.description || "")}" />
-            </div>
-            <div>
-              <label>Qté</label>
-              <input class="line-qty" type="number" min="0" step="0.01" value="${toNumber(line.quantity)}" />
-            </div>
-            <div>
-              <label>PU HT (€)</label>
-              <input class="line-unit-price" type="number" min="0" step="0.01" value="${toNumber(line.unitPrice)}" />
-            </div>
-            <div>
-              <label>TVA (%)</label>
-              <input class="line-tva" type="number" min="0" step="0.01" value="${toNumber(line.tva)}" />
-            </div>
-            <div>
-              <label>Total TTC</label>
-              <div class="line-total">${formatCurrency(calc.ttc)}</div>
-            </div>
-            <div class="hidden-print">
-              <button class="btn-danger remove-line-btn" type="button">Suppr.</button>
-            </div>
-          </div>
-        `;
-
-        const inputs = wrapper.querySelectorAll("input, select");
-        inputs.forEach(input => {
-          input.addEventListener("input", updateSummaryFromForm);
-          input.addEventListener("change", updateSummaryFromForm);
-        });
-
-        wrapper.querySelector(".remove-line-btn").addEventListener("click", () => {
-          const currentLines = readLinesFromDOM();
-          currentLines.splice(index, 1);
-          renderLines(currentLines.length ? currentLines : [createEmptyLine()]);
-          updateSummaryFromForm();
-        });
-
-        container.appendChild(wrapper);
-      });
-    }
-
-    function readLinesFromDOM() {
-      const items = Array.from(document.querySelectorAll(".line-item"));
-      return items.map(item => ({
-        type: item.querySelector(".line-type").value,
-        description: item.querySelector(".line-description").value.trim(),
-        quantity: toNumber(item.querySelector(".line-qty").value),
-        unitPrice: toNumber(item.querySelector(".line-unit-price").value),
-        tva: toNumber(item.querySelector(".line-tva").value)
-      }));
-    }
-
     function updateSummaryFromForm() {
-      const fakeDoc = readFormToDoc(getCurrentDoc() || createNewDocument(document.getElementById("docType").value));
-      const totals = calculateDoc(fakeDoc);
+      const doc = readFormToDoc(getCurrentDoc() || createNewDocument(document.getElementById("docType").value));
+      const totals = calculateDoc(doc);
 
       document.querySelectorAll(".line-item").forEach((row, idx) => {
-        const lines = readLinesFromDOM();
-        const line = lines[idx];
+        const line = readLinesFromDOM()[idx];
         if (!line) return;
-        const calc = calculateLine(line);
-        const totalCell = row.querySelector(".line-total");
-        if (totalCell) totalCell.textContent = formatCurrency(calc.ttc);
+        row.querySelector(".line-total").textContent = formatCurrency(calculateLine(line).ttc);
       });
 
       document.getElementById("subtotalHT").textContent = formatCurrency(totals.subtotalHT);
@@ -1073,70 +1137,12 @@
       autoSaveCurrentDocumentSilently();
     }
 
-    function renderHistory() {
-      const list = document.getElementById("historyList");
-      if (!state.documents.length) {
-        list.innerHTML = `<div class="empty">Aucun document enregistré.</div>`;
-        return;
-      }
-
-      const docs = [...state.documents].sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
-
-      list.innerHTML = "";
-      docs.forEach(doc => {
-        const totals = calculateDoc(doc);
-        const item = document.createElement("div");
-        item.className = "history-item";
-        if (doc.id === state.currentId) {
-          item.style.borderColor = "rgba(96,165,250,0.35)";
-          item.style.background = "rgba(96,165,250,0.08)";
-        }
-
-        item.innerHTML = `
-          <div class="history-top">
-            <span class="badge ${doc.type === "facture" ? "facture" : "devis"}">${doc.type === "facture" ? "Facture" : "Devis"}</span>
-            <span class="badge ${doc.paymentStatus === "paye" ? "paye" : "impaye"}">${doc.paymentStatus === "paye" ? "Payé" : "Non payé"}</span>
-          </div>
-          <div style="font-weight: 800; margin-bottom: 4px;">${escapeHtml(doc.number || "")}</div>
-          <div class="small" style="margin-bottom: 6px;">${escapeHtml(doc.clientName || "Sans client")} ${doc.vehicle ? "• " + escapeHtml(doc.vehicle) : ""}</div>
-          <div class="small">Date : ${escapeHtml(doc.date || "-")} ${doc.dueDate ? "• Échéance : " + escapeHtml(doc.dueDate) : ""}</div>
-          <div style="margin-top: 8px; font-weight: 700;">${formatCurrency(totals.remainingBalance)} restant</div>
-        `;
-
-        item.addEventListener("click", () => {
-          setCurrentDoc(doc);
-        });
-
-        list.appendChild(item);
-      });
-    }
-
     function saveCurrentDocument(showAlert = true) {
       const current = getCurrentDoc();
       let doc = readFormToDoc(current);
 
-      if (!doc.number || !doc.number.trim()) {
-        doc.number = incrementCounterFor(doc.type);
-      } else if (!current) {
-        const existingNumber = state.documents.some(d => d.number === doc.number);
-        if (!existingNumber) {
-          const prefix = doc.type === "facture" ? "FA-" : "DV-";
-          if (doc.number.startsWith(prefix)) {
-            const match = doc.number.match(/(\d+)$/);
-            if (match) {
-              const n = parseInt(match[1], 10);
-              if (doc.type === "facture" && n > getCounter(STORAGE_KEYS.invoiceCounter)) {
-                setCounter(STORAGE_KEYS.invoiceCounter, n);
-              }
-              if (doc.type === "devis" && n > getCounter(STORAGE_KEYS.quoteCounter)) {
-                setCounter(STORAGE_KEYS.quoteCounter, n);
-              }
-            }
-          }
-        }
-      }
-
       const existingIndex = state.documents.findIndex(d => d.id === doc.id);
+
       if (existingIndex >= 0) {
         state.documents[existingIndex] = doc;
       } else {
@@ -1149,40 +1155,17 @@
       persistDocuments();
       setCurrentDoc(doc);
 
-      if (showAlert) {
-        alert("Document enregistré avec succès.");
-      }
+      if (showAlert) alert("Document enregistré avec succès.");
     }
 
     function autoSaveCurrentDocumentSilently() {
       const current = getCurrentDoc();
       if (!current) return;
-
       const doc = readFormToDoc(current);
       const index = state.documents.findIndex(d => d.id === doc.id);
       if (index >= 0) {
         state.documents[index] = doc;
         persistDocuments();
-      }
-    }
-
-    function deleteCurrentDocument() {
-      const current = getCurrentDoc();
-      if (!current) return;
-
-      const ok = confirm("Supprimer ce document ?");
-      if (!ok) return;
-
-      state.documents = state.documents.filter(d => d.id !== current.id);
-      persistDocuments();
-
-      if (state.documents.length) {
-        setCurrentDoc(state.documents[0]);
-      } else {
-        const fresh = createNewDocument("devis");
-        state.documents = [fresh];
-        persistDocuments();
-        setCurrentDoc(fresh);
       }
     }
 
@@ -1192,7 +1175,6 @@
 
       const clone = JSON.parse(JSON.stringify(current));
       clone.id = uid();
-      clone.type = current.type;
       clone.number = nextNumberFor(clone.type);
       clone.date = todayISO();
       clone.dueDate = addDaysISO(clone.date, 30);
@@ -1229,27 +1211,57 @@
       setCurrentDoc(invoice);
     }
 
+    function deleteCurrentDocument() {
+      const current = getCurrentDoc();
+      if (!current) return;
+      if (!confirm("Supprimer ce document ?")) return;
+
+      state.documents = state.documents.filter(d => d.id !== current.id);
+      persistDocuments();
+
+      if (state.documents.length) {
+        setCurrentDoc(state.documents[0]);
+      } else {
+        const fresh = createNewDocument("devis");
+        state.documents = [fresh];
+        persistDocuments();
+        setCurrentDoc(fresh);
+      }
+    }
+
+    function markCurrentAsPaid() {
+      const current = getCurrentDoc();
+      if (!current) return;
+
+      document.getElementById("paymentStatus").value = "paye";
+      updateSummaryFromForm();
+      saveCurrentDocument(false);
+    }
+
+    function markCurrentAsUnpaid() {
+      const current = getCurrentDoc();
+      if (!current) return;
+
+      document.getElementById("paymentStatus").value = "non_paye";
+      updateSummaryFromForm();
+      saveCurrentDocument(false);
+    }
+
     function updateConvertButton() {
-      const currentType = document.getElementById("docType").value;
+      const type = document.getElementById("docType").value;
       const btn = document.getElementById("convertBtn");
-      btn.disabled = currentType === "facture";
-      btn.style.opacity = currentType === "facture" ? "0.55" : "1";
-      btn.style.cursor = currentType === "facture" ? "not-allowed" : "pointer";
+      btn.disabled = type === "facture";
+      btn.style.opacity = type === "facture" ? "0.55" : "1";
+      btn.style.cursor = type === "facture" ? "not-allowed" : "pointer";
     }
 
     function handleDocTypeChange() {
       const current = getCurrentDoc();
       const newType = document.getElementById("docType").value;
-
       if (!current) return;
 
       if (current.type !== newType) {
-        const currentNumber = document.getElementById("docNumber").value;
-        const hasSavedNumber = !!currentNumber;
-
-        if (!hasSavedNumber || currentNumber === current.number) {
-          document.getElementById("docNumber").value = nextNumberFor(newType);
-        }
+        document.getElementById("docNumber").value = nextNumberFor(newType);
       }
 
       updateConvertButton();
@@ -1264,13 +1276,111 @@
       setCurrentDoc(doc);
     }
 
-    function escapeHtml(str) {
-      return String(str)
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
+    function getFilteredDocuments() {
+      let docs = [...state.documents].sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+
+      if (state.activeTab !== "all") {
+        docs = docs.filter(doc => doc.type === state.activeTab);
+      }
+
+      if (state.activeFilter === "paye") {
+        docs = docs.filter(doc => doc.paymentStatus === "paye");
+      } else if (state.activeFilter === "non_paye") {
+        docs = docs.filter(doc => doc.paymentStatus !== "paye");
+      } else if (state.activeFilter === "overdue") {
+        docs = docs.filter(doc => isOverdue(doc));
+      }
+
+      const q = state.search.trim().toLowerCase();
+      if (q) {
+        docs = docs.filter(doc => {
+          const haystack = [
+            doc.number,
+            doc.clientName,
+            doc.vehicle,
+            doc.immatriculation,
+            doc.clientPhone,
+            doc.clientEmail
+          ].join(" ").toLowerCase();
+          return haystack.includes(q);
+        });
+      }
+
+      return docs;
+    }
+
+    function renderHistory() {
+      const list = document.getElementById("historyList");
+      const docs = getFilteredDocuments();
+
+      if (!docs.length) {
+        list.innerHTML = `<div class="empty">Aucun document trouvé.</div>`;
+        return;
+      }
+
+      list.innerHTML = "";
+
+      docs.forEach(doc => {
+        const totals = calculateDoc(doc);
+        const overdue = isOverdue(doc);
+
+        const item = document.createElement("div");
+        item.className = "history-item";
+        if (doc.id === state.currentId) {
+          item.style.borderColor = "rgba(96,165,250,0.35)";
+          item.style.background = "rgba(96,165,250,0.08)";
+        }
+
+        item.innerHTML = `
+          <div class="history-top">
+            <div class="history-meta">
+              <span class="badge ${doc.type === "facture" ? "facture" : "devis"}">${doc.type === "facture" ? "Facture" : "Devis"}</span>
+              <span class="badge ${doc.paymentStatus === "paye" ? "paye" : "impaye"}">${doc.paymentStatus === "paye" ? "Payé" : "Non payé"}</span>
+              ${overdue ? `<span class="badge echu">Échéance dépassée</span>` : ``}
+            </div>
+          </div>
+          <div style="font-weight: 800; margin-bottom: 4px;">${escapeHtml(doc.number)}</div>
+          <div class="small" style="margin-bottom: 6px;">
+            ${escapeHtml(doc.clientName || "Sans client")}
+            ${doc.vehicle ? " • " + escapeHtml(doc.vehicle) : ""}
+          </div>
+          <div class="small">
+            Date : ${escapeHtml(doc.date || "-")}
+            ${doc.dueDate ? " • Échéance : " + escapeHtml(doc.dueDate) : ""}
+          </div>
+          <div style="margin-top: 8px; font-weight: 700;">
+            ${formatCurrency(totals.remainingBalance)} restant
+          </div>
+        `;
+
+        item.addEventListener("click", () => setCurrentDoc(doc));
+        list.appendChild(item);
+      });
+    }
+
+    function initFilters() {
+      document.querySelectorAll(".tab-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          state.activeTab = btn.dataset.tab;
+          document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+          btn.classList.add("active");
+          renderHistory();
+        });
+      });
+
+      document.querySelectorAll(".filter-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          state.activeFilter = btn.dataset.filter;
+          document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+          btn.classList.add("active");
+          renderHistory();
+        });
+      });
+
+      document.getElementById("historySearch").addEventListener("input", (e) => {
+        state.search = e.target.value || "";
+        renderHistory();
+      });
     }
 
     function initBindings() {
@@ -1289,6 +1399,8 @@
       document.getElementById("deleteBtn").addEventListener("click", deleteCurrentDocument);
       document.getElementById("duplicateBtn").addEventListener("click", duplicateCurrentDocument);
       document.getElementById("convertBtn").addEventListener("click", convertCurrentToInvoice);
+      document.getElementById("markPaidBtn").addEventListener("click", markCurrentAsPaid);
+      document.getElementById("markUnpaidBtn").addEventListener("click", markCurrentAsUnpaid);
 
       [
         "docType", "docDate", "dueDate", "paymentStatus",
@@ -1302,7 +1414,6 @@
       });
 
       document.getElementById("docType").addEventListener("change", handleDocTypeChange);
-      document.getElementById("paymentStatus").addEventListener("change", updateSummaryFromForm);
     }
 
     function init() {
@@ -1310,6 +1421,7 @@
       ensureCountersFromDocs();
       updateSidebarStats();
       initBindings();
+      initFilters();
 
       let currentId = localStorage.getItem(STORAGE_KEYS.currentDocId);
       let current = state.documents.find(d => d.id === currentId);
