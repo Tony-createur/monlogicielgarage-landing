@@ -7,14 +7,23 @@
 
   <style>
     body {
-      font-family: Arial;
+      font-family: Arial, Helvetica, sans-serif;
       background: #0b1220;
       color: white;
       padding: 20px;
+      margin: 0;
     }
 
     h1 {
       margin-bottom: 10px;
+    }
+
+    .top-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
     }
 
     .box {
@@ -29,10 +38,12 @@
       margin: 5px;
       border-radius: 5px;
       border: none;
+      font-size: 15px;
     }
 
     input {
       width: 200px;
+      max-width: 100%;
     }
 
     button {
@@ -40,6 +51,20 @@
       color: black;
       cursor: pointer;
       font-weight: bold;
+    }
+
+    button:hover {
+      opacity: 0.95;
+    }
+
+    .btn-logout {
+      background: #ef4444;
+      color: white;
+    }
+
+    .btn-reset {
+      background: #f59e0b;
+      color: white;
     }
 
     table {
@@ -51,88 +76,137 @@
     td, th {
       border-bottom: 1px solid #333;
       padding: 8px;
+      text-align: left;
+    }
+
+    @media (max-width: 640px) {
+      .top-actions {
+        justify-content: stretch;
+      }
+
+      .top-actions button {
+        width: 100%;
+      }
+
+      input {
+        width: 100%;
+        display: block;
+        margin-left: 0;
+        margin-right: 0;
+      }
+
+      .add-row button {
+        width: 100%;
+        margin-left: 0;
+        margin-right: 0;
+      }
     }
   </style>
 </head>
 
 <body style="display:none;">
 
-<h1>🚗 Mon Logiciel Garage</h1>
-<p>Bienvenue dans votre espace</p>
+  <div class="top-actions">
+    <button class="btn-reset" onclick="resetAll()">Reset complet (test)</button>
+    <button class="btn-logout" onclick="logout()">Déconnexion</button>
+  </div>
 
-<div class="box">
-  <h2>Ajouter un client</h2>
+  <h1>🚗 Mon Logiciel Garage</h1>
+  <p>Bienvenue dans votre espace</p>
 
-  <input id="nom" placeholder="Nom">
-  <input id="tel" placeholder="Téléphone">
-  <button onclick="ajouterClient()">Ajouter</button>
-</div>
+  <div class="box">
+    <h2>Ajouter un client</h2>
 
-<div class="box">
-  <h2>Clients</h2>
-  <table id="tableClients">
-    <tr>
-      <th>Nom</th>
-      <th>Téléphone</th>
-    </tr>
-  </table>
-</div>
+    <div class="add-row">
+      <input id="nom" placeholder="Nom">
+      <input id="tel" placeholder="Téléphone">
+      <button onclick="ajouterClient()">Ajouter</button>
+    </div>
+  </div>
 
-<script>
-/* =========================
-   🔒 SÉCURITÉ SIMPLE
-========================= */
-
-const paid = localStorage.getItem("paid");
-
-if (paid !== "true") {
-  window.location.href = "/index.html";
-} else {
-  document.body.style.display = "block";
-}
-
-/* =========================
-   🚗 LOGICIEL CLIENTS
-========================= */
-
-let clients = JSON.parse(localStorage.getItem("clients")) || [];
-
-function afficherClients() {
-  let table = document.getElementById("tableClients");
-  table.innerHTML = `
-    <tr>
-      <th>Nom</th>
-      <th>Téléphone</th>
-    </tr>
-  `;
-
-  clients.forEach(c => {
-    table.innerHTML += `
+  <div class="box">
+    <h2>Clients</h2>
+    <table id="tableClients">
       <tr>
-        <td>${c.nom}</td>
-        <td>${c.tel}</td>
+        <th>Nom</th>
+        <th>Téléphone</th>
       </tr>
-    `;
-  });
-}
+    </table>
+  </div>
 
-function ajouterClient() {
-  let nom = document.getElementById("nom").value;
-  let tel = document.getElementById("tel").value;
+  <script>
+    /* =========================
+       🔒 SÉCURITÉ SIMPLE
+    ========================= */
 
-  if (!nom) return alert("Nom requis");
+    const paid = localStorage.getItem("paid");
 
-  clients.push({ nom, tel });
-  localStorage.setItem("clients", JSON.stringify(clients));
+    if (paid !== "true") {
+      window.location.href = "/index.html";
+    } else {
+      document.body.style.display = "block";
+    }
 
-  afficherClients();
+    /* =========================
+       🔐 ACTIONS SESSION
+    ========================= */
 
-  document.getElementById("nom").value = "";
-  document.getElementById("tel").value = "";
-}
+    function logout() {
+      localStorage.removeItem("paid");
+      window.location.href = "/index.html";
+    }
 
-afficherClients();
-</script>
+    function resetAll() {
+      localStorage.clear();
+      alert("Toutes les données locales ont été supprimées.");
+      window.location.href = "/index.html";
+    }
+
+    /* =========================
+       🚗 LOGICIEL CLIENTS
+    ========================= */
+
+    let clients = JSON.parse(localStorage.getItem("clients")) || [];
+
+    function afficherClients() {
+      let table = document.getElementById("tableClients");
+      table.innerHTML = `
+        <tr>
+          <th>Nom</th>
+          <th>Téléphone</th>
+        </tr>
+      `;
+
+      clients.forEach(c => {
+        table.innerHTML += `
+          <tr>
+            <td>${c.nom}</td>
+            <td>${c.tel}</td>
+          </tr>
+        `;
+      });
+    }
+
+    function ajouterClient() {
+      let nom = document.getElementById("nom").value.trim();
+      let tel = document.getElementById("tel").value.trim();
+
+      if (!nom) {
+        alert("Nom requis");
+        return;
+      }
+
+      clients.push({ nom, tel });
+      localStorage.setItem("clients", JSON.stringify(clients));
+
+      afficherClients();
+
+      document.getElementById("nom").value = "";
+      document.getElementById("tel").value = "";
+    }
+
+    afficherClients();
+  </script>
 
 </body>
 </html>
