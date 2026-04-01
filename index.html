@@ -113,8 +113,7 @@
       font-size: 15px;
     }
 
-    .nav a:hover,
-    .footer-links a:hover {
+    .nav a:hover {
       color: white;
     }
 
@@ -347,19 +346,13 @@
       font-size: 18px;
     }
 
-    .features-grid,
-    .steps,
-    .pricing-grid,
-    .testimonial-wrap {
+    .features-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 18px;
     }
 
-    .feature-card,
-    .step,
-    .testimonial,
-    .price-card {
+    .feature-card {
       background: var(--card);
       border: 1px solid var(--card-border);
       border-radius: var(--radius);
@@ -379,36 +372,28 @@
       margin-bottom: 16px;
     }
 
-    .feature-card h3,
-    .step h3,
-    .price-card h3 {
+    .feature-card h3 {
       margin: 0 0 10px;
       font-size: 22px;
     }
 
-    .feature-card p,
-    .step p,
-    .faq-item p {
+    .feature-card p {
       margin: 0;
       color: var(--muted);
       font-size: 15px;
     }
 
-    .problem-solution,
-    .contact-grid {
+    .problem-solution {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 18px;
     }
 
-    .list-card,
-    .contact-card,
-    .legal-card {
+    .list-card {
       border-radius: 22px;
       padding: 26px;
       border: 1px solid rgba(255,255,255,0.08);
       background: rgba(255,255,255,0.04);
-      box-shadow: var(--shadow);
     }
 
     .list-card.bad {
@@ -421,23 +406,32 @@
       border-color: rgba(34,197,94,0.22);
     }
 
-    .list-card h3,
-    .contact-card h3,
-    .legal-card h3 {
+    .list-card h3 {
       margin-top: 0;
       font-size: 24px;
     }
 
-    .list-card ul,
-    .legal-card ul {
+    .list-card ul {
       padding-left: 18px;
       margin: 0;
       color: #e7edf7;
     }
 
-    .list-card li,
-    .legal-card li {
+    .list-card li {
       margin: 10px 0;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .step {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 22px;
+      padding: 22px;
     }
 
     .step-number {
@@ -450,6 +444,22 @@
       color: #062411;
       font-weight: 900;
       margin-bottom: 14px;
+    }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .price-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 26px;
+      padding: 26px;
+      position: relative;
+      overflow: hidden;
     }
 
     .price-card.featured {
@@ -468,6 +478,11 @@
       font-size: 12px;
       padding: 8px 10px;
       border-radius: 999px;
+    }
+
+    .price-card h3 {
+      margin: 0 0 8px;
+      font-size: 24px;
     }
 
     .price-card p {
@@ -504,6 +519,19 @@
       border-bottom: 0;
     }
 
+    .testimonial-wrap {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .testimonial {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 22px;
+      padding: 24px;
+    }
+
     .stars {
       color: #fbbf24;
       letter-spacing: 1px;
@@ -517,6 +545,93 @@
 
     .testimonial strong {
       display: block;
+    }
+
+    .contact-section {
+      padding-top: 54px;
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 0.95fr 1.05fr;
+      gap: 18px;
+    }
+
+    .contact-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 22px;
+      padding: 26px;
+      box-shadow: var(--shadow);
+    }
+
+    .contact-card h3 {
+      margin-top: 0;
+      font-size: 24px;
+    }
+
+    .contact-card p {
+      color: #e7edf7;
+    }
+
+    .contact-list {
+      list-style: none;
+      padding: 0;
+      margin: 18px 0 0;
+    }
+
+    .contact-list li {
+      margin: 12px 0;
+      color: #dbe7f5;
+    }
+
+    .contact-form {
+      display: grid;
+      gap: 14px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .field label {
+      display: block;
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 7px;
+      color: #e6eef9;
+    }
+
+    .field input,
+    .field select,
+    .field textarea {
+      width: 100%;
+      padding: 14px 16px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.05);
+      color: white;
+      font-size: 15px;
+      outline: none;
+    }
+
+    .field textarea {
+      min-height: 140px;
+      resize: vertical;
+    }
+
+    .field input::placeholder,
+    .field textarea::placeholder {
+      color: #aebed4;
+    }
+
+    .form-note {
+      margin-top: 4px;
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.6;
     }
 
     .faq {
@@ -534,6 +649,11 @@
     .faq-item h3 {
       margin: 0 0 8px;
       font-size: 18px;
+    }
+
+    .faq-item p {
+      margin: 0;
+      color: var(--muted);
     }
 
     .cta-final {
@@ -564,6 +684,40 @@
       font-size: 18px;
     }
 
+    .legal-section {
+      padding: 44px 0;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.02);
+    }
+
+    .legal-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 22px;
+      padding: 28px;
+      box-shadow: var(--shadow);
+    }
+
+    .legal-card h2 {
+      margin-top: 0;
+      font-size: clamp(28px, 4vw, 40px);
+    }
+
+    .legal-card h3 {
+      margin: 24px 0 8px;
+      font-size: 20px;
+    }
+
+    .legal-card p,
+    .legal-card li {
+      color: #e5edf8;
+    }
+
+    .legal-card ul {
+      margin: 10px 0 0;
+      padding-left: 20px;
+    }
+
     .rgpd-note {
       margin-top: 18px;
       font-size: 13px;
@@ -571,78 +725,6 @@
       max-width: 760px;
       margin-left: auto;
       margin-right: auto;
-    }
-
-    .contact-section,
-    .legal-section {
-      padding: 44px 0;
-      border-top: 1px solid rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.02);
-    }
-
-    .contact-card p,
-    .legal-card p,
-    .legal-card li {
-      color: #e5edf8;
-    }
-
-    .contact-info-line {
-      margin: 12px 0;
-      color: #dfe8f5;
-    }
-
-    .contact-form {
-      display: grid;
-      gap: 14px;
-    }
-
-    .contact-form label {
-      font-size: 14px;
-      font-weight: 700;
-      color: #eaf0f8;
-      display: block;
-      margin-bottom: 6px;
-    }
-
-    .contact-form input,
-    .contact-form select,
-    .contact-form textarea {
-      width: 100%;
-      border: 1px solid rgba(255,255,255,0.12);
-      background: rgba(255,255,255,0.05);
-      color: white;
-      border-radius: 14px;
-      padding: 14px 16px;
-      font-size: 15px;
-      outline: none;
-    }
-
-    .contact-form textarea {
-      min-height: 130px;
-      resize: vertical;
-    }
-
-    .contact-form input::placeholder,
-    .contact-form textarea::placeholder {
-      color: #b8c4d6;
-    }
-
-    .form-note {
-      font-size: 13px;
-      color: var(--muted);
-      line-height: 1.6;
-      margin-top: 6px;
-    }
-
-    .success-box {
-      margin-top: 16px;
-      padding: 14px 16px;
-      border-radius: 14px;
-      background: rgba(34,197,94,0.12);
-      border: 1px solid rgba(34,197,94,0.24);
-      color: #d3fae0;
-      font-size: 14px;
-      display: none;
     }
 
     footer {
@@ -664,6 +746,10 @@
       display: flex;
       gap: 14px;
       flex-wrap: wrap;
+    }
+
+    .footer-links a:hover {
+      color: white;
     }
 
     .cookie-banner {
@@ -788,6 +874,10 @@
       }
 
       .row {
+        grid-template-columns: 1fr;
+      }
+
+      .form-grid {
         grid-template-columns: 1fr;
       }
 
@@ -959,37 +1049,50 @@
           <div class="feature-card">
             <div class="feature-icon">🧾</div>
             <h3>Devis ultra rapides</h3>
-            <p>Créez un devis clair en quelques minutes avec lignes, TVA, pièces, main d’œuvre et total automatique.</p>
+            <p>
+              Créez un devis clair en quelques minutes avec lignes, TVA, pièces,
+              main d’œuvre et total automatique.
+            </p>
           </div>
 
           <div class="feature-card">
             <div class="feature-icon">💶</div>
             <h3>Factures automatiques</h3>
-            <p>Transformez votre devis ou votre ordre de réparation en facture sans tout refaire.</p>
+            <p>
+              Transformez votre devis ou votre ordre de réparation en facture sans tout refaire.
+            </p>
           </div>
 
           <div class="feature-card">
             <div class="feature-icon">🚗</div>
             <h3>Clients & véhicules</h3>
-            <p>Gardez l’historique complet des clients, des véhicules et des interventions.</p>
+            <p>
+              Gardez l’historique complet des clients, des véhicules et des interventions.
+            </p>
           </div>
 
           <div class="feature-card">
             <div class="feature-icon">🛠️</div>
             <h3>Ordres de réparation</h3>
-            <p>Gérez l’entrée atelier, les travaux à faire, les travaux effectués et la validation.</p>
+            <p>
+              Gérez l’entrée atelier, les travaux à faire, les travaux effectués et la validation.
+            </p>
           </div>
 
           <div class="feature-card">
             <div class="feature-icon">📄</div>
             <h3>PDF propres et pros</h3>
-            <p>Sortez des documents lisibles, sérieux et imprimables pour rassurer immédiatement vos clients.</p>
+            <p>
+              Sortez des documents lisibles, sérieux et imprimables pour rassurer immédiatement vos clients.
+            </p>
           </div>
 
           <div class="feature-card">
             <div class="feature-icon">☁️</div>
             <h3>Accessible partout</h3>
-            <p>Ouvrez votre logiciel depuis l’atelier, le bureau ou la maison, sans installation compliquée.</p>
+            <p>
+              Ouvrez votre logiciel depuis l’atelier, le bureau ou la maison, sans installation compliquée.
+            </p>
           </div>
         </div>
       </div>
@@ -1064,7 +1167,9 @@
       <div class="container">
         <div class="section-head">
           <h2>Des tarifs simples, sans usine à gaz</h2>
-          <p>Choisissez l’offre adaptée à votre garage. Commencez gratuitement, sans engagement compliqué.</p>
+          <p>
+            Choisissez l’offre adaptée à votre garage. Commencez gratuitement, sans engagement compliqué.
+          </p>
         </div>
 
         <div class="pricing-grid">
@@ -1118,27 +1223,35 @@
       <div class="container">
         <div class="section-head">
           <h2>Ce que recherchent les garages aujourd’hui</h2>
-          <p>Ils veulent quelque chose de simple, rapide, et compréhensible sans perdre une heure en configuration.</p>
+          <p>
+            Ils veulent quelque chose de simple, rapide, et compréhensible sans perdre une heure en configuration.
+          </p>
         </div>
 
         <div class="testimonial-wrap">
           <div class="testimonial">
             <div class="stars">★★★★★</div>
-            <p>“Enfin un outil clair. Pas besoin d’être informaticien pour faire un devis propre.”</p>
+            <p>
+              “Enfin un outil clair. Pas besoin d’être informaticien pour faire un devis propre.”
+            </p>
             <strong>Garage indépendant</strong>
             <span style="color:var(--muted);">Atelier auto</span>
           </div>
 
           <div class="testimonial">
             <div class="stars">★★★★★</div>
-            <p>“Le plus important pour moi, c’est le gain de temps entre le devis et la facture.”</p>
+            <p>
+              “Le plus important pour moi, c’est le gain de temps entre le devis et la facture.”
+            </p>
             <strong>Responsable atelier</strong>
             <span style="color:var(--muted);">Garage multimarque</span>
           </div>
 
           <div class="testimonial">
             <div class="stars">★★★★★</div>
-            <p>“Simple, propre, lisible. C’est exactement ce qu’il faut pour un petit garage.”</p>
+            <p>
+              “Simple, propre, lisible. C’est exactement ce qu’il faut pour un petit garage.”
+            </p>
             <strong>Garagiste</strong>
             <span style="color:var(--muted);">Mécanique générale</span>
           </div>
@@ -1151,21 +1264,30 @@
         <div class="section-head">
           <h2>Demander une démo ou un essai</h2>
           <p>
-            Laissez vos coordonnées. Vous recevrez votre demande directement via Netlify Forms
-            après le déploiement du site.
+            Laissez vos coordonnées et décrivez rapidement votre besoin. Votre demande sera
+            enregistrée via Netlify Forms puis redirigée vers la page merci.
           </p>
         </div>
 
         <div class="contact-grid">
           <div class="contact-card">
             <h3>Contact commercial</h3>
-            <p class="contact-info-line"><strong>Email :</strong> <a href="mailto:support@monlogicielgarage.fr">support@monlogicielgarage.fr</a></p>
-            <p class="contact-info-line"><strong>Société :</strong> La Boutique BYMEO</p>
-            <p class="contact-info-line"><strong>Public visé :</strong> garages et professionnels de l’automobile</p>
-            <p class="contact-info-line"><strong>Offres :</strong> Starter, Pro, Elite</p>
+            <p>
+              Mon Logiciel Garage s’adresse aux garages indépendants et aux professionnels de l’automobile
+              qui veulent un outil simple, clair et rentable au quotidien.
+            </p>
+
+            <ul class="contact-list">
+              <li><strong>Email :</strong> <a href="mailto:support@monlogicielgarage.fr">support@monlogicielgarage.fr</a></li>
+              <li><strong>Société :</strong> La Boutique BYMEO</li>
+              <li><strong>Responsable :</strong> Anthony Meoli</li>
+              <li><strong>Positionnement :</strong> SaaS simple, pro, rapide à prendre en main</li>
+              <li><strong>Cible :</strong> garages, ateliers, structures légères à intermédiaires</li>
+            </ul>
+
             <p class="form-note">
-              Astuce : tu peux ensuite connecter les notifications formulaire dans Netlify pour recevoir
-              un email à chaque demande.
+              Après déploiement Netlify, tu pourras consulter les demandes dans l’onglet Forms
+              et activer les notifications email.
             </p>
           </div>
 
@@ -1175,36 +1297,42 @@
             <form
               name="contact-garage"
               method="POST"
+              action="/merci.html"
               data-netlify="true"
               netlify-honeypot="bot-field"
               class="contact-form"
             >
               <input type="hidden" name="form-name" value="contact-garage" />
+
               <p style="display:none;">
                 <label>Ne pas remplir ce champ : <input name="bot-field" /></label>
               </p>
 
-              <div>
-                <label for="nom">Nom</label>
-                <input id="nom" name="nom" type="text" placeholder="Votre nom" required />
+              <div class="form-grid">
+                <div class="field">
+                  <label for="nom">Nom</label>
+                  <input id="nom" name="nom" type="text" placeholder="Votre nom" required />
+                </div>
+
+                <div class="field">
+                  <label for="garage">Nom du garage</label>
+                  <input id="garage" name="garage" type="text" placeholder="Nom de votre garage" required />
+                </div>
               </div>
 
-              <div>
-                <label for="garage">Nom du garage</label>
-                <input id="garage" name="garage" type="text" placeholder="Nom de votre garage" required />
+              <div class="form-grid">
+                <div class="field">
+                  <label for="email">Email</label>
+                  <input id="email" name="email" type="email" placeholder="votre@email.fr" required />
+                </div>
+
+                <div class="field">
+                  <label for="telephone">Téléphone</label>
+                  <input id="telephone" name="telephone" type="text" placeholder="Votre téléphone" />
+                </div>
               </div>
 
-              <div>
-                <label for="email">Email</label>
-                <input id="email" name="email" type="email" placeholder="votre@email.fr" required />
-              </div>
-
-              <div>
-                <label for="telephone">Téléphone</label>
-                <input id="telephone" name="telephone" type="text" placeholder="Votre téléphone" />
-              </div>
-
-              <div>
+              <div class="field">
                 <label for="offre">Offre qui vous intéresse</label>
                 <select id="offre" name="offre">
                   <option value="Starter">Starter</option>
@@ -1214,7 +1342,7 @@
                 </select>
               </div>
 
-              <div>
+              <div class="field">
                 <label for="message">Message</label>
                 <textarea id="message" name="message" placeholder="Expliquez rapidement votre besoin..."></textarea>
               </div>
@@ -1222,14 +1350,10 @@
               <button type="submit" class="btn btn-primary">Envoyer ma demande</button>
 
               <p class="form-note">
-                En soumettant ce formulaire, vous acceptez que vos données soient utilisées
-                pour vous recontacter dans le cadre de votre demande commerciale. Voir la
+                En soumettant ce formulaire, vous acceptez que vos données soient utilisées pour vous
+                recontacter dans le cadre de votre demande commerciale. Voir la
                 <a href="#politique-confidentialite"><strong> politique de confidentialité</strong></a>.
               </p>
-
-              <div class="success-box" id="success-box">
-                Si le site est bien déployé sur Netlify, votre demande sera enregistrée dans les soumissions du site.
-              </div>
             </form>
           </div>
         </div>
@@ -1318,7 +1442,8 @@
           <p>
             L’ensemble du contenu du site, incluant notamment les textes, visuels, logos, éléments graphiques,
             structure et code, est protégé par le droit de la propriété intellectuelle. Toute reproduction,
-            représentation, diffusion ou exploitation, totale ou partielle, sans autorisation préalable écrite est interdite.
+            représentation, diffusion ou exploitation, totale ou partielle, sans autorisation préalable écrite
+            est interdite.
           </p>
 
           <h3>Responsabilité</h3>
@@ -1399,7 +1524,10 @@
           </p>
 
           <h3>10. Support</h3>
-          <p>Le support est assuré via l’adresse support@monlogicielgarage.fr.</p>
+          <p>
+            Le support est assuré via l’adresse support@monlogicielgarage.fr, selon des modalités raisonnables
+            compatibles avec l’offre souscrite.
+          </p>
 
           <h3>11. Droit applicable et litiges</h3>
           <p>
@@ -1471,7 +1599,10 @@
           </p>
 
           <h3>9. Contact</h3>
-          <p>Pour toute question relative à la confidentialité ou à vos données personnelles : support@monlogicielgarage.fr</p>
+          <p>
+            Pour toute question relative à la confidentialité ou à vos données personnelles :
+            support@monlogicielgarage.fr
+          </p>
         </div>
       </div>
     </section>
@@ -1522,7 +1653,6 @@
       const rejectBtn = document.getElementById("cookie-reject");
       const closeBtn = document.getElementById("cookie-close");
       const status = document.getElementById("cookie-status");
-      const successBox = document.getElementById("success-box");
 
       function showBanner() {
         banner.classList.add("show");
@@ -1584,10 +1714,6 @@
       window.openCookieSettings = function () {
         showBanner();
       };
-
-      if (window.location.search.includes("success=true") && successBox) {
-        successBox.style.display = "block";
-      }
     })();
   </script>
 </body>
