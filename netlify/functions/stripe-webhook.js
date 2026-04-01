@@ -6,7 +6,6 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 exports.handler = async (event) => {
   try {
-    // ✅ Test simple (GET)
     if (event.httpMethod !== "POST") {
       return {
         statusCode: 200,
@@ -14,7 +13,48 @@ exports.handler = async (event) => {
       };
     }
 
-    // ✅ Signature Stripe
+    if (!process.env.STRIPE_SECRET_KEY) {
+      return {
+        statusCode: 500,
+        body: "Missing STRIPE_SECRET_KEY",
+      };
+    }
+
+    if (!process.env.STRIPE_WEBHOOK_SECRET) {
+      return {
+        statusCode: 500,
+        body: "Missing STRIPE_WEBHOOK_SECRET",
+      };
+    }
+
+    if (!process.env.JWT_SECRET) {
+      return {
+        statusCode: 500,
+        body: "Missing JWT_SECRET",
+      };
+    }
+
+    if (!process.env.RESEND_API_KEY) {
+      return {
+        statusCode: 500,
+        body: "Missing RESEND_API_KEY",
+      };
+    }
+
+    if (!process.env.MAIL_FROM) {
+      return {
+        statusCode: 500,
+        body: "Missing MAIL_FROM",
+      };
+    }
+
+    if (!process.env.APP_BASE_URL) {
+      return {
+        statusCode: 500,
+        body: "Missing APP_BASE_URL",
+      };
+    }
+
     const signature =
       event.headers["stripe-signature"] || event.headers["Stripe-Signature"];
 
@@ -25,16 +65,18 @@ exports.handler = async (event) => {
       };
     }
 
-    // 🔥 CORRECTION CRITIQUE ICI
+    const rawBody = event.isBase64Encoded
+      ? Buffer.from(event.body, "base64")
+      : Buffer.from(event.body, "utf8");
+
     const stripeEvent = stripe.webhooks.constructEvent(
-      Buffer.from(event.body, "utf8"),
+      rawBody,
       signature,
       process.env.STRIPE_WEBHOOK_SECRET
     );
 
     console.log("📩 Event reçu :", stripeEvent.type);
 
-    // ✅ Paiement validé
     if (stripeEvent.type === "checkout.session.completed") {
       const session = stripeEvent.data.object;
 
@@ -45,18 +87,16 @@ exports.handler = async (event) => {
       ).toLowerCase().trim();
 
       if (!email) {
-        console.error("❌ Aucun email trouvé");
+        console.error("❌ Aucun email trouvé dans la session");
         return {
           statusCode: 400,
-          body: "No email",
+          body: "No email in checkout session",
         };
       }
 
       console.log("✅ Paiement réussi :", session.id, email);
 
-      // ✅ Stockage client payé
       const customers = getStore("paid-customers");
-
       await customers.set(
         email,
         JSON.stringify({
@@ -69,18 +109,13 @@ exports.handler = async (event) => {
 
       console.log("💾 Client sauvegardé");
 
-      // ✅ Token sécurisé
-      const token = jwt.sign(
-        { email },
-        process.env.JWT_SECRET,
-        { expiresIn: "30d" }
-      );
+      const token = jwt.sign({ email }, process.env.JWT_SECRET, {
+        expiresIn: "30d",
+      });
 
       const accessUrl = `${process.env.APP_BASE_URL}/acces.html?token=${encodeURIComponent(token)}`;
+      console.log("🔗 Lien généré");
 
-      console.log("🔗 Lien généré :", accessUrl);
-
-      // ✅ Envoi email
       const resendResponse = await fetch("https://api.resend.com/emails", {
         method: "POST",
         headers: {
@@ -108,20 +143,18 @@ exports.handler = async (event) => {
         }),
       });
 
-      const resendData = await resendResponse.text();
-
+      const resendText = await resendResponse.text();
       console.log("📨 Resend status:", resendResponse.status);
-      console.log("📨 Resend réponse:", resendData);
+      console.log("📨 Resend réponse:", resendText);
 
       if (!resendResponse.ok) {
-        console.error("❌ Erreur envoi mail");
         return {
           statusCode: 500,
-          body: resendData,
+          body: `Resend error: ${resendText}`,
         };
       }
 
-      console.log("✅ Email envoyé !");
+      console.log("✅ Email envoyé");
     }
 
     return {
