@@ -110,6 +110,12 @@
       color: #05210f;
       font-weight: bold;
       text-decoration: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      background: var(--green-hover);
     }
 
     .btn-secondary {
@@ -157,7 +163,6 @@
         <div id="successStatus" class="status success"></div>
 
         <div class="actions">
-          <!-- ✅ CORRECTION ICI -->
           <a class="btn" href="/dashboard.html">Ouvrir le logiciel</a>
           <a class="btn btn-secondary" href="/">Retour accueil</a>
         </div>
@@ -166,7 +171,9 @@
       <div id="errorBlock" class="hidden">
         <div class="badge">⛔ Accès refusé</div>
         <h1>Lien invalide</h1>
-        <div id="errorStatus" class="status error"></div>
+        <div id="errorStatus" class="status error">
+          Votre lien d’accès est invalide, expiré ou déjà utilisé.
+        </div>
 
         <div class="actions">
           <a class="btn btn-secondary" href="/">Retour accueil</a>
@@ -185,23 +192,38 @@
       const successBlock = document.getElementById("successBlock");
       const errorBlock = document.getElementById("errorBlock");
       const successStatus = document.getElementById("successStatus");
+      const errorStatus = document.getElementById("errorStatus");
 
       if (!token) {
         loadingBlock.classList.add("hidden");
         errorBlock.classList.remove("hidden");
+        errorStatus.innerHTML = "Aucun jeton d’accès n’a été trouvé dans le lien.";
         return;
       }
 
-      const res = await fetch(`/.netlify/functions/check-access?token=${token}`);
-      const data = await res.json();
+      try {
+        const res = await fetch(`/.netlify/functions/check-access?token=${encodeURIComponent(token)}`);
+        const data = await res.json();
 
-      loadingBlock.classList.add("hidden");
+        loadingBlock.classList.add("hidden");
 
-      if (data.ok) {
-        successBlock.classList.remove("hidden");
-        successStatus.innerHTML = `Accès validé pour : <strong>${data.email}</strong>`;
-      } else {
+        if (data.ok) {
+          localStorage.setItem("premium_access", "true");
+
+          if (data.email) {
+            localStorage.setItem("mlg_access_email", data.email);
+          }
+
+          successBlock.classList.remove("hidden");
+          successStatus.innerHTML = `Accès validé pour : <strong>${data.email || "Abonné"}</strong>`;
+        } else {
+          errorBlock.classList.remove("hidden");
+          errorStatus.innerHTML = data.message || "Votre lien d’accès est invalide ou expiré.";
+        }
+      } catch (error) {
+        loadingBlock.classList.add("hidden");
         errorBlock.classList.remove("hidden");
+        errorStatus.innerHTML = "Erreur de vérification. Merci de réessayer dans quelques instants.";
       }
     }
 
