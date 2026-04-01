@@ -19,7 +19,6 @@
       --muted: #b8c4d6;
       --green: #22c55e;
       --green-hover: #2dd563;
-      --max: 1120px;
       --shadow: 0 20px 60px rgba(0,0,0,0.28);
       --radius: 24px;
     }
@@ -38,6 +37,7 @@
         radial-gradient(circle at top right, rgba(34,197,94,0.15), transparent 25%),
         radial-gradient(circle at top left, rgba(96,165,250,0.12), transparent 30%),
         linear-gradient(180deg, #07101d 0%, #0a1424 100%);
+      padding: 16px;
     }
 
     .container {
@@ -154,12 +154,12 @@
       </p>
 
       <p>
-        Votre lien d’accès sécurisé vous est envoyé par email automatiquement.
+        Votre lien d’accès sécurisé vous sera envoyé automatiquement par email.
       </p>
 
       <div class="info">
         <strong>Important :</strong><br>
-        Si vous ne recevez rien dans les prochaines minutes, vérifiez aussi vos spams / courriers indésirables.
+        Vérifiez votre boîte de réception ainsi que vos spams / courriers indésirables.<br><br>
         L’accès au logiciel se fait uniquement via le lien sécurisé reçu par email.
       </div>
 
@@ -169,5 +169,10 @@
       </div>
     </div>
   </div>
+
+  <script>
+    localStorage.removeItem("premium_access");
+    localStorage.removeItem("mlg_access_email");
+  </script>
 </body>
 </html>
