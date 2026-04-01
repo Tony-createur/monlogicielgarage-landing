@@ -1,35 +1,52 @@
-import jwt from "jsonwebtoken";
-import { getStore } from "@netlify/blobs";
+const jwt = require("jsonwebtoken");
+const { getStore } = require("@netlify/blobs");
 
-export default async (req) => {
+exports.handler = async (event) => {
   try {
-    const url = new URL(req.url);
-    const token = url.searchParams.get("token");
+    const token = event.queryStringParameters?.token;
 
     if (!token) {
-      return Response.json({ ok: false, reason: "missing_token" }, { status: 401 });
+      return {
+        statusCode: 401,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ok: false, reason: "missing_token" }),
+      };
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const email = (decoded.email || "").toLowerCase();
+    const email = (decoded.email || "").toLowerCase().trim();
 
     if (!email) {
-      return Response.json({ ok: false, reason: "invalid_token" }, { status: 401 });
+      return {
+        statusCode: 401,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ok: false, reason: "invalid_token" }),
+      };
     }
 
     const customers = getStore("paid-customers");
     const record = await customers.get(email, { type: "json" });
 
     if (!record || !record.paid) {
-      return Response.json({ ok: false, reason: "not_paid" }, { status: 403 });
+      return {
+        statusCode: 403,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ok: false, reason: "not_paid" }),
+      };
     }
 
-    return Response.json({ ok: true, email });
+    return {
+      statusCode: 200,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ok: true, email }),
+    };
   } catch (err) {
-    return Response.json({ ok: false, reason: "forbidden" }, { status: 401 });
-  }
-};
+    console.error("❌ check-access error:", err);
 
-export const config = {
-  path: "/.netlify/functions/check-access"
+    return {
+      statusCode: 401,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ok: false, reason: "forbidden" }),
+    };
+  }
 };
