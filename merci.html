@@ -4,119 +4,63 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Merci | Mon Logiciel Garage</title>
-  <meta
-    name="description"
-    content="Merci pour votre abonnement à Mon Logiciel Garage. Votre paiement a bien été pris en compte."
-  />
+  <meta name="description" content="Paiement confirmé pour Mon Logiciel Garage." />
   <meta name="robots" content="noindex, nofollow" />
-
   <style>
-    :root {
-      --bg: #081120;
-      --card: rgba(255,255,255,0.06);
-      --card-border: rgba(255,255,255,0.12);
-      --text: #ffffff;
-      --muted: #b8c4d6;
-      --green: #22c55e;
-      --green-hover: #2dd563;
-      --max: 1120px;
-      --shadow: 0 20px 60px rgba(0,0,0,0.28);
-      --radius: 24px;
+    body{
+      margin:0;
+      font-family:Arial, Helvetica, sans-serif;
+      background:linear-gradient(180deg,#07101d 0%,#0a1424 100%);
+      color:#fff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      min-height:100vh;
+      padding:20px;
+      text-align:center;
     }
-
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
-      color: var(--text);
-      background:
-        radial-gradient(circle at top right, rgba(34,197,94,0.15), transparent 25%),
-        radial-gradient(circle at top left, rgba(96,165,250,0.12), transparent 30%),
-        linear-gradient(180deg, #07101d 0%, #0a1424 100%);
+    .box{
+      max-width:760px;
+      background:rgba(255,255,255,0.06);
+      border:1px solid rgba(255,255,255,0.10);
+      padding:40px 28px;
+      border-radius:22px;
     }
-
-    .container {
-      width: min(var(--max), calc(100% - 32px));
-      margin: 0 auto;
+    .badge{
+      display:inline-block;
+      padding:10px 14px;
+      border-radius:999px;
+      background:rgba(34,197,94,0.12);
+      border:1px solid rgba(34,197,94,0.28);
+      color:#d8ffe6;
+      font-weight:700;
+      margin-bottom:18px;
     }
-
-    .hero {
-      padding: 80px 20px 40px;
-      text-align: center;
+    h1{
+      margin:0 0 14px;
+      font-size:42px;
     }
-
-    .badge {
-      display: inline-block;
-      padding: 10px 16px;
-      border-radius: 999px;
-      background: rgba(34,197,94,0.12);
-      border: 1px solid rgba(34,197,94,0.28);
-      color: #c9f7d8;
-      font-weight: 700;
-      margin-bottom: 20px;
+    p{
+      color:#c6d1e2;
+      font-size:18px;
+      line-height:1.6;
+      margin:0 0 12px;
     }
-
-    h1 {
-      font-size: 48px;
-      margin-bottom: 15px;
-    }
-
-    p {
-      color: var(--muted);
-      max-width: 600px;
-      margin: auto;
-      font-size: 18px;
-    }
-
-    .actions {
-      margin-top: 30px;
-    }
-
-    .btn {
-      display: inline-block;
-      padding: 16px 26px;
-      border-radius: 12px;
-      background: var(--green);
-      color: #05210f;
-      font-weight: bold;
-      text-decoration: none;
-    }
-
-    .btn:hover {
-      background: var(--green-hover);
+    .small{
+      font-size:14px;
+      color:#9fb0c7;
+      margin-top:18px;
     }
   </style>
 </head>
-
 <body>
-
-  <section class="hero">
-    <div class="container">
-      <div class="badge">✅ Paiement confirmé</div>
-
-      <h1>Merci pour votre abonnement</h1>
-
-      <p>
-        Votre paiement a bien été pris en compte.<br>
-        Votre accès est maintenant activé.
-      </p>
-
-      <div class="actions">
-        <a class="btn" href="/acces.html">Accéder au logiciel</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- 🔥 TRÈS IMPORTANT : activation accès -->
-  <script>
-    localStorage.setItem("paid", "true");
-
-    // option bonus : redirection automatique après 2 secondes
-    setTimeout(() => {
-      window.location.href = "/acces.html";
-    }, 2000);
-  </script>
-
+  <div class="box">
+    <div class="badge">✅ Paiement confirmé</div>
+    <h1>Merci pour votre abonnement</h1>
+    <p>Votre paiement a bien été pris en compte.</p>
+    <p>Votre lien d’accès sécurisé vous est envoyé automatiquement par email.</p>
+    <p>Vérifiez votre boîte de réception et vos courriers indésirables.</p>
+    <p class="small">Si vous ne recevez rien sous quelques minutes, contactez : support@monlogicielgarage.fr</p>
+  </div>
 </body>
 </html>
