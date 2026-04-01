@@ -13,7 +13,6 @@
       --text: #ffffff;
       --muted: #b8c4d6;
       --green: #22c55e;
-      --green-dark: #15803d;
       --blue: #60a5fa;
       --red: #ef4444;
       --orange: #f59e0b;
@@ -23,9 +22,7 @@
 
     * { box-sizing: border-box; }
 
-    html {
-      scroll-behavior: smooth;
-    }
+    html { scroll-behavior: smooth; }
 
     body {
       margin: 0;
@@ -235,7 +232,8 @@
     }
 
     .form-grid input,
-    .form-grid textarea {
+    .form-grid textarea,
+    .form-grid select {
       width: 100%;
       padding: 14px 14px;
       border-radius: 12px;
@@ -252,8 +250,61 @@
     }
 
     .form-grid textarea {
-      min-height: 120px;
+      min-height: 100px;
       resize: vertical;
+    }
+
+    .line-editor {
+      display: grid;
+      grid-template-columns: 2.2fr 0.8fr 1fr 0.9fr auto;
+      gap: 10px;
+      align-items: end;
+      margin-top: 12px;
+    }
+
+    .line-editor input,
+    .line-editor select {
+      width: 100%;
+      padding: 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.05);
+      color: white;
+      font-size: 14px;
+      outline: none;
+    }
+
+    .line-editor button {
+      height: 46px;
+    }
+
+    .lines-table-wrap {
+      margin-top: 16px;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      overflow: hidden;
+      background: rgba(255,255,255,0.03);
+    }
+
+    .lines-table th,
+    .lines-table td {
+      padding: 12px 12px;
+      font-size: 13px;
+    }
+
+    .lines-table th:last-child,
+    .lines-table td:last-child {
+      text-align: right;
+    }
+
+    .line-delete-btn {
+      border: 0;
+      border-radius: 8px;
+      padding: 8px 10px;
+      background: var(--red);
+      color: white;
+      cursor: pointer;
+      font-weight: 700;
     }
 
     .result-box {
@@ -344,24 +395,6 @@
       color: #fff;
     }
 
-    .doc-section {
-      margin-bottom: 18px;
-    }
-
-    .doc-section p {
-      margin: 6px 0;
-      line-height: 1.7;
-    }
-
-    .doc-prestation {
-      padding: 18px;
-      border-radius: 16px;
-      background: rgba(255,255,255,0.035);
-      border: 1px solid rgba(255,255,255,0.08);
-      line-height: 1.8;
-      white-space: normal;
-    }
-
     .doc-table-wrap {
       margin-top: 18px;
       border: 1px solid rgba(255,255,255,0.08);
@@ -388,15 +421,21 @@
       font-weight: 700;
     }
 
-    .doc-table td:last-child,
-    .doc-table th:last-child {
+    .doc-table td:nth-child(2),
+    .doc-table td:nth-child(3),
+    .doc-table td:nth-child(4),
+    .doc-table td:nth-child(5),
+    .doc-table th:nth-child(2),
+    .doc-table th:nth-child(3),
+    .doc-table th:nth-child(4),
+    .doc-table th:nth-child(5) {
       text-align: right;
     }
 
     .doc-total {
       margin-top: 18px;
       margin-left: auto;
-      width: min(100%, 380px);
+      width: min(100%, 420px);
       padding: 18px;
       border-radius: 16px;
       background: rgba(255,255,255,0.035);
@@ -513,6 +552,8 @@
       #moduleFacture h2,
       #moduleFacture .muted,
       #moduleDevis .form-grid,
+      #moduleDevis .line-editor,
+      #moduleDevis .lines-table-wrap,
       #moduleFacture .actions,
       .small-actions {
         display: none !important;
@@ -533,7 +574,6 @@
       .doc-shell,
       .doc-company,
       .doc-client,
-      .doc-prestation,
       .doc-total,
       .doc-table-wrap {
         background: white !important;
@@ -557,7 +597,6 @@
       .doc-meta,
       .history-line,
       .muted,
-      .doc-section p,
       .doc-footer,
       .doc-total-line,
       .doc-box-title {
@@ -584,6 +623,12 @@
         border-color: #ddd !important;
         color: black !important;
         background: white !important;
+      }
+    }
+
+    @media (max-width: 1100px) {
+      .line-editor {
+        grid-template-columns: 1fr 1fr;
       }
     }
 
@@ -622,6 +667,10 @@
 
       .small-actions .btn {
         width: 100%;
+      }
+
+      .line-editor {
+        grid-template-columns: 1fr;
       }
     }
   </style>
@@ -695,9 +744,45 @@
           <input type="text" id="devisClient" placeholder="Nom du client" />
           <input type="text" id="devisVehicule" placeholder="Véhicule / immatriculation" />
           <input type="text" id="devisReference" placeholder="Référence devis (laisser vide pour automatique)" />
-          <textarea id="devisPrestation" placeholder="Détail de la prestation"></textarea>
-          <input type="number" id="devisPrixHT" placeholder="Montant HT (€)" />
+          <textarea id="devisNotes" placeholder="Notes ou remarques générales du devis (facultatif)"></textarea>
+        </div>
+
+        <div class="line-editor">
+          <input type="text" id="ligneDesignation" placeholder="Désignation" />
+          <input type="number" id="ligneQuantite" placeholder="Quantité" step="1" min="1" />
+          <input type="number" id="lignePrixUnitaire" placeholder="Prix unitaire HT" step="0.01" min="0" />
+          <select id="ligneTva">
+            <option value="20">TVA 20 %</option>
+            <option value="10">TVA 10 %</option>
+            <option value="5.5">TVA 5,5 %</option>
+            <option value="0">TVA 0 %</option>
+          </select>
+          <button class="btn btn-secondary" type="button" onclick="ajouterLigneDevis()">Ajouter</button>
+        </div>
+
+        <div class="lines-table-wrap">
+          <table class="lines-table">
+            <thead>
+              <tr>
+                <th>Désignation</th>
+                <th>Qté</th>
+                <th>PU HT</th>
+                <th>TVA</th>
+                <th>Total HT</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="devisLignesPreview">
+              <tr>
+                <td colspan="6" class="muted">Aucune ligne ajoutée pour le moment.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="small-actions">
           <button class="btn" onclick="genererDevis()">Générer le devis</button>
+          <button class="btn btn-secondary" type="button" onclick="viderLignesTemp()">Vider les lignes</button>
         </div>
 
         <div class="result-box" id="resultatDevis" style="display:none;"></div>
@@ -782,6 +867,8 @@
       const email = localStorage.getItem("mlg_access_email") || "Abonné";
       document.getElementById("userEmail").textContent = email;
 
+      let devisLignesTemp = [];
+
       function getGarageBlockHtml() {
         const garage = getGarageInfos();
 
@@ -821,18 +908,8 @@
         return `<div class="doc-footer">${lignes.join("<br>")}</div>`;
       }
 
-      window.scrollToSection = function (id) {
-        document.getElementById(id).scrollIntoView({ behavior: "smooth", block: "start" });
-      };
-
-      window.logout = function () {
-        localStorage.removeItem("premium_access");
-        localStorage.removeItem("mlg_access_email");
-        window.location.replace("/");
-      };
-
       function formatPrix(value) {
-        return Number(value).toLocaleString("fr-FR", {
+        return Number(value || 0).toLocaleString("fr-FR", {
           minimumFractionDigits: 2,
           maximumFractionDigits: 2
         }) + " €";
@@ -872,10 +949,103 @@
         return "DEV-2026-" + String(nextNumber).padStart(4, "0");
       }
 
-      function getDocumentShell(type, reference, date, client, vehicule, prestation, prixHT, tva, prixTTC, isFacture) {
+      function calculerTotauxLignes(lignes) {
+        const totalHT = lignes.reduce((sum, ligne) => sum + Number(ligne.totalHT || 0), 0);
+        const totalTVA = lignes.reduce((sum, ligne) => sum + Number(ligne.montantTVA || 0), 0);
+        const totalTTC = totalHT + totalTVA;
+
+        return { totalHT, totalTVA, totalTTC };
+      }
+
+      function creerLigne(designation, quantite, prixUnitaireHT, tva) {
+        const qte = Number(quantite);
+        const pu = Number(prixUnitaireHT);
+        const taux = Number(tva);
+        const totalHT = qte * pu;
+        const montantTVA = totalHT * (taux / 100);
+        const totalTTC = totalHT + montantTVA;
+
+        return {
+          id: Date.now() + Math.floor(Math.random() * 1000),
+          designation,
+          quantite: qte,
+          prixUnitaireHT: pu,
+          tva: taux,
+          totalHT,
+          montantTVA,
+          totalTTC
+        };
+      }
+
+      function renderLignesPreview() {
+        const tbody = document.getElementById("devisLignesPreview");
+
+        if (!devisLignesTemp.length) {
+          tbody.innerHTML = `<tr><td colspan="6" class="muted">Aucune ligne ajoutée pour le moment.</td></tr>`;
+          return;
+        }
+
+        tbody.innerHTML = devisLignesTemp.map(ligne => `
+          <tr>
+            <td>${escapeHtml(ligne.designation)}</td>
+            <td>${ligne.quantite}</td>
+            <td>${formatPrix(ligne.prixUnitaireHT)}</td>
+            <td>${ligne.tva} %</td>
+            <td>${formatPrix(ligne.totalHT)}</td>
+            <td>
+              <button class="line-delete-btn" type="button" onclick="supprimerLigneTemp(${ligne.id})">X</button>
+            </td>
+          </tr>
+        `).join("");
+      }
+
+      window.ajouterLigneDevis = function () {
+        const designation = document.getElementById("ligneDesignation").value.trim();
+        const quantite = parseFloat(document.getElementById("ligneQuantite").value);
+        const prixUnitaire = parseFloat(document.getElementById("lignePrixUnitaire").value);
+        const tva = parseFloat(document.getElementById("ligneTva").value);
+
+        if (!designation || isNaN(quantite) || quantite <= 0 || isNaN(prixUnitaire) || prixUnitaire < 0 || isNaN(tva)) {
+          alert("Merci de remplir correctement la ligne de devis.");
+          return;
+        }
+
+        devisLignesTemp.push(creerLigne(designation, quantite, prixUnitaire, tva));
+        renderLignesPreview();
+
+        document.getElementById("ligneDesignation").value = "";
+        document.getElementById("ligneQuantite").value = "";
+        document.getElementById("lignePrixUnitaire").value = "";
+        document.getElementById("ligneTva").value = "20";
+      };
+
+      window.supprimerLigneTemp = function (id) {
+        devisLignesTemp = devisLignesTemp.filter(l => l.id !== id);
+        renderLignesPreview();
+      };
+
+      window.viderLignesTemp = function () {
+        devisLignesTemp = [];
+        renderLignesPreview();
+      };
+
+      function getDocumentTableRowsHtml(lignes) {
+        return lignes.map(ligne => `
+          <tr>
+            <td>${escapeHtml(ligne.designation)}</td>
+            <td>${ligne.quantite}</td>
+            <td>${formatPrix(ligne.prixUnitaireHT)}</td>
+            <td>${ligne.tva} %</td>
+            <td>${formatPrix(ligne.totalHT)}</td>
+          </tr>
+        `).join("");
+      }
+
+      function getDocumentShell(type, reference, date, client, vehicule, notes, lignes, isFacture) {
         const badgeClass = isFacture ? "doc-badge facture" : "doc-badge";
         const titre = isFacture ? "FACTURE" : "DEVIS";
         const totalLabel = isFacture ? "Total TTC à payer" : "Total TTC";
+        const totaux = calculerTotauxLignes(lignes);
 
         return `
           <div class="doc-shell">
@@ -897,40 +1067,42 @@
               </div>
             </div>
 
-            <div class="doc-section">
-              <div class="doc-box-title">Description de la prestation</div>
-              <div class="doc-prestation">${escapeHtml(prestation).replace(/\n/g, "<br>")}</div>
-            </div>
+            ${notes ? `
+              <div class="doc-client" style="margin-bottom:18px;">
+                <div class="doc-box-title">Notes</div>
+                ${escapeHtml(notes).replace(/\n/g, "<br>")}
+              </div>
+            ` : ""}
 
             <div class="doc-table-wrap">
               <table class="doc-table">
                 <thead>
                   <tr>
                     <th>Désignation</th>
-                    <th>Montant</th>
+                    <th>Qté</th>
+                    <th>PU HT</th>
+                    <th>TVA</th>
+                    <th>Total HT</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>${escapeHtml(prestation.split("\n")[0] || prestation || "Prestation atelier")}</td>
-                    <td>${formatPrix(prixHT)}</td>
-                  </tr>
+                  ${getDocumentTableRowsHtml(lignes)}
                 </tbody>
               </table>
             </div>
 
             <div class="doc-total">
               <div class="doc-total-line">
-                <span>Montant HT</span>
-                <strong>${formatPrix(prixHT)}</strong>
+                <span>Total HT</span>
+                <strong>${formatPrix(totaux.totalHT)}</strong>
               </div>
               <div class="doc-total-line">
-                <span>TVA 20 %</span>
-                <strong>${formatPrix(tva)}</strong>
+                <span>Total TVA</span>
+                <strong>${formatPrix(totaux.totalTVA)}</strong>
               </div>
               <div class="doc-total-line final">
                 <span>${totalLabel}</span>
-                <span>${formatPrix(prixTTC)}</span>
+                <span>${formatPrix(totaux.totalTTC)}</span>
               </div>
             </div>
 
@@ -947,10 +1119,8 @@
             devisData.date,
             devisData.client,
             devisData.vehicule,
-            devisData.prestation,
-            devisData.prixHT,
-            devisData.tva,
-            devisData.prixTTC,
+            devisData.notes || "",
+            devisData.lignes || [],
             false
           )}
 
@@ -976,10 +1146,8 @@
             factureData.date,
             factureData.client,
             factureData.vehicule,
-            factureData.prestation,
-            factureData.prixHT,
-            factureData.tva,
-            factureData.prixTTC,
+            factureData.notes || "",
+            factureData.lignes || [],
             true
           )}
 
@@ -999,26 +1167,30 @@
         const client = document.getElementById("devisClient").value.trim();
         const vehicule = document.getElementById("devisVehicule").value.trim();
         const reference = document.getElementById("devisReference").value.trim() || getNextDevisReference();
-        const prestation = document.getElementById("devisPrestation").value.trim();
-        const prixHT = parseFloat(document.getElementById("devisPrixHT").value);
+        const notes = document.getElementById("devisNotes").value.trim();
 
-        if (!client || !vehicule || !prestation || isNaN(prixHT)) {
-          alert("Merci de remplir tous les champs du devis.");
+        if (!client || !vehicule) {
+          alert("Merci de remplir le client et le véhicule.");
           return;
         }
 
-        const tva = prixHT * 0.20;
-        const prixTTC = prixHT + tva;
+        if (!devisLignesTemp.length) {
+          alert("Merci d'ajouter au moins une ligne de devis.");
+          return;
+        }
+
+        const totaux = calculerTotauxLignes(devisLignesTemp);
 
         const devisData = {
           id: Date.now(),
           client,
           vehicule,
           reference,
-          prestation,
-          prixHT,
-          tva,
-          prixTTC,
+          notes,
+          lignes: devisLignesTemp.map(l => ({ ...l })),
+          prixHT: totaux.totalHT,
+          tva: totaux.totalTVA,
+          prixTTC: totaux.totalTTC,
           date: getDateFR()
         };
 
@@ -1036,8 +1208,9 @@
         document.getElementById("devisClient").value = "";
         document.getElementById("devisVehicule").value = "";
         document.getElementById("devisReference").value = "";
-        document.getElementById("devisPrestation").value = "";
-        document.getElementById("devisPrixHT").value = "";
+        document.getElementById("devisNotes").value = "";
+        devisLignesTemp = [];
+        renderLignesPreview();
       };
 
       window.genererFacture = function () {
@@ -1056,7 +1229,8 @@
           client: devisData.client,
           vehicule: devisData.vehicule,
           reference: referenceFacture,
-          prestation: devisData.prestation,
+          notes: devisData.notes || "",
+          lignes: (devisData.lignes || []).map(l => ({ ...l })),
           prixHT: devisData.prixHT,
           tva: devisData.tva,
           prixTTC: devisData.prixTTC,
@@ -1102,8 +1276,10 @@
         document.getElementById("devisClient").value = devis.client || "";
         document.getElementById("devisVehicule").value = devis.vehicule || "";
         document.getElementById("devisReference").value = devis.reference || "";
-        document.getElementById("devisPrestation").value = devis.prestation || "";
-        document.getElementById("devisPrixHT").value = devis.prixHT || "";
+        document.getElementById("devisNotes").value = devis.notes || "";
+
+        devisLignesTemp = (devis.lignes || []).map(l => ({ ...l }));
+        renderLignesPreview();
 
         scrollToSection("moduleDevis");
       };
@@ -1149,6 +1325,7 @@
             </div>
             <div class="history-line"><strong>Client :</strong> ${escapeHtml(d.client)}</div>
             <div class="history-line"><strong>Véhicule :</strong> ${escapeHtml(d.vehicule)}</div>
+            <div class="history-line"><strong>Lignes :</strong> ${(d.lignes || []).length}</div>
             <div class="history-line"><strong>Total TTC :</strong> ${formatPrix(d.prixTTC)}</div>
 
             <div class="small-actions">
@@ -1212,6 +1389,16 @@
         document.getElementById("statCA").textContent = formatPrix(totalCA);
       }
 
+      window.scrollToSection = function (id) {
+        document.getElementById(id).scrollIntoView({ behavior: "smooth", block: "start" });
+      };
+
+      window.logout = function () {
+        localStorage.removeItem("premium_access");
+        localStorage.removeItem("mlg_access_email");
+        window.location.replace("/");
+      };
+
       window.viderDocuments = function () {
         document.getElementById("resultatDevis").style.display = "none";
         document.getElementById("resultatDevis").innerHTML = "";
@@ -1221,6 +1408,7 @@
       };
 
       document.addEventListener("DOMContentLoaded", () => {
+        renderLignesPreview();
         afficherListeDevis();
         afficherDocumentsRecents();
         mettreAJourStats();
