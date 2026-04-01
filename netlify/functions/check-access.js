@@ -8,7 +8,23 @@ exports.handler = async (event) => {
       return {
         statusCode: 401,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ok: false, reason: "missing_token" }),
+        body: JSON.stringify({
+          ok: false,
+          message: "Token manquant.",
+          reason: "missing_token",
+        }),
+      };
+    }
+
+    if (!process.env.JWT_SECRET) {
+      return {
+        statusCode: 500,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ok: false,
+          message: "JWT_SECRET non configuré sur Netlify.",
+          reason: "missing_jwt_secret",
+        }),
       };
     }
 
@@ -19,20 +35,31 @@ exports.handler = async (event) => {
       return {
         statusCode: 401,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ok: false, reason: "invalid_token" }),
+        body: JSON.stringify({
+          ok: false,
+          message: "Token invalide.",
+          reason: "invalid_token",
+        }),
       };
     }
 
     return {
       statusCode: 200,
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ok: true, email }),
+      body: JSON.stringify({
+        ok: true,
+        email,
+      }),
     };
   } catch (err) {
     return {
       statusCode: 401,
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ok: false, reason: "forbidden" }),
+      body: JSON.stringify({
+        ok: false,
+        message: "Accès refusé ou lien expiré.",
+        reason: "forbidden",
+      }),
     };
   }
 };
