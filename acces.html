@@ -55,7 +55,7 @@
   </style>
 </head>
 
-<body>
+<body style="display:none;">
 
 <h1>🚗 Mon Logiciel Garage</h1>
 <p>Bienvenue dans votre espace</p>
@@ -79,43 +79,59 @@
 </div>
 
 <script>
-  let clients = JSON.parse(localStorage.getItem("clients")) || [];
+/* =========================
+   🔒 SÉCURITÉ SIMPLE
+========================= */
 
-  function afficherClients() {
-    let table = document.getElementById("tableClients");
-    table.innerHTML = `
+const paid = localStorage.getItem("paid");
+
+if (paid !== "true") {
+  window.location.href = "/index.html";
+} else {
+  document.body.style.display = "block";
+}
+
+/* =========================
+   🚗 LOGICIEL CLIENTS
+========================= */
+
+let clients = JSON.parse(localStorage.getItem("clients")) || [];
+
+function afficherClients() {
+  let table = document.getElementById("tableClients");
+  table.innerHTML = `
+    <tr>
+      <th>Nom</th>
+      <th>Téléphone</th>
+    </tr>
+  `;
+
+  clients.forEach(c => {
+    table.innerHTML += `
       <tr>
-        <th>Nom</th>
-        <th>Téléphone</th>
+        <td>${c.nom}</td>
+        <td>${c.tel}</td>
       </tr>
     `;
+  });
+}
 
-    clients.forEach(c => {
-      table.innerHTML += `
-        <tr>
-          <td>${c.nom}</td>
-          <td>${c.tel}</td>
-        </tr>
-      `;
-    });
-  }
+function ajouterClient() {
+  let nom = document.getElementById("nom").value;
+  let tel = document.getElementById("tel").value;
 
-  function ajouterClient() {
-    let nom = document.getElementById("nom").value;
-    let tel = document.getElementById("tel").value;
+  if (!nom) return alert("Nom requis");
 
-    if (!nom) return alert("Nom requis");
-
-    clients.push({ nom, tel });
-    localStorage.setItem("clients", JSON.stringify(clients));
-
-    afficherClients();
-
-    document.getElementById("nom").value = "";
-    document.getElementById("tel").value = "";
-  }
+  clients.push({ nom, tel });
+  localStorage.setItem("clients", JSON.stringify(clients));
 
   afficherClients();
+
+  document.getElementById("nom").value = "";
+  document.getElementById("tel").value = "";
+}
+
+afficherClients();
 </script>
 
 </body>
