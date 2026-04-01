@@ -339,18 +339,22 @@
 
     @media print {
       body {
-        background: white;
-        color: black;
+        background: white !important;
+        color: black !important;
       }
 
       .topbar,
       .grid,
       .main,
-      .modules > .card:not(.printable),
       .bottom-grid,
       .logout-btn,
-      .small-actions,
-      .actions {
+      .actions,
+      #moduleDevis h2,
+      #moduleFacture h2,
+      #moduleFacture .muted,
+      #moduleDevis .form-grid,
+      #moduleFacture .actions,
+      .small-actions {
         display: none !important;
       }
 
@@ -360,21 +364,37 @@
         padding: 0;
       }
 
+      .modules {
+        display: block !important;
+      }
+
       .card,
       .result-box {
         background: white !important;
         color: black !important;
         border: 0 !important;
         box-shadow: none !important;
+        backdrop-filter: none !important;
       }
 
-      .printable {
+      #resultatDevis,
+      #resultatFacture {
         display: block !important;
       }
 
+      #moduleDevis,
+      #moduleFacture {
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+
       .doc-meta,
-      .history-line {
-        color: #333 !important;
+      .history-line,
+      .muted,
+      .doc-section p,
+      .doc-total,
+      .doc-title {
+        color: black !important;
       }
     }
 
@@ -470,7 +490,7 @@
           <button class="btn" onclick="genererDevis()">Générer le devis</button>
         </div>
 
-        <div class="result-box printable" id="resultatDevis" style="display:none;"></div>
+        <div class="result-box" id="resultatDevis" style="display:none;"></div>
       </div>
 
       <div class="card" id="moduleFacture">
@@ -485,7 +505,7 @@
           <button class="btn btn-danger" onclick="viderDocuments()">Vider les documents affichés</button>
         </div>
 
-        <div class="result-box printable" id="resultatFacture" style="display:none;"></div>
+        <div class="result-box" id="resultatFacture" style="display:none;"></div>
       </div>
     </div>
 
@@ -593,6 +613,8 @@
       const box = document.getElementById("resultatDevis");
       box.innerHTML = html;
       box.style.display = "block";
+      document.getElementById("resultatFacture").style.display = "none";
+      document.getElementById("resultatFacture").innerHTML = "";
     }
 
     function afficherFacture(factureData) {
@@ -638,6 +660,8 @@
       const box = document.getElementById("resultatFacture");
       box.innerHTML = html;
       box.style.display = "block";
+      document.getElementById("resultatDevis").style.display = "none";
+      document.getElementById("resultatDevis").innerHTML = "";
     }
 
     function genererDevis() {
