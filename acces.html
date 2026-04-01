@@ -1,473 +1,122 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Accès & Onboarding | Mon Logiciel Garage</title>
-  <meta
-    name="description"
-    content="Accès et onboarding premium de Mon Logiciel Garage après paiement."
-  />
-  <meta name="robots" content="noindex, nofollow" />
+  <meta charset="UTF-8">
+  <title>Mon Logiciel Garage - Accès</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <style>
-    :root {
-      --bg: #081120;
-      --card: rgba(255,255,255,0.06);
-      --card-border: rgba(255,255,255,0.12);
-      --text: #ffffff;
-      --muted: #b8c4d6;
-      --green: #22c55e;
-      --green-hover: #2dd563;
-      --blue: #60a5fa;
-      --max: 1180px;
-      --shadow: 0 20px 60px rgba(0,0,0,0.28);
-      --radius: 24px;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
     body {
-      margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
-      color: var(--text);
-      background:
-        radial-gradient(circle at top right, rgba(34,197,94,0.15), transparent 25%),
-        radial-gradient(circle at top left, rgba(96,165,250,0.12), transparent 30%),
-        linear-gradient(180deg, #07101d 0%, #0a1424 100%);
-      line-height: 1.5;
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    .container {
-      width: min(var(--max), calc(100% - 32px));
-      margin: 0 auto;
-    }
-
-    .topbar {
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-      background: rgba(8, 17, 32, 0.72);
-      backdrop-filter: blur(10px);
-    }
-
-    .topbar-inner {
-      min-height: 76px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 18px;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-weight: 800;
-      letter-spacing: 0.2px;
-    }
-
-    .brand-logo {
-      width: 42px;
-      height: 42px;
-      border-radius: 14px;
-      background: linear-gradient(135deg, var(--green), #86efac);
-      color: #05210f;
-      display: grid;
-      place-items: center;
-      font-size: 20px;
-      font-weight: 900;
-      box-shadow: 0 10px 30px rgba(34,197,94,0.24);
-    }
-
-    .hero {
-      padding: 60px 0 24px;
-      text-align: center;
-    }
-
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 14px;
-      border-radius: 999px;
-      background: rgba(34,197,94,0.12);
-      border: 1px solid rgba(34,197,94,0.28);
-      color: #c9f7d8;
-      font-size: 14px;
-      font-weight: 700;
-      margin-bottom: 18px;
+      font-family: Arial;
+      background: #0b1220;
+      color: white;
+      padding: 20px;
     }
 
     h1 {
-      margin: 0 0 16px;
-      font-size: clamp(36px, 5vw, 64px);
-      line-height: 1.02;
-      letter-spacing: -1.5px;
+      margin-bottom: 10px;
     }
 
-    .hero p {
-      max-width: 820px;
-      margin: 0 auto 10px;
-      color: var(--muted);
-      font-size: 20px;
+    .box {
+      background: #121a2f;
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 20px;
     }
 
-    .grid {
-      display: grid;
-      grid-template-columns: 1.05fr 0.95fr;
-      gap: 20px;
-      padding: 28px 0 40px;
+    input, button {
+      padding: 10px;
+      margin: 5px;
+      border-radius: 5px;
+      border: none;
     }
 
-    .card {
-      background: var(--card);
-      border: 1px solid var(--card-border);
-      border-radius: var(--radius);
-      padding: 28px;
-      box-shadow: var(--shadow);
+    input {
+      width: 200px;
     }
 
-    .card h2 {
-      margin: 0 0 14px;
-      font-size: 28px;
-    }
-
-    .card p {
-      margin: 0 0 14px;
-      color: #e8eef9;
-    }
-
-    .muted {
-      color: var(--muted) !important;
-    }
-
-    .steps {
-      display: grid;
-      gap: 14px;
-      margin-top: 18px;
-    }
-
-    .step {
-      display: flex;
-      gap: 14px;
-      align-items: flex-start;
-      padding: 16px;
-      border-radius: 18px;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
-    }
-
-    .step-number {
-      flex: 0 0 42px;
-      width: 42px;
-      height: 42px;
-      border-radius: 999px;
-      display: grid;
-      place-items: center;
-      background: var(--green);
-      color: #062411;
-      font-weight: 900;
-    }
-
-    .step h3 {
-      margin: 2px 0 6px;
-      font-size: 18px;
-    }
-
-    .step p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 15px;
-    }
-
-    .checklist {
-      list-style: none;
-      padding: 0;
-      margin: 20px 0 0;
-    }
-
-    .checklist li {
-      padding: 12px 0;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-      color: #eaf0f8;
-    }
-
-    .checklist li:last-child {
-      border-bottom: 0;
-    }
-
-    .checklist li::before {
-      content: "✔";
-      color: var(--green);
-      font-weight: 900;
-      margin-right: 10px;
-    }
-
-    .actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 14px;
-      margin-top: 24px;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      border: 0;
-      border-radius: 14px;
-      padding: 15px 22px;
-      font-size: 16px;
-      font-weight: 800;
+    button {
+      background: #00c2ff;
+      color: black;
       cursor: pointer;
-      transition: 0.2s ease;
+      font-weight: bold;
     }
 
-    .btn:hover {
-      transform: translateY(-1px);
+    table {
+      width: 100%;
+      margin-top: 10px;
+      border-collapse: collapse;
     }
 
-    .btn-primary {
-      background: var(--green);
-      color: #05210f;
-      box-shadow: 0 16px 36px rgba(34,197,94,0.24);
-    }
-
-    .btn-primary:hover {
-      background: var(--green-hover);
-    }
-
-    .btn-secondary {
-      background: rgba(255,255,255,0.06);
-      color: white;
-      border: 1px solid rgba(255,255,255,0.12);
-    }
-
-    .info-box {
-      margin-top: 18px;
-      padding: 18px;
-      border-radius: 18px;
-      background: rgba(96,165,250,0.10);
-      border: 1px solid rgba(96,165,250,0.20);
-      color: #dcecff;
-    }
-
-    .contact-box {
-      margin-top: 18px;
-      padding: 18px;
-      border-radius: 18px;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
-    }
-
-    .contact-box strong {
-      display: block;
-      margin-bottom: 8px;
-      font-size: 17px;
-    }
-
-    footer {
-      border-top: 1px solid rgba(255,255,255,0.08);
-      padding: 22px 0 40px;
-      color: var(--muted);
-      font-size: 14px;
-      margin-top: 14px;
-    }
-
-    .footer-inner {
-      display: flex;
-      justify-content: space-between;
-      gap: 18px;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-
-    .footer-links {
-      display: flex;
-      gap: 14px;
-      flex-wrap: wrap;
-    }
-
-    .footer-links a:hover {
-      color: white;
-    }
-
-    @media (max-width: 980px) {
-      .grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media (max-width: 760px) {
-      .hero p {
-        font-size: 17px;
-      }
-
-      .actions {
-        flex-direction: column;
-      }
-
-      .btn {
-        width: 100%;
-      }
-
-      .footer-inner {
-        flex-direction: column;
-        align-items: flex-start;
-      }
+    td, th {
+      border-bottom: 1px solid #333;
+      padding: 8px;
     }
   </style>
 </head>
+
 <body>
-  <script>
-    const access = localStorage.getItem("mlg_access");
-    if (!access) {
-      window.location.href = "/";
-    }
-  </script>
 
-  <header class="topbar">
-    <div class="container topbar-inner">
-      <a href="/" class="brand">
-        <div class="brand-logo">M</div>
-        <span>Mon Logiciel Garage</span>
-      </a>
-      <a href="/merci.html" class="btn btn-secondary">Retour à l’étape précédente</a>
-    </div>
-  </header>
+<h1>🚗 Mon Logiciel Garage</h1>
+<p>Bienvenue dans votre espace</p>
 
-  <main>
-    <section class="hero">
-      <div class="container">
-        <div class="badge">🚀 Onboarding premium</div>
-        <h1>Bienvenue dans Mon Logiciel Garage</h1>
-        <p>
-          Votre espace de démarrage est prêt. Cette page vous sert de point de départ
-          simple et professionnel pour organiser votre mise en route.
-        </p>
-      </div>
-    </section>
+<div class="box">
+  <h2>Ajouter un client</h2>
 
-    <section>
-      <div class="container grid">
-        <div class="card">
-          <h2>Vos 4 premières étapes</h2>
-          <p class="muted">
-            Le plus important est de démarrer proprement, sans vous disperser.
-          </p>
+  <input id="nom" placeholder="Nom">
+  <input id="tel" placeholder="Téléphone">
+  <button onclick="ajouterClient()">Ajouter</button>
+</div>
 
-          <div class="steps">
-            <div class="step">
-              <div class="step-number">1</div>
-              <div>
-                <h3>Préparez vos informations de base</h3>
-                <p>
-                  Nom du garage, coordonnées, TVA, mentions utiles, email de contact,
-                  téléphone et logo si vous en avez un.
-                </p>
-              </div>
-            </div>
+<div class="box">
+  <h2>Clients</h2>
+  <table id="tableClients">
+    <tr>
+      <th>Nom</th>
+      <th>Téléphone</th>
+    </tr>
+  </table>
+</div>
 
-            <div class="step">
-              <div class="step-number">2</div>
-              <div>
-                <h3>Créez vos premiers clients et véhicules</h3>
-                <p>
-                  Commencez avec quelques dossiers réels pour prendre l’outil en main rapidement.
-                </p>
-              </div>
-            </div>
+<script>
+  let clients = JSON.parse(localStorage.getItem("clients")) || [];
 
-            <div class="step">
-              <div class="step-number">3</div>
-              <div>
-                <h3>Faites un premier devis test</h3>
-                <p>
-                  Ajoutez pièces, main d’œuvre, TVA et vérifiez le rendu PDF
-                  pour valider votre flux de travail.
-                </p>
-              </div>
-            </div>
+  function afficherClients() {
+    let table = document.getElementById("tableClients");
+    table.innerHTML = `
+      <tr>
+        <th>Nom</th>
+        <th>Téléphone</th>
+      </tr>
+    `;
 
-            <div class="step">
-              <div class="step-number">4</div>
-              <div>
-                <h3>Passez du devis à la facture</h3>
-                <p>
-                  Une fois votre fonctionnement validé, vous pourrez l’utiliser
-                  sur vos vrais dossiers du quotidien.
-                </p>
-              </div>
-            </div>
-          </div>
+    clients.forEach(c => {
+      table.innerHTML += `
+        <tr>
+          <td>${c.nom}</td>
+          <td>${c.tel}</td>
+        </tr>
+      `;
+    });
+  }
 
-          <div class="info-box">
-            <strong>Conseil simple :</strong>
-            ne cherchez pas à tout paramétrer parfaitement au début.
-            Le meilleur démarrage, c’est 1 client, 1 véhicule, 1 devis, 1 facture.
-          </div>
+  function ajouterClient() {
+    let nom = document.getElementById("nom").value;
+    let tel = document.getElementById("tel").value;
 
-          <div class="actions">
-            <a class="btn btn-primary" href="mailto:support@monlogicielgarage.fr?subject=Onboarding%20Mon%20Logiciel%20Garage">Demander un accompagnement</a>
-            <a class="btn btn-secondary" href="/">Retour au site</a>
-          </div>
-        </div>
+    if (!nom) return alert("Nom requis");
 
-        <div class="card">
-          <h2>Checklist de démarrage</h2>
-          <p class="muted">
-            Utilisez cette liste comme mini plan d’action.
-          </p>
+    clients.push({ nom, tel });
+    localStorage.setItem("clients", JSON.stringify(clients));
 
-          <ul class="checklist">
-            <li>Vérifier vos coordonnées garage</li>
-            <li>Préparer votre numéro de TVA</li>
-            <li>Créer vos premiers clients</li>
-            <li>Ajouter vos premiers véhicules</li>
-            <li>Tester un devis</li>
-            <li>Tester une facture</li>
-            <li>Contrôler le rendu PDF</li>
-            <li>Valider votre routine de travail</li>
-          </ul>
+    afficherClients();
 
-          <div class="contact-box">
-            <strong>Support</strong>
-            <p style="margin:0;">
-              Pour toute question :
-              <a href="mailto:support@monlogicielgarage.fr"><strong>support@monlogicielgarage.fr</strong></a>
-            </p>
-          </div>
+    document.getElementById("nom").value = "";
+    document.getElementById("tel").value = "";
+  }
 
-          <div class="contact-box">
-            <strong>Entreprise</strong>
-            <p style="margin:0;">
-              Anthony Meoli – La Boutique BYMEO
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-  </main>
+  afficherClients();
+</script>
 
-  <footer>
-    <div class="container footer-inner">
-      <div>© 2026 Mon Logiciel Garage</div>
-
-      <div class="footer-links">
-        <a href="/#mentions-legales">Mentions légales</a>
-        <a href="/#cgv">CGV</a>
-        <a href="/#politique-confidentialite">Politique de confidentialité</a>
-        <a href="mailto:support@monlogicielgarage.fr">support@monlogicielgarage.fr</a>
-      </div>
-
-      <div>Logiciel simple pour garages indépendants</div>
-    </div>
-  </footer>
 </body>
 </html>
