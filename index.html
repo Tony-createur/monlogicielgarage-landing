@@ -665,6 +665,95 @@
       color: white;
     }
 
+    .cookie-banner {
+      position: fixed;
+      left: 20px;
+      right: 20px;
+      bottom: 20px;
+      z-index: 9999;
+      display: none;
+    }
+
+    .cookie-banner.show {
+      display: block;
+    }
+
+    .cookie-box {
+      max-width: 980px;
+      margin: 0 auto;
+      background: rgba(8, 17, 32, 0.96);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+      padding: 22px;
+      backdrop-filter: blur(10px);
+    }
+
+    .cookie-box h3 {
+      margin: 0 0 10px;
+      font-size: 22px;
+      color: #fff;
+    }
+
+    .cookie-box p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .cookie-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .cookie-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      border: 0;
+      border-radius: 12px;
+      padding: 13px 18px;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .cookie-btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .cookie-btn.accept {
+      background: var(--green);
+      color: #05210f;
+    }
+
+    .cookie-btn.reject {
+      background: rgba(255,255,255,0.06);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+
+    .cookie-btn.settings {
+      background: transparent;
+      color: #fff;
+      border: 1px dashed rgba(255,255,255,0.22);
+    }
+
+    .cookie-status {
+      margin-top: 12px;
+      font-size: 13px;
+      color: #c9f7d8;
+    }
+
+    .cookie-link {
+      text-decoration: underline;
+    }
+
     @media (max-width: 1080px) {
       .hero-grid,
       .features-grid,
@@ -707,6 +796,28 @@
       .footer-inner {
         flex-direction: column;
         align-items: flex-start;
+      }
+
+      .cookie-banner {
+        left: 12px;
+        right: 12px;
+        bottom: 12px;
+      }
+
+      .cookie-box {
+        padding: 18px;
+      }
+
+      .cookie-box h3 {
+        font-size: 19px;
+      }
+
+      .cookie-actions {
+        flex-direction: column;
+      }
+
+      .cookie-btn {
+        width: 100%;
       }
     }
   </style>
@@ -1117,18 +1228,17 @@
             Le site monlogicielgarage.fr est édité par :
           </p>
           <p>
-            <strong>[TON NOM / SOCIÉTÉ]</strong><br>
-            Forme juridique : [EX : SARL]<br>
-            Capital social : [CAPITAL SOCIAL]<br>
-            Siège social : [ADRESSE COMPLÈTE]<br>
-            SIRET : [NUMÉRO SIRET]<br>
-            RCS : [VILLE D’IMMATRICULATION]<br>
-            TVA intracommunautaire : [NUMÉRO TVA SI APPLICABLE]<br>
+            <strong>Anthony Meoli - La Boutique BYMEO</strong><br>
+            Forme juridique : SARL<br>
+            Siège social : 104 rue des Bruyères, 58660 Coulanges-Les-Nevers<br>
+            SIRET : 89867767900018<br>
+            RCS : Nevers<br>
+            TVA intracommunautaire : FR14898677679<br>
             Email : support@monlogicielgarage.fr
           </p>
 
           <h3>Directeur de la publication</h3>
-          <p>[NOM DU DIRECTEUR DE PUBLICATION]</p>
+          <p>Anthony Meoli</p>
 
           <h3>Hébergement</h3>
           <p>
@@ -1234,7 +1344,7 @@
           <h3>11. Droit applicable et litiges</h3>
           <p>
             Les présentes CGV sont soumises au droit français. En cas de litige, compétence expresse est attribuée
-            aux tribunaux compétents du ressort de [VILLE].
+            aux tribunaux compétents du ressort de Nevers.
           </p>
         </div>
       </div>
@@ -1320,11 +1430,105 @@
         <a href="#mentions-legales">Mentions légales</a>
         <a href="#cgv">CGV</a>
         <a href="#politique-confidentialite">Politique de confidentialité</a>
+        <a href="#" onclick="openCookieSettings(); return false;">Cookies</a>
         <a href="mailto:support@monlogicielgarage.fr">support@monlogicielgarage.fr</a>
       </div>
 
       <div>Logiciel simple pour garages indépendants</div>
     </div>
   </footer>
+
+  <div id="cookie-banner" class="cookie-banner">
+    <div class="cookie-box">
+      <h3>Gestion des cookies</h3>
+      <p>
+        Ce site utilise des cookies nécessaires à son fonctionnement et, selon votre choix,
+        des cookies de mesure d’audience pour améliorer l’expérience utilisateur.
+        Vous pouvez accepter, refuser ou modifier votre choix à tout moment.
+        Consultez notre
+        <a class="cookie-link" href="#politique-confidentialite">politique de confidentialité</a>.
+      </p>
+
+      <div class="cookie-actions">
+        <button class="cookie-btn accept" id="cookie-accept">Accepter</button>
+        <button class="cookie-btn reject" id="cookie-reject">Refuser</button>
+        <button class="cookie-btn settings" id="cookie-close">Fermer</button>
+      </div>
+
+      <div id="cookie-status" class="cookie-status" style="display:none;"></div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const COOKIE_KEY = "mlg_cookie_choice";
+      const banner = document.getElementById("cookie-banner");
+      const acceptBtn = document.getElementById("cookie-accept");
+      const rejectBtn = document.getElementById("cookie-reject");
+      const closeBtn = document.getElementById("cookie-close");
+      const status = document.getElementById("cookie-status");
+
+      function showBanner() {
+        banner.classList.add("show");
+      }
+
+      function hideBanner() {
+        banner.classList.remove("show");
+      }
+
+      function saveChoice(value) {
+        localStorage.setItem(COOKIE_KEY, value);
+      }
+
+      function getChoice() {
+        return localStorage.getItem(COOKIE_KEY);
+      }
+
+      function setStatus(message) {
+        status.style.display = "block";
+        status.textContent = message;
+      }
+
+      function enableAnalyticsCookies() {
+        console.log("Cookies analytiques autorisés");
+      }
+
+      function disableAnalyticsCookies() {
+        console.log("Cookies analytiques refusés");
+      }
+
+      acceptBtn.addEventListener("click", function () {
+        saveChoice("accepted");
+        enableAnalyticsCookies();
+        setStatus("Votre choix a été enregistré : cookies de mesure d’audience acceptés.");
+        setTimeout(hideBanner, 900);
+      });
+
+      rejectBtn.addEventListener("click", function () {
+        saveChoice("rejected");
+        disableAnalyticsCookies();
+        setStatus("Votre choix a été enregistré : cookies non essentiels refusés.");
+        setTimeout(hideBanner, 900);
+      });
+
+      closeBtn.addEventListener("click", function () {
+        hideBanner();
+      });
+
+      const savedChoice = getChoice();
+
+      if (!savedChoice) {
+        showBanner();
+      } else if (savedChoice === "accepted") {
+        enableAnalyticsCookies();
+      } else {
+        disableAnalyticsCookies();
+      }
+
+      window.openCookieSettings = function () {
+        showBanner();
+      };
+    })();
+  </script>
 </body>
 </html>
