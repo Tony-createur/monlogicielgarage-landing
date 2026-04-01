@@ -129,11 +129,6 @@
       font-size: 22px;
     }
 
-    h3 {
-      margin: 0 0 14px;
-      font-size: 18px;
-    }
-
     table {
       width: 100%;
       border-collapse: collapse;
@@ -217,8 +212,7 @@
     }
 
     .form-grid input,
-    .form-grid textarea,
-    .form-grid select {
+    .form-grid textarea {
       width: 100%;
       padding: 14px 14px;
       border-radius: 12px;
@@ -250,9 +244,9 @@
     .doc-header {
       display: flex;
       justify-content: space-between;
-      gap: 12px;
+      gap: 20px;
       flex-wrap: wrap;
-      margin-bottom: 16px;
+      margin-bottom: 20px;
     }
 
     .doc-title {
@@ -264,6 +258,11 @@
       color: var(--muted);
       font-size: 14px;
       line-height: 1.6;
+    }
+
+    .doc-company {
+      text-align: right;
+      max-width: 360px;
     }
 
     .doc-section {
@@ -281,6 +280,15 @@
       border-top: 1px solid rgba(255,255,255,0.12);
       font-size: 18px;
       font-weight: 700;
+    }
+
+    .doc-footer {
+      margin-top: 26px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(255,255,255,0.12);
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.7;
     }
 
     .small-actions {
@@ -393,7 +401,8 @@
       .muted,
       .doc-section p,
       .doc-total,
-      .doc-title {
+      .doc-title,
+      .doc-footer {
         color: black !important;
       }
     }
@@ -406,6 +415,10 @@
       .main,
       .modules {
         grid-template-columns: 1fr;
+      }
+
+      .doc-company {
+        text-align: left;
       }
     }
 
@@ -527,6 +540,51 @@
     const email = localStorage.getItem("mlg_access_email") || "Abonné";
     document.getElementById("userEmail").textContent = email;
 
+    const garageRaw = localStorage.getItem("mlg_garage_infos");
+    if (!garageRaw) {
+      window.location.href = "/setup.html";
+    }
+
+    function getGarageInfos() {
+      return JSON.parse(localStorage.getItem("mlg_garage_infos") || "{}");
+    }
+
+    function isGarageConfigured() {
+      const garage = getGarageInfos();
+      return !!(garage.nom && garage.adresse && garage.ville && garage.telephone && garage.email);
+    }
+
+    if (!isGarageConfigured()) {
+      window.location.href = "/setup.html";
+    }
+
+    function getGarageBlockHtml() {
+      const garage = getGarageInfos();
+
+      return `
+        <div class="doc-meta doc-company">
+          <strong>${garage.nom || ""}</strong><br>
+          ${garage.adresse || ""}<br>
+          ${garage.ville || ""}<br>
+          ${garage.telephone || ""}<br>
+          ${garage.email || ""}<br>
+          ${garage.siret ? `SIRET : ${garage.siret}<br>` : ""}
+          ${garage.tva ? `TVA : ${garage.tva}<br>` : ""}
+        </div>
+      `;
+    }
+
+    function getFooterMentionsHtml() {
+      const garage = getGarageInfos();
+      const lignes = [];
+
+      if (garage.siret) lignes.push(`SIRET : ${garage.siret}`);
+      if (garage.tva) lignes.push(`TVA intracommunautaire : ${garage.tva}`);
+      lignes.push("Merci pour votre confiance.");
+
+      return `<div class="doc-footer">${lignes.join("<br>")}</div>`;
+    }
+
     function scrollToSection(id) {
       document.getElementById(id).scrollIntoView({ behavior: "smooth", block: "start" });
     }
@@ -580,10 +638,7 @@
               Date : ${devisData.date}
             </div>
           </div>
-          <div class="doc-meta">
-            <strong>Mon Logiciel Garage</strong><br>
-            Document généré automatiquement
-          </div>
+          ${getGarageBlockHtml()}
         </div>
 
         <div class="doc-section">
@@ -604,6 +659,8 @@
         <div class="doc-total">
           Total TTC : ${formatPrix(devisData.prixTTC)}
         </div>
+
+        ${getFooterMentionsHtml()}
 
         <div class="small-actions">
           <button class="btn" onclick="window.print()">Imprimer le devis</button>
@@ -627,10 +684,7 @@
               Date : ${factureData.date}
             </div>
           </div>
-          <div class="doc-meta">
-            <strong>Mon Logiciel Garage</strong><br>
-            Document généré automatiquement
-          </div>
+          ${getGarageBlockHtml()}
         </div>
 
         <div class="doc-section">
@@ -651,6 +705,8 @@
         <div class="doc-total">
           Total TTC à payer : ${formatPrix(factureData.prixTTC)}
         </div>
+
+        ${getFooterMentionsHtml()}
 
         <div class="small-actions">
           <button class="btn" onclick="window.print()">Imprimer la facture</button>
