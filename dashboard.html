@@ -3,14 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dashboard V2 | Mon Logiciel Garage</title>
+  <title>Dashboard V5 | Mon Logiciel Garage</title>
   <meta name="robots" content="noindex, nofollow" />
   <style>
     :root {
       --bg: #081120;
-      --bg-soft: #0d1a2d;
       --card: rgba(255,255,255,0.06);
-      --card-strong: rgba(255,255,255,0.10);
       --border: rgba(255,255,255,0.12);
       --text: #ffffff;
       --muted: #b8c4d6;
@@ -21,7 +19,6 @@
       --red: #ef4444;
       --shadow: 0 20px 60px rgba(0,0,0,0.35);
       --radius: 22px;
-      --radius-sm: 14px;
     }
 
     * { box-sizing: border-box; }
@@ -41,7 +38,7 @@
 
     .app {
       display: grid;
-      grid-template-columns: 340px 1fr;
+      grid-template-columns: 360px 1fr;
       min-height: 100vh;
     }
 
@@ -56,9 +53,7 @@
       overflow: auto;
     }
 
-    .content {
-      padding: 26px;
-    }
+    .content { padding: 26px; }
 
     .brand {
       display: flex;
@@ -68,8 +63,8 @@
     }
 
     .brand-badge {
-      width: 48px;
-      height: 48px;
+      width: 50px;
+      height: 50px;
       border-radius: 15px;
       background: linear-gradient(135deg, var(--blue), var(--green));
       display: grid;
@@ -90,8 +85,7 @@
       font-size: 0.9rem;
     }
 
-    .side-card,
-    .panel {
+    .side-card, .panel {
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: var(--radius);
@@ -108,8 +102,7 @@
       margin-bottom: 20px;
     }
 
-    .side-card h3,
-    .panel h3 {
+    .side-card h3, .panel h3 {
       margin-top: 0;
       margin-bottom: 16px;
       font-size: 1.03rem;
@@ -120,10 +113,13 @@
       color: var(--muted);
     }
 
-    .stats {
+    .stats, .mini-stats {
       display: grid;
       gap: 10px;
     }
+
+    .stats { grid-template-columns: 1fr; }
+    .mini-stats { grid-template-columns: repeat(4, minmax(0,1fr)); }
 
     .stat {
       padding: 14px;
@@ -134,7 +130,7 @@
 
     .stat strong {
       display: block;
-      font-size: 1.15rem;
+      font-size: 1.08rem;
       margin-top: 6px;
     }
 
@@ -157,16 +153,13 @@
       color: var(--muted);
     }
 
-    .actions,
-    .toolbar,
-    .filter-row,
-    .tabs {
+    .actions, .toolbar, .filter-row, .tabs {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
     }
 
-    button {
+    button, .mail-btn {
       appearance: none;
       border: 0;
       cursor: pointer;
@@ -175,11 +168,12 @@
       font-weight: 700;
       font-size: 0.95rem;
       transition: 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    button:hover {
-      transform: translateY(-1px);
-    }
+    button:hover, .mail-btn:hover { transform: translateY(-1px); }
 
     .btn-primary {
       background: linear-gradient(135deg, var(--green), var(--green-dark));
@@ -187,7 +181,7 @@
       box-shadow: var(--shadow);
     }
 
-    .btn-secondary {
+    .btn-secondary, .mail-btn {
       background: rgba(255,255,255,0.08);
       color: white;
       border: 1px solid var(--border);
@@ -211,8 +205,13 @@
       border: 1px solid rgba(245,158,11,0.25);
     }
 
-    .tab-btn.active,
-    .filter-btn.active {
+    .btn-red-soft {
+      background: rgba(239,68,68,0.12);
+      color: #ffd7d7;
+      border: 1px solid rgba(239,68,68,0.22);
+    }
+
+    .tab-btn.active, .filter-btn.active {
       background: rgba(255,255,255,0.16);
       border: 1px solid rgba(255,255,255,0.22);
     }
@@ -249,8 +248,7 @@
       resize: vertical;
     }
 
-    input::placeholder,
-    textarea::placeholder {
+    input::placeholder, textarea::placeholder {
       color: #a8b4c6;
     }
 
@@ -296,23 +294,36 @@
       border-color: rgba(245,158,11,0.24);
     }
 
-    .history-list {
+    .badge.linked {
+      background: rgba(255,255,255,0.08);
+      color: #f4f7fb;
+      border-color: rgba(255,255,255,0.16);
+    }
+
+    .badge.acompte {
+      background: rgba(255,255,255,0.08);
+      color: #fff;
+      border-color: rgba(255,255,255,0.15);
+    }
+
+    .history-list, .client-list, .vehicle-list {
       display: flex;
       flex-direction: column;
       gap: 10px;
-      max-height: 58vh;
+      max-height: 38vh;
       overflow: auto;
       padding-right: 4px;
     }
 
-    .history-item {
+    .history-item, .mini-item {
       border: 1px solid rgba(255,255,255,0.08);
       background: rgba(255,255,255,0.04);
       border-radius: 16px;
       padding: 12px;
-      cursor: pointer;
       transition: 0.2s ease;
     }
+
+    .history-item { cursor: pointer; }
 
     .history-item:hover {
       transform: translateY(-1px);
@@ -420,13 +431,104 @@
       margin-top: 12px;
     }
 
-    .search-box {
-      margin-top: 12px;
+    .search-box { margin-top: 12px; }
+
+    .doc-links-box {
+      display: grid;
+      gap: 10px;
+      padding: 14px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
     }
 
-    .hidden-print {
+    .doc-link-line {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .doc-header-preview {
+      display: grid;
+      grid-template-columns: 120px 1fr;
+      gap: 18px;
+      align-items: center;
+      padding: 16px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .logo-box {
+      width: 120px;
+      height: 120px;
+      border-radius: 18px;
+      overflow: hidden;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      font-size: 0.85rem;
+      text-align: center;
+      padding: 10px;
+    }
+
+    .logo-box img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
       display: block;
     }
+
+    .print-footer-box {
+      margin-top: 16px;
+      padding: 14px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .month-table {
+      width: 100%;
+      border-collapse: collapse;
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    .month-table th, .month-table td {
+      text-align: left;
+      padding: 10px 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      font-size: 0.92rem;
+    }
+
+    .month-table th {
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .row-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .row-actions button {
+      padding: 8px 11px;
+      font-size: 0.82rem;
+      border-radius: 10px;
+    }
+
+    .hidden-print { display: block; }
 
     @media (max-width: 1180px) {
       .app { grid-template-columns: 1fr; }
@@ -436,30 +538,35 @@
         border-right: 0;
         border-bottom: 1px solid var(--border);
       }
-      .line-grid {
-        grid-template-columns: 1fr 1fr;
-      }
-      .grid-4 {
-        grid-template-columns: repeat(2, minmax(0,1fr));
-      }
+      .line-grid { grid-template-columns: 1fr 1fr; }
+      .grid-4, .mini-stats { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .doc-header-preview { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 760px) {
       .content, .sidebar { padding: 18px; }
-      .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+      .grid-2, .grid-3, .grid-4, .mini-stats { grid-template-columns: 1fr; }
       .line-grid { grid-template-columns: 1fr; }
+
       .actions button,
       .toolbar button,
       .tabs button,
-      .filter-row button {
+      .filter-row button,
+      .mail-btn {
         width: 100%;
       }
+    }
+
+    @page {
+      size: A4;
+      margin: 12mm;
     }
 
     @media print {
       body {
         background: white !important;
         color: black !important;
+        font-size: 12px;
       }
 
       .sidebar,
@@ -467,7 +574,16 @@
       .toolbar,
       .filter-row,
       .tabs,
-      .hidden-print {
+      .hidden-print,
+      .mail-btn,
+      #saveBtnTop,
+      #printBtnTop,
+      #newDocBtn,
+      #clientsPanel,
+      #vehiclesPanel,
+      #indicatorsPanel,
+      #monthlyPanel,
+      #garageSettingsPanel {
         display: none !important;
       }
 
@@ -476,11 +592,15 @@
 
       .panel,
       .line-item,
-      .summary-box {
+      .summary-box,
+      .doc-links-box,
+      .doc-header-preview,
+      .print-footer-box {
         background: white !important;
         color: black !important;
-        border: 1px solid #ccc !important;
+        border: 1px solid #d7d7d7 !important;
         box-shadow: none !important;
+        break-inside: avoid;
       }
 
       input, select, textarea {
@@ -493,7 +613,12 @@
       .summary-row,
       .small,
       .footer-note,
-      .empty {
+      .empty,
+      .topbar p,
+      .brand p,
+      .muted-box,
+      .month-table th,
+      .month-table td {
         color: black !important;
       }
 
@@ -502,6 +627,12 @@
         color: black !important;
         background: white !important;
       }
+
+      .month-table th, .month-table td {
+        border-bottom: 1px solid #ddd !important;
+      }
+
+      .topbar h2 { font-size: 22px; }
     }
   </style>
 </head>
@@ -512,7 +643,7 @@
         <div class="brand-badge">MG</div>
         <div>
           <h1>Mon Logiciel Garage</h1>
-          <p>Dashboard version 2</p>
+          <p>Dashboard version 5</p>
         </div>
       </div>
 
@@ -531,15 +662,11 @@
             <div class="small">Documents</div>
             <strong id="docCount">0</strong>
           </div>
-          <div class="stat">
-            <div class="small">CA factures payées</div>
-            <strong id="paidRevenue">0,00 €</strong>
-          </div>
         </div>
       </div>
 
       <div class="side-card">
-        <h3>Historique</h3>
+        <h3>Liste documents</h3>
 
         <div class="tabs hidden-print">
           <button class="btn-secondary tab-btn active" data-tab="all">Tout</button>
@@ -566,14 +693,99 @@
       <div class="topbar">
         <div>
           <h2>Dashboard</h2>
-          <p>Devis, factures, échéances et suivi paiement.</p>
+          <p>Version 5 avec clients, véhicules, acompte encaissé, paiement partiel et relance impayée.</p>
         </div>
         <div class="actions">
           <button class="btn-primary" id="newDocBtn">Nouveau document</button>
           <button class="btn-secondary" id="saveBtnTop">Enregistrer</button>
-          <button class="btn-secondary" id="printBtnTop">Imprimer</button>
+          <button class="btn-secondary" id="printBtnTop">Imprimer / PDF</button>
         </div>
       </div>
+
+      <section class="panel" id="indicatorsPanel">
+        <h3>Indicateurs</h3>
+        <div class="mini-stats">
+          <div class="stat">
+            <div class="small">CA payé ce mois</div>
+            <strong id="monthlyPaidRevenue">0,00 €</strong>
+          </div>
+          <div class="stat">
+            <div class="small">Factures payées</div>
+            <strong id="paidRevenue">0,00 €</strong>
+          </div>
+          <div class="stat">
+            <div class="small">Impayés</div>
+            <strong id="unpaidAmount">0,00 €</strong>
+          </div>
+          <div class="stat">
+            <div class="small">Échéances dépassées</div>
+            <strong id="overdueAmount">0,00 €</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" id="garageSettingsPanel">
+        <h3>Identité du garage</h3>
+        <div class="grid-4">
+          <div>
+            <label for="garageName">Nom du garage</label>
+            <input id="garageName" type="text" placeholder="Ex. Garage Dupont" />
+          </div>
+          <div>
+            <label for="garagePhone">Téléphone</label>
+            <input id="garagePhone" type="text" placeholder="Ex. 03 00 00 00 00" />
+          </div>
+          <div>
+            <label for="garageEmail">Email</label>
+            <input id="garageEmail" type="email" placeholder="Ex. contact@garage.fr" />
+          </div>
+          <div>
+            <label for="garageLogo">URL du logo</label>
+            <input id="garageLogo" type="text" placeholder="https://..." />
+          </div>
+        </div>
+
+        <div class="grid-4" style="margin-top: 14px;">
+          <div>
+            <label for="garageSiret">SIRET</label>
+            <input id="garageSiret" type="text" placeholder="Ex. 12345678900012" />
+          </div>
+          <div>
+            <label for="garageTva">TVA intracom</label>
+            <input id="garageTva" type="text" placeholder="Ex. FR00123456789" />
+          </div>
+          <div>
+            <label for="garageAddress">Adresse</label>
+            <input id="garageAddress" type="text" placeholder="Adresse du garage" />
+          </div>
+          <div>
+            <label for="paymentTerms">Conditions paiement</label>
+            <input id="paymentTerms" type="text" placeholder="Ex. Paiement à réception" />
+          </div>
+        </div>
+
+        <div style="margin-top: 14px;">
+          <label for="legalNotice">Mentions / pied de page document</label>
+          <textarea id="legalNotice" placeholder="Ex. Merci de votre confiance. Pénalités de retard applicables en cas de non-paiement à échéance."></textarea>
+        </div>
+
+        <div class="toolbar hidden-print">
+          <button class="btn-secondary" id="saveGarageBtn">Enregistrer les paramètres garage</button>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h3>Aperçu entête document</h3>
+        <div class="doc-header-preview">
+          <div class="logo-box" id="logoPreview">Aucun logo</div>
+          <div>
+            <div style="font-size: 1.2rem; font-weight: 800;" id="garageNamePreview">Nom du garage</div>
+            <div class="small" id="garageAddressPreview">Adresse du garage</div>
+            <div class="small" id="garageContactPreview">Téléphone • Email</div>
+            <div class="small" id="garageLegalPreview">SIRET • TVA</div>
+          </div>
+        </div>
+      </section>
 
       <section class="panel">
         <h3>Document</h3>
@@ -642,6 +854,19 @@
           <label for="clientAddress">Adresse</label>
           <textarea id="clientAddress" placeholder="Adresse complète du client"></textarea>
         </div>
+
+        <div class="toolbar" style="margin-top: 14px;">
+          <a href="#" id="mailToBtn" class="mail-btn">Envoyer par mail</a>
+          <a href="#" id="paymentReminderBtn" class="mail-btn">Relance impayée</a>
+          <button class="btn-secondary hidden-print" id="saveClientFromDocBtn">Enregistrer ce client</button>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h3>Références liées</h3>
+        <div class="doc-links-box" id="docLinksBox">
+          <div class="small">Aucune référence liée.</div>
+        </div>
       </section>
 
       <section class="panel">
@@ -653,7 +878,7 @@
       </section>
 
       <section class="panel">
-        <h3>Totaux</h3>
+        <h3>Totaux & paiements</h3>
         <div class="grid-2">
           <div>
             <div class="grid-3">
@@ -662,18 +887,23 @@
                 <input id="globalDiscount" type="number" min="0" step="0.01" value="0" />
               </div>
               <div>
-                <label for="deposit">Acompte versé (€)</label>
+                <label for="deposit">Acompte prévu / saisi (€)</label>
                 <input id="deposit" type="number" min="0" step="0.01" value="0" />
               </div>
               <div>
-                <label for="notes">Notes</label>
-                <textarea id="notes" placeholder="Observations, garantie, délai, etc."></textarea>
+                <label for="paidAmount">Montant déjà encaissé (€)</label>
+                <input id="paidAmount" type="number" min="0" step="0.01" value="0" />
               </div>
             </div>
 
+            <div style="margin-top:14px;">
+              <label for="notes">Notes</label>
+              <textarea id="notes" placeholder="Observations, garantie, délai, etc."></textarea>
+            </div>
+
             <div class="muted-box">
-              L’acompte est automatiquement déduit du total pour afficher le <strong>solde restant</strong>.  
-              Si le document est en <strong>Payé</strong>, le solde restant passe à <strong>0 €</strong>.
+              Le <strong>solde restant</strong> est calculé avec le montant déjà encaissé.  
+              L’ancien champ acompte reste compatible, mais la V5 utilise surtout <strong>montant encaissé</strong>.
             </div>
           </div>
 
@@ -699,8 +929,12 @@
               <strong id="netToPay">0,00 €</strong>
             </div>
             <div class="summary-row">
-              <span>Acompte versé</span>
+              <span>Acompte prévu</span>
               <strong id="depositDisplay">0,00 €</strong>
+            </div>
+            <div class="summary-row">
+              <span>Déjà encaissé</span>
+              <strong id="paidAmountDisplay">0,00 €</strong>
             </div>
             <div class="summary-row total-final">
               <span>Solde restant</span>
@@ -713,10 +947,91 @@
           <button class="btn-primary" id="saveBtn">Enregistrer</button>
           <button class="btn-blue" id="markPaidBtn">Marquer comme payé</button>
           <button class="btn-orange" id="markUnpaidBtn">Marquer non payé</button>
+          <button class="btn-secondary" id="depositReceivedBtn">Acompte encaissé</button>
+          <button class="btn-secondary" id="partialPaymentBtn">Paiement partiel</button>
+          <button class="btn-secondary" id="depositInvoiceBtn">Facture d’acompte</button>
           <button class="btn-secondary" id="duplicateBtn">Dupliquer</button>
           <button class="btn-secondary" id="convertBtn">Transformer en facture</button>
-          <button class="btn-secondary" id="printBtn">Imprimer</button>
+          <button class="btn-secondary" id="printBtn">Imprimer / PDF</button>
           <button class="btn-danger" id="deleteBtn">Supprimer</button>
+        </div>
+      </section>
+
+      <section class="panel" id="clientsPanel">
+        <h3>Base clients modifiable</h3>
+        <div class="grid-4">
+          <div>
+            <label for="dbClientName">Nom / société</label>
+            <input id="dbClientName" type="text" placeholder="Nom du client" />
+          </div>
+          <div>
+            <label for="dbClientPhone">Téléphone</label>
+            <input id="dbClientPhone" type="text" placeholder="Téléphone" />
+          </div>
+          <div>
+            <label for="dbClientEmail">Email</label>
+            <input id="dbClientEmail" type="email" placeholder="Email" />
+          </div>
+          <div>
+            <label for="dbClientAddress">Adresse</label>
+            <input id="dbClientAddress" type="text" placeholder="Adresse" />
+          </div>
+        </div>
+        <div class="toolbar hidden-print" style="margin-top:14px;">
+          <button class="btn-primary" id="saveClientBtn">Ajouter / mettre à jour client</button>
+          <button class="btn-secondary" id="resetClientBtn">Vider</button>
+        </div>
+        <div id="clientDbList" class="client-list" style="margin-top:14px;"></div>
+      </section>
+
+      <section class="panel" id="vehiclesPanel">
+        <h3>Base véhicules modifiable</h3>
+        <div class="grid-4">
+          <div>
+            <label for="dbVehicleName">Véhicule</label>
+            <input id="dbVehicleName" type="text" placeholder="Ex. Peugeot 308" />
+          </div>
+          <div>
+            <label for="dbVehiclePlate">Immatriculation</label>
+            <input id="dbVehiclePlate" type="text" placeholder="AB-123-CD" />
+          </div>
+          <div>
+            <label for="dbVehicleMileage">Kilométrage</label>
+            <input id="dbVehicleMileage" type="text" placeholder="185000 km" />
+          </div>
+          <div>
+            <label for="dbVehicleOwner">Client</label>
+            <input id="dbVehicleOwner" type="text" placeholder="Nom du client" />
+          </div>
+        </div>
+        <div class="toolbar hidden-print" style="margin-top:14px;">
+          <button class="btn-primary" id="saveVehicleBtn">Ajouter / mettre à jour véhicule</button>
+          <button class="btn-secondary" id="resetVehicleBtn">Vider</button>
+          <button class="btn-secondary" id="saveVehicleFromDocBtn">Enregistrer ce véhicule</button>
+        </div>
+        <div id="vehicleDbList" class="vehicle-list" style="margin-top:14px;"></div>
+      </section>
+
+      <section class="panel" id="monthlyPanel">
+        <h3>Résumé mensuel</h3>
+        <table class="month-table">
+          <thead>
+            <tr>
+              <th>Mois</th>
+              <th>Factures payées</th>
+              <th>Impayés</th>
+            </tr>
+          </thead>
+          <tbody id="monthlyTableBody"></tbody>
+        </table>
+      </section>
+
+      <section class="panel">
+        <h3>Signature / mentions document</h3>
+        <div class="print-footer-box">
+          <div id="printFooterPreview" class="small">
+            Les mentions du document apparaîtront ici.
+          </div>
         </div>
 
         <div class="footer-note">
@@ -728,11 +1043,17 @@
 
   <script>
     const STORAGE_KEYS = {
-      docs: "garage_documents_v2",
+      docs: "garage_documents_v5",
+      legacyV4: "garage_documents_v4",
+      legacyV3: "garage_documents_v3",
+      legacyV2: "garage_documents_v2",
       legacyQuotes: "garage_quotes_history",
       currentDocId: "garage_current_document_id",
       quoteCounter: "garage_quote_counter",
-      invoiceCounter: "garage_invoice_counter"
+      invoiceCounter: "garage_invoice_counter",
+      garageSettings: "garage_settings_v1",
+      clientsDb: "garage_clients_db_v1",
+      vehiclesDb: "garage_vehicles_db_v1"
     };
 
     const defaultTVA = 20;
@@ -742,7 +1063,22 @@
       currentId: null,
       activeTab: "all",
       activeFilter: "all",
-      search: ""
+      search: "",
+      editingClientId: null,
+      editingVehicleId: null,
+      garageSettings: {
+        garageName: "",
+        garagePhone: "",
+        garageEmail: "",
+        garageLogo: "",
+        garageSiret: "",
+        garageTva: "",
+        garageAddress: "",
+        paymentTerms: "",
+        legalNotice: ""
+      },
+      clientsDb: [],
+      vehiclesDb: []
     };
 
     function todayISO() {
@@ -765,8 +1101,8 @@
       return Number.isFinite(n) ? n : 0;
     }
 
-    function uid() {
-      return "doc_" + Date.now() + "_" + Math.random().toString(36).slice(2, 10);
+    function uid(prefix = "id") {
+      return prefix + "_" + Date.now() + "_" + Math.random().toString(36).slice(2, 10);
     }
 
     function escapeHtml(str) {
@@ -836,7 +1172,7 @@
     function createNewDocument(type = "devis") {
       const date = todayISO();
       return {
-        id: uid(),
+        id: uid("doc"),
         type,
         number: nextNumberFor(type),
         date,
@@ -852,81 +1188,239 @@
         notes: "",
         globalDiscount: 0,
         deposit: 0,
+        paidAmount: 0,
         lines: [createEmptyLine()],
         createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
+        updatedAt: new Date().toISOString(),
+        sourceQuoteId: null,
+        sourceQuoteNumber: "",
+        linkedInvoiceId: null,
+        linkedInvoiceNumber: "",
+        isDepositInvoice: false
       };
     }
 
-    function migrateLegacyData() {
-      const existing = JSON.parse(localStorage.getItem(STORAGE_KEYS.docs) || "[]");
-      if (Array.isArray(existing) && existing.length > 0) {
-        state.documents = existing;
-        ensureCountersFromDocs();
-        return;
+    function normalizeDoc(item, index = 0) {
+      const date = item.date || todayISO();
+      const deposit = toNumber(item.deposit);
+      const paidAmount = item.paidAmount != null ? toNumber(item.paidAmount) : deposit;
+
+      return {
+        id: item.id || uid("doc") + "_" + index,
+        type: item.type || "devis",
+        number: item.number || ("DV-" + String(index + 1).padStart(4, "0")),
+        date,
+        dueDate: item.dueDate || addDaysISO(date, 30),
+        paymentStatus: item.paymentStatus || "non_paye",
+        clientName: item.clientName || "",
+        clientPhone: item.clientPhone || "",
+        clientEmail: item.clientEmail || "",
+        clientAddress: item.clientAddress || "",
+        vehicle: item.vehicle || "",
+        immatriculation: item.immatriculation || "",
+        mileage: item.mileage || "",
+        notes: item.notes || "",
+        globalDiscount: toNumber(item.globalDiscount),
+        deposit,
+        paidAmount,
+        lines: Array.isArray(item.lines) && item.lines.length
+          ? item.lines.map(l => ({
+              type: l.type || "autre",
+              description: l.description || "",
+              quantity: toNumber(l.quantity || 1),
+              unitPrice: toNumber(l.unitPrice || 0),
+              tva: toNumber(l.tva ?? defaultTVA)
+            }))
+          : [createEmptyLine()],
+        createdAt: item.createdAt || new Date().toISOString(),
+        updatedAt: item.updatedAt || new Date().toISOString(),
+        sourceQuoteId: item.sourceQuoteId || null,
+        sourceQuoteNumber: item.sourceQuoteNumber || "",
+        linkedInvoiceId: item.linkedInvoiceId || null,
+        linkedInvoiceNumber: item.linkedInvoiceNumber || "",
+        isDepositInvoice: !!item.isDepositInvoice
+      };
+    }
+
+    function loadGarageSettings() {
+      try {
+        const raw = JSON.parse(localStorage.getItem(STORAGE_KEYS.garageSettings) || "{}");
+        state.garageSettings = { ...state.garageSettings, ...raw };
+      } catch (e) {}
+    }
+
+    function saveGarageSettings(showAlert = true) {
+      state.garageSettings = {
+        garageName: document.getElementById("garageName").value.trim(),
+        garagePhone: document.getElementById("garagePhone").value.trim(),
+        garageEmail: document.getElementById("garageEmail").value.trim(),
+        garageLogo: document.getElementById("garageLogo").value.trim(),
+        garageSiret: document.getElementById("garageSiret").value.trim(),
+        garageTva: document.getElementById("garageTva").value.trim(),
+        garageAddress: document.getElementById("garageAddress").value.trim(),
+        paymentTerms: document.getElementById("paymentTerms").value.trim(),
+        legalNotice: document.getElementById("legalNotice").value.trim()
+      };
+
+      localStorage.setItem(STORAGE_KEYS.garageSettings, JSON.stringify(state.garageSettings));
+      renderGaragePreview();
+      updateMailToLink();
+      updateReminderLink();
+
+      if (showAlert) alert("Paramètres garage enregistrés.");
+    }
+
+    function fillGarageSettings() {
+      document.getElementById("garageName").value = state.garageSettings.garageName || "";
+      document.getElementById("garagePhone").value = state.garageSettings.garagePhone || "";
+      document.getElementById("garageEmail").value = state.garageSettings.garageEmail || "";
+      document.getElementById("garageLogo").value = state.garageSettings.garageLogo || "";
+      document.getElementById("garageSiret").value = state.garageSettings.garageSiret || "";
+      document.getElementById("garageTva").value = state.garageSettings.garageTva || "";
+      document.getElementById("garageAddress").value = state.garageSettings.garageAddress || "";
+      document.getElementById("paymentTerms").value = state.garageSettings.paymentTerms || "";
+      document.getElementById("legalNotice").value = state.garageSettings.legalNotice || "";
+      renderGaragePreview();
+    }
+
+    function renderGaragePreview() {
+      const s = state.garageSettings;
+
+      document.getElementById("garageNamePreview").textContent = s.garageName || "Nom du garage";
+      document.getElementById("garageAddressPreview").textContent = s.garageAddress || "Adresse du garage";
+      document.getElementById("garageContactPreview").textContent =
+        [s.garagePhone, s.garageEmail].filter(Boolean).join(" • ") || "Téléphone • Email";
+      document.getElementById("garageLegalPreview").textContent =
+        [s.garageSiret ? "SIRET : " + s.garageSiret : "", s.garageTva ? "TVA : " + s.garageTva : ""]
+          .filter(Boolean).join(" • ") || "SIRET • TVA";
+
+      const logoBox = document.getElementById("logoPreview");
+      if (s.garageLogo) {
+        logoBox.innerHTML = `<img src="${escapeHtml(s.garageLogo)}" alt="Logo garage">`;
+      } else {
+        logoBox.textContent = "Aucun logo";
       }
 
-      const legacyRaw = localStorage.getItem(STORAGE_KEYS.legacyQuotes);
-      if (!legacyRaw) {
-        state.documents = [];
-        return;
+      const footerParts = [];
+      if (s.paymentTerms) footerParts.push("Conditions de paiement : " + s.paymentTerms);
+      if (s.legalNotice) footerParts.push(s.legalNotice);
+
+      document.getElementById("printFooterPreview").textContent =
+        footerParts.join(" • ") || "Les mentions du document apparaîtront ici.";
+    }
+
+    function loadDb() {
+      try {
+        state.clientsDb = JSON.parse(localStorage.getItem(STORAGE_KEYS.clientsDb) || "[]");
+      } catch (e) {
+        state.clientsDb = [];
       }
 
       try {
-        const legacy = JSON.parse(legacyRaw);
-        if (!Array.isArray(legacy)) {
-          state.documents = [];
-          return;
+        state.vehiclesDb = JSON.parse(localStorage.getItem(STORAGE_KEYS.vehiclesDb) || "[]");
+      } catch (e) {
+        state.vehiclesDb = [];
+      }
+    }
+
+    function saveClientsDb() {
+      localStorage.setItem(STORAGE_KEYS.clientsDb, JSON.stringify(state.clientsDb));
+      renderClients();
+      renderClientsDb();
+    }
+
+    function saveVehiclesDb() {
+      localStorage.setItem(STORAGE_KEYS.vehiclesDb, JSON.stringify(state.vehiclesDb));
+      renderVehicles();
+      renderVehiclesDb();
+    }
+
+    function syncDbFromDocuments() {
+      state.documents.forEach(doc => {
+        if ((doc.clientName || "").trim()) {
+          const key = doc.clientName.trim().toLowerCase();
+          const existing = state.clientsDb.find(c => c.key === key);
+          if (!existing) {
+            state.clientsDb.push({
+              id: uid("client"),
+              key,
+              name: doc.clientName || "",
+              phone: doc.clientPhone || "",
+              email: doc.clientEmail || "",
+              address: doc.clientAddress || ""
+            });
+          }
         }
 
-        state.documents = legacy.map((item, index) => {
-          const date = item.date || todayISO();
-          return {
-            id: item.id || uid() + "_" + index,
-            type: item.type || "devis",
-            number: item.number || ("DV-" + String(index + 1).padStart(4, "0")),
-            date,
-            dueDate: item.dueDate || addDaysISO(date, 30),
-            paymentStatus: item.paymentStatus || "non_paye",
-            clientName: item.clientName || "",
-            clientPhone: item.clientPhone || "",
-            clientEmail: item.clientEmail || "",
-            clientAddress: item.clientAddress || "",
-            vehicle: item.vehicle || "",
-            immatriculation: item.immatriculation || "",
-            mileage: item.mileage || "",
-            notes: item.notes || "",
-            globalDiscount: toNumber(item.globalDiscount),
-            deposit: toNumber(item.deposit),
-            lines: Array.isArray(item.lines) && item.lines.length
-              ? item.lines.map(l => ({
-                  type: l.type || "autre",
-                  description: l.description || "",
-                  quantity: toNumber(l.quantity || 1),
-                  unitPrice: toNumber(l.unitPrice || 0),
-                  tva: toNumber(l.tva ?? defaultTVA)
-                }))
-              : [createEmptyLine()],
-            createdAt: item.createdAt || new Date().toISOString(),
-            updatedAt: item.updatedAt || new Date().toISOString()
-          };
-        });
+        if ((doc.vehicle || "").trim() || (doc.immatriculation || "").trim()) {
+          const key = [doc.vehicle || "", doc.immatriculation || ""].join("|").trim().toLowerCase();
+          if (key && key !== "|") {
+            const existing = state.vehiclesDb.find(v => v.key === key);
+            if (!existing) {
+              state.vehiclesDb.push({
+                id: uid("vehicle"),
+                key,
+                vehicle: doc.vehicle || "",
+                plate: doc.immatriculation || "",
+                mileage: doc.mileage || "",
+                owner: doc.clientName || ""
+              });
+            }
+          }
+        }
+      });
 
-        persistDocuments();
+      saveClientsDb();
+      saveVehiclesDb();
+    }
+
+    function migrateLegacyData() {
+      const existingV5 = JSON.parse(localStorage.getItem(STORAGE_KEYS.docs) || "[]");
+      if (Array.isArray(existingV5) && existingV5.length > 0) {
+        state.documents = existingV5.map(normalizeDoc);
         ensureCountersFromDocs();
-      } catch (e) {
-        state.documents = [];
+        return;
       }
+
+      const legacyKeys = [
+        STORAGE_KEYS.legacyV4,
+        STORAGE_KEYS.legacyV3,
+        STORAGE_KEYS.legacyV2,
+        STORAGE_KEYS.legacyQuotes
+      ];
+
+      for (const key of legacyKeys) {
+        const raw = localStorage.getItem(key);
+        if (!raw) continue;
+        try {
+          const data = JSON.parse(raw);
+          if (Array.isArray(data) && data.length) {
+            state.documents = data.map(normalizeDoc);
+            persistDocuments();
+            ensureCountersFromDocs();
+            return;
+          }
+        } catch (e) {}
+      }
+
+      state.documents = [];
     }
 
     function persistDocuments() {
       localStorage.setItem(STORAGE_KEYS.docs, JSON.stringify(state.documents));
       updateSidebarStats();
       renderHistory();
+      renderClients();
+      renderVehicles();
+      renderMonthlyTable();
     }
 
     function getCurrentDoc() {
       return state.documents.find(d => d.id === state.currentId) || null;
+    }
+
+    function getDocById(id) {
+      return state.documents.find(d => d.id === id) || null;
     }
 
     function setCurrentDoc(doc) {
@@ -934,6 +1428,9 @@
       localStorage.setItem(STORAGE_KEYS.currentDocId, doc.id);
       fillForm(doc);
       renderHistory();
+      renderLinkedDocs(doc);
+      updateMailToLink();
+      updateReminderLink();
     }
 
     function isOverdue(doc) {
@@ -967,10 +1464,17 @@
 
       const globalDiscount = Math.max(0, toNumber(doc.globalDiscount));
       const deposit = Math.max(0, toNumber(doc.deposit));
-      const netToPay = Math.max(0, totalTTCBeforeDiscount - globalDiscount);
+      let paidAmount = Math.max(0, toNumber(doc.paidAmount));
 
-      let remainingBalance = Math.max(0, netToPay - deposit);
-      if (doc.paymentStatus === "paye") remainingBalance = 0;
+      if (!paidAmount && deposit) paidAmount = deposit;
+
+      const netToPay = Math.max(0, totalTTCBeforeDiscount - globalDiscount);
+      let remainingBalance = Math.max(0, netToPay - paidAmount);
+
+      if (doc.paymentStatus === "paye") {
+        paidAmount = netToPay;
+        remainingBalance = 0;
+      }
 
       return {
         subtotalHT,
@@ -978,6 +1482,7 @@
         totalTTCBeforeDiscount,
         globalDiscount,
         deposit,
+        paidAmount,
         netToPay,
         remainingBalance
       };
@@ -992,7 +1497,27 @@
         .filter(doc => doc.type === "facture" && doc.paymentStatus === "paye")
         .reduce((sum, doc) => sum + calculateDoc(doc).netToPay, 0);
 
+      const unpaidAmount = state.documents
+        .filter(doc => doc.type === "facture" && doc.paymentStatus !== "paye")
+        .reduce((sum, doc) => sum + calculateDoc(doc).remainingBalance, 0);
+
+      const overdueAmount = state.documents
+        .filter(doc => doc.type === "facture" && isOverdue(doc))
+        .reduce((sum, doc) => sum + calculateDoc(doc).remainingBalance, 0);
+
+      const thisMonth = new Date().toISOString().slice(0, 7);
+      const monthlyPaidRevenue = state.documents
+        .filter(doc =>
+          doc.type === "facture" &&
+          doc.paymentStatus === "paye" &&
+          String(doc.date || "").slice(0, 7) === thisMonth
+        )
+        .reduce((sum, doc) => sum + calculateDoc(doc).netToPay, 0);
+
       document.getElementById("paidRevenue").textContent = formatCurrency(paidRevenue);
+      document.getElementById("unpaidAmount").textContent = formatCurrency(unpaidAmount);
+      document.getElementById("overdueAmount").textContent = formatCurrency(overdueAmount);
+      document.getElementById("monthlyPaidRevenue").textContent = formatCurrency(monthlyPaidRevenue);
     }
 
     function renderLines(lines) {
@@ -1083,9 +1608,10 @@
       document.getElementById("notes").value = doc.notes || "";
       document.getElementById("globalDiscount").value = toNumber(doc.globalDiscount).toFixed(2);
       document.getElementById("deposit").value = toNumber(doc.deposit).toFixed(2);
+      document.getElementById("paidAmount").value = toNumber(doc.paidAmount != null ? doc.paidAmount : doc.deposit).toFixed(2);
 
       renderLines(doc.lines || [createEmptyLine()]);
-      updateSummaryFromForm();
+      updateSummaryFromForm(false);
       updateConvertButton();
     }
 
@@ -1108,14 +1634,28 @@
       doc.notes = document.getElementById("notes").value.trim();
       doc.globalDiscount = toNumber(document.getElementById("globalDiscount").value);
       doc.deposit = toNumber(document.getElementById("deposit").value);
+      doc.paidAmount = toNumber(document.getElementById("paidAmount").value);
       doc.lines = readLinesFromDOM();
       doc.updatedAt = new Date().toISOString();
 
       if (!doc.createdAt) doc.createdAt = doc.updatedAt;
+      if (!("sourceQuoteId" in doc)) doc.sourceQuoteId = null;
+      if (!("sourceQuoteNumber" in doc)) doc.sourceQuoteNumber = "";
+      if (!("linkedInvoiceId" in doc)) doc.linkedInvoiceId = null;
+      if (!("linkedInvoiceNumber" in doc)) doc.linkedInvoiceNumber = "";
+      if (!("isDepositInvoice" in doc)) doc.isDepositInvoice = false;
+
+      const totals = calculateDoc(doc);
+      if (totals.remainingBalance <= 0 && totals.netToPay > 0) {
+        doc.paymentStatus = "paye";
+      } else if (totals.netToPay > 0) {
+        doc.paymentStatus = document.getElementById("paymentStatus").value;
+      }
+
       return doc;
     }
 
-    function updateSummaryFromForm() {
+    function updateSummaryFromForm(withAutoSave = true) {
       const doc = readFormToDoc(getCurrentDoc() || createNewDocument(document.getElementById("docType").value));
       const totals = calculateDoc(doc);
 
@@ -1131,10 +1671,14 @@
       document.getElementById("discountDisplay").textContent = formatCurrency(totals.globalDiscount);
       document.getElementById("netToPay").textContent = formatCurrency(totals.netToPay);
       document.getElementById("depositDisplay").textContent = formatCurrency(totals.deposit);
+      document.getElementById("paidAmountDisplay").textContent = formatCurrency(totals.paidAmount);
       document.getElementById("remainingBalance").textContent = formatCurrency(totals.remainingBalance);
 
       updateConvertButton();
-      autoSaveCurrentDocumentSilently();
+      updateMailToLink();
+      updateReminderLink();
+
+      if (withAutoSave) autoSaveCurrentDocumentSilently();
     }
 
     function saveCurrentDocument(showAlert = true) {
@@ -1166,6 +1710,7 @@
       if (index >= 0) {
         state.documents[index] = doc;
         persistDocuments();
+        renderLinkedDocs(doc);
       }
     }
 
@@ -1174,13 +1719,23 @@
       if (!current) return;
 
       const clone = JSON.parse(JSON.stringify(current));
-      clone.id = uid();
+      clone.id = uid("doc");
       clone.number = nextNumberFor(clone.type);
       clone.date = todayISO();
       clone.dueDate = addDaysISO(clone.date, 30);
       clone.paymentStatus = "non_paye";
+      clone.paidAmount = 0;
       clone.createdAt = new Date().toISOString();
       clone.updatedAt = new Date().toISOString();
+
+      if (clone.type === "devis") {
+        clone.linkedInvoiceId = null;
+        clone.linkedInvoiceNumber = "";
+      }
+      if (clone.type === "facture") {
+        clone.sourceQuoteId = current.sourceQuoteId || null;
+        clone.sourceQuoteNumber = current.sourceQuoteNumber || "";
+      }
 
       state.documents.unshift(clone);
       persistDocuments();
@@ -1196,8 +1751,12 @@
         return;
       }
 
-      const invoice = JSON.parse(JSON.stringify(current));
-      invoice.id = uid();
+      const savedCurrent = readFormToDoc(current);
+      const currentIndex = state.documents.findIndex(d => d.id === savedCurrent.id);
+      if (currentIndex >= 0) state.documents[currentIndex] = savedCurrent;
+
+      const invoice = JSON.parse(JSON.stringify(savedCurrent));
+      invoice.id = uid("doc");
       invoice.type = "facture";
       invoice.number = incrementCounterFor("facture");
       invoice.date = todayISO();
@@ -1205,8 +1764,79 @@
       invoice.paymentStatus = "non_paye";
       invoice.createdAt = new Date().toISOString();
       invoice.updatedAt = new Date().toISOString();
+      invoice.sourceQuoteId = savedCurrent.id;
+      invoice.sourceQuoteNumber = savedCurrent.number;
+      invoice.isDepositInvoice = false;
 
+      savedCurrent.linkedInvoiceId = invoice.id;
+      savedCurrent.linkedInvoiceNumber = invoice.number;
+      savedCurrent.updatedAt = new Date().toISOString();
+
+      if (currentIndex >= 0) state.documents[currentIndex] = savedCurrent;
       state.documents.unshift(invoice);
+
+      persistDocuments();
+      setCurrentDoc(invoice);
+    }
+
+    function createDepositInvoice() {
+      const current = getCurrentDoc();
+      if (!current) return;
+      if (current.type === "facture") {
+        alert("La facture d’acompte se crée depuis un devis.");
+        return;
+      }
+
+      const savedCurrent = readFormToDoc(current);
+      const totals = calculateDoc(savedCurrent);
+      const depositAmount = Math.max(0, toNumber(savedCurrent.deposit));
+
+      if (depositAmount <= 0) {
+        alert("Saisis un acompte prévu supérieur à 0 € avant de créer la facture d’acompte.");
+        return;
+      }
+
+      if (depositAmount > totals.netToPay) {
+        alert("L’acompte ne peut pas dépasser le total net à payer.");
+        return;
+      }
+
+      const currentIndex = state.documents.findIndex(d => d.id === savedCurrent.id);
+      if (currentIndex >= 0) state.documents[currentIndex] = savedCurrent;
+
+      const invoice = createNewDocument("facture");
+      invoice.number = incrementCounterFor("facture");
+      invoice.clientName = savedCurrent.clientName;
+      invoice.clientPhone = savedCurrent.clientPhone;
+      invoice.clientEmail = savedCurrent.clientEmail;
+      invoice.clientAddress = savedCurrent.clientAddress;
+      invoice.vehicle = savedCurrent.vehicle;
+      invoice.immatriculation = savedCurrent.immatriculation;
+      invoice.mileage = savedCurrent.mileage;
+      invoice.notes = "Facture d’acompte liée au devis " + savedCurrent.number + (savedCurrent.notes ? "\n\n" + savedCurrent.notes : "");
+      invoice.sourceQuoteId = savedCurrent.id;
+      invoice.sourceQuoteNumber = savedCurrent.number;
+      invoice.isDepositInvoice = true;
+      invoice.deposit = depositAmount;
+      invoice.paidAmount = 0;
+      invoice.globalDiscount = 0;
+      invoice.lines = [
+        {
+          type: "autre",
+          description: "Acompte sur devis " + savedCurrent.number,
+          quantity: 1,
+          unitPrice: depositAmount / (1 + defaultTVA / 100),
+          tva: defaultTVA
+        }
+      ];
+
+      savedCurrent.linkedInvoiceId = invoice.id;
+      savedCurrent.linkedInvoiceNumber = invoice.number;
+      savedCurrent.updatedAt = new Date().toISOString();
+
+      if (currentIndex >= 0) state.documents[currentIndex] = savedCurrent;
+      state.documents.unshift(invoice);
+
       persistDocuments();
       setCurrentDoc(invoice);
     }
@@ -1215,6 +1845,24 @@
       const current = getCurrentDoc();
       if (!current) return;
       if (!confirm("Supprimer ce document ?")) return;
+
+      if (current.type === "devis" && current.linkedInvoiceId) {
+        const linked = getDocById(current.linkedInvoiceId);
+        if (linked) {
+          linked.sourceQuoteId = null;
+          linked.sourceQuoteNumber = "";
+        }
+      }
+
+      if (current.type === "facture" && current.sourceQuoteId) {
+        const source = getDocById(current.sourceQuoteId);
+        if (source) {
+          if (source.linkedInvoiceId === current.id) {
+            source.linkedInvoiceId = null;
+            source.linkedInvoiceNumber = "";
+          }
+        }
+      }
 
       state.documents = state.documents.filter(d => d.id !== current.id);
       persistDocuments();
@@ -1232,7 +1880,9 @@
     function markCurrentAsPaid() {
       const current = getCurrentDoc();
       if (!current) return;
-
+      const doc = readFormToDoc(current);
+      const totals = calculateDoc(doc);
+      document.getElementById("paidAmount").value = totals.netToPay.toFixed(2);
       document.getElementById("paymentStatus").value = "paye";
       updateSummaryFromForm();
       saveCurrentDocument(false);
@@ -1241,8 +1891,48 @@
     function markCurrentAsUnpaid() {
       const current = getCurrentDoc();
       if (!current) return;
-
       document.getElementById("paymentStatus").value = "non_paye";
+      updateSummaryFromForm();
+      saveCurrentDocument(false);
+    }
+
+    function setDepositReceived() {
+      const depositValue = toNumber(document.getElementById("deposit").value);
+      if (depositValue <= 0) {
+        alert("Saisis un acompte prévu supérieur à 0 €.");
+        return;
+      }
+      document.getElementById("paidAmount").value = depositValue.toFixed(2);
+      document.getElementById("paymentStatus").value = "non_paye";
+      updateSummaryFromForm();
+      saveCurrentDocument(false);
+    }
+
+    function addPartialPayment() {
+      const current = getCurrentDoc();
+      if (!current) return;
+
+      const doc = readFormToDoc(current);
+      const totals = calculateDoc(doc);
+
+      const value = prompt("Montant du paiement partiel encaissé (€) :", "");
+      if (value === null) return;
+
+      const amount = toNumber(value);
+      if (amount <= 0) {
+        alert("Montant invalide.");
+        return;
+      }
+
+      const newPaidAmount = Math.min(totals.netToPay, totals.paidAmount + amount);
+      document.getElementById("paidAmount").value = newPaidAmount.toFixed(2);
+
+      if (newPaidAmount >= totals.netToPay) {
+        document.getElementById("paymentStatus").value = "paye";
+      } else {
+        document.getElementById("paymentStatus").value = "non_paye";
+      }
+
       updateSummaryFromForm();
       saveCurrentDocument(false);
     }
@@ -1250,9 +1940,15 @@
     function updateConvertButton() {
       const type = document.getElementById("docType").value;
       const btn = document.getElementById("convertBtn");
+      const depositBtn = document.getElementById("depositInvoiceBtn");
+
       btn.disabled = type === "facture";
       btn.style.opacity = type === "facture" ? "0.55" : "1";
       btn.style.cursor = type === "facture" ? "not-allowed" : "pointer";
+
+      depositBtn.disabled = type === "facture";
+      depositBtn.style.opacity = type === "facture" ? "0.55" : "1";
+      depositBtn.style.cursor = type === "facture" ? "not-allowed" : "pointer";
     }
 
     function handleDocTypeChange() {
@@ -1300,7 +1996,9 @@
             doc.vehicle,
             doc.immatriculation,
             doc.clientPhone,
-            doc.clientEmail
+            doc.clientEmail,
+            doc.sourceQuoteNumber,
+            doc.linkedInvoiceNumber
           ].join(" ").toLowerCase();
           return haystack.includes(q);
         });
@@ -1324,6 +2022,10 @@
         const totals = calculateDoc(doc);
         const overdue = isOverdue(doc);
 
+        const linkLabel = doc.type === "devis"
+          ? (doc.linkedInvoiceNumber ? `Facture liée : ${doc.linkedInvoiceNumber}` : "")
+          : (doc.sourceQuoteNumber ? `Devis source : ${doc.sourceQuoteNumber}` : "");
+
         const item = document.createElement("div");
         item.className = "history-item";
         if (doc.id === state.currentId) {
@@ -1337,6 +2039,8 @@
               <span class="badge ${doc.type === "facture" ? "facture" : "devis"}">${doc.type === "facture" ? "Facture" : "Devis"}</span>
               <span class="badge ${doc.paymentStatus === "paye" ? "paye" : "impaye"}">${doc.paymentStatus === "paye" ? "Payé" : "Non payé"}</span>
               ${overdue ? `<span class="badge echu">Échéance dépassée</span>` : ``}
+              ${linkLabel ? `<span class="badge linked">${escapeHtml(linkLabel)}</span>` : ``}
+              ${doc.isDepositInvoice ? `<span class="badge acompte">Facture d’acompte</span>` : ``}
             </div>
           </div>
           <div style="font-weight: 800; margin-bottom: 4px;">${escapeHtml(doc.number)}</div>
@@ -1357,6 +2061,430 @@
         list.appendChild(item);
       });
     }
+
+    function renderLinkedDocs(doc) {
+      const box = document.getElementById("docLinksBox");
+      const lines = [];
+
+      if (doc.type === "devis" && doc.linkedInvoiceId) {
+        const invoice = getDocById(doc.linkedInvoiceId);
+        if (invoice) {
+          lines.push(`
+            <div class="doc-link-line">
+              <div>
+                <div style="font-weight:700;">Facture liée</div>
+                <div class="small">${escapeHtml(invoice.number)}${invoice.isDepositInvoice ? " • Facture d’acompte" : ""}</div>
+              </div>
+              <button class="btn-secondary" onclick="openLinkedDoc('${invoice.id}')">Ouvrir</button>
+            </div>
+          `);
+        }
+      }
+
+      if (doc.type === "facture" && doc.sourceQuoteId) {
+        const quote = getDocById(doc.sourceQuoteId);
+        if (quote) {
+          lines.push(`
+            <div class="doc-link-line">
+              <div>
+                <div style="font-weight:700;">Devis source</div>
+                <div class="small">${escapeHtml(quote.number)}</div>
+              </div>
+              <button class="btn-secondary" onclick="openLinkedDoc('${quote.id}')">Ouvrir</button>
+            </div>
+          `);
+        }
+      }
+
+      if (!lines.length) {
+        box.innerHTML = `<div class="small">Aucune référence liée.</div>`;
+      } else {
+        box.innerHTML = lines.join("");
+      }
+    }
+
+    function openLinkedDoc(id) {
+      const doc = getDocById(id);
+      if (doc) setCurrentDoc(doc);
+    }
+    window.openLinkedDoc = openLinkedDoc;
+
+    function updateMailToLink() {
+      const doc = readFormToDoc(getCurrentDoc() || createNewDocument(document.getElementById("docType").value));
+      const totals = calculateDoc(doc);
+      const email = (doc.clientEmail || "").trim();
+      const button = document.getElementById("mailToBtn");
+      const s = state.garageSettings;
+
+      if (!email) {
+        button.setAttribute("href", "#");
+        button.style.opacity = "0.55";
+        button.style.pointerEvents = "none";
+        return;
+      }
+
+      button.style.opacity = "1";
+      button.style.pointerEvents = "auto";
+
+      const typeLabel = doc.type === "facture" ? "facture" : "devis";
+      const subject = `${typeLabel.toUpperCase()} ${doc.number} - ${s.garageName || "Mon Logiciel Garage"}`;
+
+      const body =
+`Bonjour,
+
+Veuillez trouver ci-dessous les informations de votre ${typeLabel} ${doc.number}.
+
+Garage : ${s.garageName || ""}
+Client : ${doc.clientName || ""}
+Véhicule : ${doc.vehicle || ""}
+Immatriculation : ${doc.immatriculation || ""}
+Date : ${doc.date || ""}
+Échéance : ${doc.dueDate || ""}
+Total net à payer : ${formatCurrency(totals.netToPay)}
+Déjà encaissé : ${formatCurrency(totals.paidAmount)}
+Solde restant : ${formatCurrency(totals.remainingBalance)}
+
+${s.paymentTerms ? "Conditions de paiement : " + s.paymentTerms : ""}
+
+Cordialement,
+${s.garageName || ""}`;
+
+      button.setAttribute("href", `mailto:${encodeURIComponent(email)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`);
+    }
+
+    function updateReminderLink() {
+      const doc = readFormToDoc(getCurrentDoc() || createNewDocument(document.getElementById("docType").value));
+      const totals = calculateDoc(doc);
+      const email = (doc.clientEmail || "").trim();
+      const button = document.getElementById("paymentReminderBtn");
+      const s = state.garageSettings;
+
+      if (!email || doc.paymentStatus === "paye" || doc.type !== "facture") {
+        button.setAttribute("href", "#");
+        button.style.opacity = "0.55";
+        button.style.pointerEvents = "none";
+        return;
+      }
+
+      button.style.opacity = "1";
+      button.style.pointerEvents = "auto";
+
+      const subject = `Relance paiement facture ${doc.number}`;
+      const body =
+`Bonjour,
+
+Sauf erreur de notre part, la facture ${doc.number} en date du ${doc.date || ""} reste en attente de règlement.
+
+Montant total : ${formatCurrency(totals.netToPay)}
+Déjà encaissé : ${formatCurrency(totals.paidAmount)}
+Solde restant : ${formatCurrency(totals.remainingBalance)}
+Échéance : ${doc.dueDate || ""}
+
+Merci de bien vouloir procéder au règlement dans les meilleurs délais.
+
+${s.paymentTerms ? "Conditions de paiement : " + s.paymentTerms : ""}
+
+Cordialement,
+${s.garageName || ""}
+${s.garagePhone || ""}
+${s.garageEmail || ""}`;
+
+      button.setAttribute("href", `mailto:${encodeURIComponent(email)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`);
+    }
+
+    function renderClients() {
+      const merged = new Map();
+
+      state.clientsDb.forEach(c => {
+        merged.set(c.key, c);
+      });
+
+      state.documents.forEach(doc => {
+        const key = (doc.clientName || "").trim().toLowerCase();
+        if (!key) return;
+        if (!merged.has(key)) {
+          merged.set(key, {
+            id: uid("client"),
+            key,
+            name: doc.clientName || "",
+            phone: doc.clientPhone || "",
+            email: doc.clientEmail || "",
+            address: doc.clientAddress || ""
+          });
+        }
+      });
+
+      const clients = Array.from(merged.values()).sort((a, b) => a.name.localeCompare(b.name, "fr"));
+      const list = document.getElementById("clientDbList");
+
+      if (!clients.length) {
+        list.innerHTML = `<div class="empty">Aucun client enregistré.</div>`;
+        return;
+      }
+
+      list.innerHTML = clients.map(c => `
+        <div class="mini-item">
+          <div style="font-weight:700;">${escapeHtml(c.name)}</div>
+          <div class="small">${escapeHtml(c.phone || "")}</div>
+          <div class="small">${escapeHtml(c.email || "")}</div>
+          <div class="small">${escapeHtml(c.address || "")}</div>
+          <div class="row-actions hidden-print">
+            <button class="btn-secondary" onclick="editClient('${c.id}')">Modifier</button>
+            <button class="btn-blue" onclick="useClient('${c.id}')">Utiliser</button>
+            <button class="btn-danger" onclick="removeClient('${c.id}')">Supprimer</button>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function renderClientsDb() {
+      renderClients();
+    }
+
+    function renderVehicles() {
+      const merged = new Map();
+
+      state.vehiclesDb.forEach(v => {
+        merged.set(v.key, v);
+      });
+
+      state.documents.forEach(doc => {
+        const key = [doc.vehicle || "", doc.immatriculation || ""].join("|").trim().toLowerCase();
+        if (!key || key === "|") return;
+        if (!merged.has(key)) {
+          merged.set(key, {
+            id: uid("vehicle"),
+            key,
+            vehicle: doc.vehicle || "",
+            plate: doc.immatriculation || "",
+            mileage: doc.mileage || "",
+            owner: doc.clientName || ""
+          });
+        }
+      });
+
+      const vehicles = Array.from(merged.values()).sort((a, b) => a.vehicle.localeCompare(b.vehicle, "fr"));
+      const list = document.getElementById("vehicleDbList");
+
+      if (!vehicles.length) {
+        list.innerHTML = `<div class="empty">Aucun véhicule enregistré.</div>`;
+        return;
+      }
+
+      list.innerHTML = vehicles.map(v => `
+        <div class="mini-item">
+          <div style="font-weight:700;">${escapeHtml(v.vehicle || "Véhicule")}</div>
+          <div class="small">${escapeHtml(v.plate || "")}</div>
+          <div class="small">${escapeHtml(v.mileage || "")}</div>
+          <div class="small">${escapeHtml(v.owner || "")}</div>
+          <div class="row-actions hidden-print">
+            <button class="btn-secondary" onclick="editVehicle('${v.id}')">Modifier</button>
+            <button class="btn-blue" onclick="useVehicle('${v.id}')">Utiliser</button>
+            <button class="btn-danger" onclick="removeVehicle('${v.id}')">Supprimer</button>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function renderVehiclesDb() {
+      renderVehicles();
+    }
+
+    function renderMonthlyTable() {
+      const body = document.getElementById("monthlyTableBody");
+      const bucket = {};
+
+      state.documents.forEach(doc => {
+        const month = String(doc.date || "").slice(0, 7);
+        if (!month) return;
+        if (!bucket[month]) bucket[month] = { paid: 0, unpaid: 0 };
+
+        if (doc.type === "facture") {
+          const totals = calculateDoc(doc);
+          if (doc.paymentStatus === "paye") {
+            bucket[month].paid += totals.netToPay;
+          } else {
+            bucket[month].unpaid += totals.remainingBalance;
+          }
+        }
+      });
+
+      const months = Object.keys(bucket).sort().reverse().slice(0, 6);
+
+      if (!months.length) {
+        body.innerHTML = `<tr><td colspan="3">Aucune donnée mensuelle.</td></tr>`;
+        return;
+      }
+
+      body.innerHTML = months.map(month => `
+        <tr>
+          <td>${escapeHtml(month)}</td>
+          <td>${formatCurrency(bucket[month].paid)}</td>
+          <td>${formatCurrency(bucket[month].unpaid)}</td>
+        </tr>
+      `).join("");
+    }
+
+    function saveClientFromForm() {
+      const name = document.getElementById("dbClientName").value.trim();
+      const phone = document.getElementById("dbClientPhone").value.trim();
+      const email = document.getElementById("dbClientEmail").value.trim();
+      const address = document.getElementById("dbClientAddress").value.trim();
+
+      if (!name) {
+        alert("Nom du client requis.");
+        return;
+      }
+
+      const key = name.toLowerCase();
+      const existingIndex = state.clientsDb.findIndex(c => c.id === state.editingClientId || c.key === key);
+
+      const payload = {
+        id: state.editingClientId || uid("client"),
+        key,
+        name,
+        phone,
+        email,
+        address
+      };
+
+      if (existingIndex >= 0) {
+        state.clientsDb[existingIndex] = payload;
+      } else {
+        state.clientsDb.unshift(payload);
+      }
+
+      state.editingClientId = null;
+      resetClientForm();
+      saveClientsDb();
+    }
+
+    function resetClientForm() {
+      state.editingClientId = null;
+      document.getElementById("dbClientName").value = "";
+      document.getElementById("dbClientPhone").value = "";
+      document.getElementById("dbClientEmail").value = "";
+      document.getElementById("dbClientAddress").value = "";
+    }
+
+    function editClient(id) {
+      const c = state.clientsDb.find(x => x.id === id);
+      if (!c) return;
+      state.editingClientId = c.id;
+      document.getElementById("dbClientName").value = c.name || "";
+      document.getElementById("dbClientPhone").value = c.phone || "";
+      document.getElementById("dbClientEmail").value = c.email || "";
+      document.getElementById("dbClientAddress").value = c.address || "";
+    }
+
+    function useClient(id) {
+      const c = state.clientsDb.find(x => x.id === id);
+      if (!c) return;
+      document.getElementById("clientName").value = c.name || "";
+      document.getElementById("clientPhone").value = c.phone || "";
+      document.getElementById("clientEmail").value = c.email || "";
+      document.getElementById("clientAddress").value = c.address || "";
+      updateSummaryFromForm();
+    }
+
+    function removeClient(id) {
+      if (!confirm("Supprimer ce client ?")) return;
+      state.clientsDb = state.clientsDb.filter(c => c.id !== id);
+      saveClientsDb();
+    }
+
+    function saveClientFromCurrentDoc() {
+      document.getElementById("dbClientName").value = document.getElementById("clientName").value;
+      document.getElementById("dbClientPhone").value = document.getElementById("clientPhone").value;
+      document.getElementById("dbClientEmail").value = document.getElementById("clientEmail").value;
+      document.getElementById("dbClientAddress").value = document.getElementById("clientAddress").value;
+      saveClientFromForm();
+    }
+
+    function saveVehicleFromForm() {
+      const vehicle = document.getElementById("dbVehicleName").value.trim();
+      const plate = document.getElementById("dbVehiclePlate").value.trim();
+      const mileage = document.getElementById("dbVehicleMileage").value.trim();
+      const owner = document.getElementById("dbVehicleOwner").value.trim();
+
+      if (!vehicle && !plate) {
+        alert("Véhicule ou immatriculation requis.");
+        return;
+      }
+
+      const key = [vehicle, plate].join("|").toLowerCase();
+      const existingIndex = state.vehiclesDb.findIndex(v => v.id === state.editingVehicleId || v.key === key);
+
+      const payload = {
+        id: state.editingVehicleId || uid("vehicle"),
+        key,
+        vehicle,
+        plate,
+        mileage,
+        owner
+      };
+
+      if (existingIndex >= 0) {
+        state.vehiclesDb[existingIndex] = payload;
+      } else {
+        state.vehiclesDb.unshift(payload);
+      }
+
+      state.editingVehicleId = null;
+      resetVehicleForm();
+      saveVehiclesDb();
+    }
+
+    function resetVehicleForm() {
+      state.editingVehicleId = null;
+      document.getElementById("dbVehicleName").value = "";
+      document.getElementById("dbVehiclePlate").value = "";
+      document.getElementById("dbVehicleMileage").value = "";
+      document.getElementById("dbVehicleOwner").value = "";
+    }
+
+    function editVehicle(id) {
+      const v = state.vehiclesDb.find(x => x.id === id);
+      if (!v) return;
+      state.editingVehicleId = v.id;
+      document.getElementById("dbVehicleName").value = v.vehicle || "";
+      document.getElementById("dbVehiclePlate").value = v.plate || "";
+      document.getElementById("dbVehicleMileage").value = v.mileage || "";
+      document.getElementById("dbVehicleOwner").value = v.owner || "";
+    }
+
+    function useVehicle(id) {
+      const v = state.vehiclesDb.find(x => x.id === id);
+      if (!v) return;
+      document.getElementById("vehicle").value = v.vehicle || "";
+      document.getElementById("immatriculation").value = v.plate || "";
+      document.getElementById("mileage").value = v.mileage || "";
+      if (v.owner && !document.getElementById("clientName").value) {
+        document.getElementById("clientName").value = v.owner;
+      }
+      updateSummaryFromForm();
+    }
+
+    function removeVehicle(id) {
+      if (!confirm("Supprimer ce véhicule ?")) return;
+      state.vehiclesDb = state.vehiclesDb.filter(v => v.id !== id);
+      saveVehiclesDb();
+    }
+
+    function saveVehicleFromCurrentDoc() {
+      document.getElementById("dbVehicleName").value = document.getElementById("vehicle").value;
+      document.getElementById("dbVehiclePlate").value = document.getElementById("immatriculation").value;
+      document.getElementById("dbVehicleMileage").value = document.getElementById("mileage").value;
+      document.getElementById("dbVehicleOwner").value = document.getElementById("clientName").value;
+      saveVehicleFromForm();
+    }
+
+    window.editClient = editClient;
+    window.useClient = useClient;
+    window.removeClient = removeClient;
+    window.editVehicle = editVehicle;
+    window.useVehicle = useVehicle;
+    window.removeVehicle = removeVehicle;
 
     function initFilters() {
       document.querySelectorAll(".tab-btn").forEach(btn => {
@@ -1399,29 +2527,58 @@
       document.getElementById("deleteBtn").addEventListener("click", deleteCurrentDocument);
       document.getElementById("duplicateBtn").addEventListener("click", duplicateCurrentDocument);
       document.getElementById("convertBtn").addEventListener("click", convertCurrentToInvoice);
+      document.getElementById("depositInvoiceBtn").addEventListener("click", createDepositInvoice);
       document.getElementById("markPaidBtn").addEventListener("click", markCurrentAsPaid);
       document.getElementById("markUnpaidBtn").addEventListener("click", markCurrentAsUnpaid);
+      document.getElementById("depositReceivedBtn").addEventListener("click", setDepositReceived);
+      document.getElementById("partialPaymentBtn").addEventListener("click", addPartialPayment);
+      document.getElementById("saveGarageBtn").addEventListener("click", () => saveGarageSettings(true));
+
+      document.getElementById("saveClientBtn").addEventListener("click", saveClientFromForm);
+      document.getElementById("resetClientBtn").addEventListener("click", resetClientForm);
+      document.getElementById("saveClientFromDocBtn").addEventListener("click", saveClientFromCurrentDoc);
+
+      document.getElementById("saveVehicleBtn").addEventListener("click", saveVehicleFromForm);
+      document.getElementById("resetVehicleBtn").addEventListener("click", resetVehicleForm);
+      document.getElementById("saveVehicleFromDocBtn").addEventListener("click", saveVehicleFromCurrentDoc);
 
       [
         "docType", "docDate", "dueDate", "paymentStatus",
         "clientName", "clientPhone", "clientEmail", "clientAddress",
         "vehicle", "immatriculation", "mileage",
-        "notes", "globalDiscount", "deposit"
+        "notes", "globalDiscount", "deposit", "paidAmount"
       ].forEach(id => {
         const el = document.getElementById(id);
-        el.addEventListener("input", updateSummaryFromForm);
-        el.addEventListener("change", updateSummaryFromForm);
+        el.addEventListener("input", () => updateSummaryFromForm(true));
+        el.addEventListener("change", () => updateSummaryFromForm(true));
+      });
+
+      [
+        "garageName", "garagePhone", "garageEmail", "garageLogo",
+        "garageSiret", "garageTva", "garageAddress",
+        "paymentTerms", "legalNotice"
+      ].forEach(id => {
+        const el = document.getElementById(id);
+        el.addEventListener("input", () => saveGarageSettings(false));
       });
 
       document.getElementById("docType").addEventListener("change", handleDocTypeChange);
     }
 
     function init() {
+      loadGarageSettings();
+      fillGarageSettings();
+
+      loadDb();
       migrateLegacyData();
       ensureCountersFromDocs();
+      syncDbFromDocuments();
       updateSidebarStats();
       initBindings();
       initFilters();
+      renderClients();
+      renderVehicles();
+      renderMonthlyTable();
 
       let currentId = localStorage.getItem(STORAGE_KEYS.currentDocId);
       let current = state.documents.find(d => d.id === currentId);
