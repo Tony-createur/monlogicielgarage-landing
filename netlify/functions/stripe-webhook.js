@@ -6,6 +6,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 exports.handler = async (event) => {
   try {
+    // ✅ Test simple (GET)
     if (event.httpMethod !== "POST") {
       return {
         statusCode: 200,
@@ -13,6 +14,7 @@ exports.handler = async (event) => {
       };
     }
 
+    // ✅ Signature Stripe
     const signature =
       event.headers["stripe-signature"] || event.headers["Stripe-Signature"];
 
@@ -23,12 +25,16 @@ exports.handler = async (event) => {
       };
     }
 
+    // 🔥 CORRECTION CRITIQUE ICI
     const stripeEvent = stripe.webhooks.constructEvent(
-      event.body,
+      Buffer.from(event.body, "utf8"),
       signature,
       process.env.STRIPE_WEBHOOK_SECRET
     );
 
+    console.log("📩 Event reçu :", stripeEvent.type);
+
+    // ✅ Paiement validé
     if (stripeEvent.type === "checkout.session.completed") {
       const session = stripeEvent.data.object;
 
@@ -39,16 +45,18 @@ exports.handler = async (event) => {
       ).toLowerCase().trim();
 
       if (!email) {
-        console.error("❌ Aucun email trouvé dans la session Stripe");
+        console.error("❌ Aucun email trouvé");
         return {
           statusCode: 400,
-          body: "No customer email found",
+          body: "No email",
         };
       }
 
       console.log("✅ Paiement réussi :", session.id, email);
 
+      // ✅ Stockage client payé
       const customers = getStore("paid-customers");
+
       await customers.set(
         email,
         JSON.stringify({
@@ -59,6 +67,9 @@ exports.handler = async (event) => {
         })
       );
 
+      console.log("💾 Client sauvegardé");
+
+      // ✅ Token sécurisé
       const token = jwt.sign(
         { email },
         process.env.JWT_SECRET,
@@ -67,6 +78,9 @@ exports.handler = async (event) => {
 
       const accessUrl = `${process.env.APP_BASE_URL}/acces.html?token=${encodeURIComponent(token)}`;
 
+      console.log("🔗 Lien généré :", accessUrl);
+
+      // ✅ Envoi email
       const resendResponse = await fetch("https://api.resend.com/emails", {
         method: "POST",
         headers: {
@@ -81,13 +95,13 @@ exports.handler = async (event) => {
             <div style="font-family:Arial,sans-serif;line-height:1.6;color:#111">
               <h2>Merci pour votre abonnement</h2>
               <p>Votre paiement a bien été validé.</p>
-              <p>Voici votre lien d’accès sécurisé :</p>
+              <p>Voici votre lien d’accès :</p>
               <p>
                 <a href="${accessUrl}" style="display:inline-block;padding:12px 18px;background:#111;color:#fff;text-decoration:none;border-radius:8px">
-                  Accéder à l’application
+                  Accéder au logiciel
                 </a>
               </p>
-              <p>Si le bouton ne fonctionne pas, copiez ce lien dans votre navigateur :</p>
+              <p>Ou copiez ce lien :</p>
               <p>${accessUrl}</p>
             </div>
           `,
@@ -95,14 +109,19 @@ exports.handler = async (event) => {
       });
 
       const resendData = await resendResponse.text();
-      console.log("📨 Réponse Resend :", resendResponse.status, resendData);
+
+      console.log("📨 Resend status:", resendResponse.status);
+      console.log("📨 Resend réponse:", resendData);
 
       if (!resendResponse.ok) {
+        console.error("❌ Erreur envoi mail");
         return {
           statusCode: 500,
-          body: `Email send failed: ${resendData}`,
+          body: resendData,
         };
       }
+
+      console.log("✅ Email envoyé !");
     }
 
     return {
