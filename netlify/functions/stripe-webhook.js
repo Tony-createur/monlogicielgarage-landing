@@ -48,7 +48,6 @@ exports.handler = async (event) => {
 
       console.log("✅ Paiement réussi :", session.id, email);
 
-      // 1) Sauvegarde client payé dans Netlify Blobs
       const customers = getStore("paid-customers");
       await customers.set(
         email,
@@ -60,7 +59,6 @@ exports.handler = async (event) => {
         })
       );
 
-      // 2) Génération du token d'accès
       const token = jwt.sign(
         { email },
         process.env.JWT_SECRET,
@@ -69,11 +67,10 @@ exports.handler = async (event) => {
 
       const accessUrl = `${process.env.APP_BASE_URL}/acces.html?token=${encodeURIComponent(token)}`;
 
-      // 3) Envoi du mail via Resend
       const resendResponse = await fetch("https://api.resend.com/emails", {
         method: "POST",
         headers: {
-          "Authorization": `Bearer ${process.env.RESEND_API_KEY}`,
+          Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
@@ -84,13 +81,13 @@ exports.handler = async (event) => {
             <div style="font-family:Arial,sans-serif;line-height:1.6;color:#111">
               <h2>Merci pour votre abonnement</h2>
               <p>Votre paiement a bien été validé.</p>
-              <p>Voici votre lien d’accès :</p>
+              <p>Voici votre lien d’accès sécurisé :</p>
               <p>
                 <a href="${accessUrl}" style="display:inline-block;padding:12px 18px;background:#111;color:#fff;text-decoration:none;border-radius:8px">
                   Accéder à l’application
                 </a>
               </p>
-              <p>Ou copiez ce lien dans votre navigateur :</p>
+              <p>Si le bouton ne fonctionne pas, copiez ce lien dans votre navigateur :</p>
               <p>${accessUrl}</p>
             </div>
           `,
