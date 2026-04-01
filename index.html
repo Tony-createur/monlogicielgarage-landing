@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mon Logiciel Garage | Devis, factures et gestion atelier</title>
+  <title>Mon Logiciel Garage | Logiciel garage simple et rentable</title>
   <meta
     name="description"
-    content="Le logiciel simple pour garages indépendants : devis en 2 minutes, factures automatiques, clients, véhicules et suivi atelier."
+    content="Le logiciel simple pour garages indépendants : devis, factures, ordres de réparation, suivi client et atelier. Une seule offre claire à 49€/mois."
   />
   <style>
     :root {
@@ -446,77 +446,88 @@
       margin-bottom: 14px;
     }
 
-    .pricing-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 18px;
-      align-items: stretch;
+    .offer-wrap {
+      display: flex;
+      justify-content: center;
     }
 
-    .price-card {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 26px;
-      padding: 26px;
+    .offer-card {
+      width: min(100%, 760px);
+      background: linear-gradient(180deg, rgba(34,197,94,0.14), rgba(255,255,255,0.05));
+      border: 1px solid rgba(34,197,94,0.35);
+      border-radius: 28px;
+      padding: 32px;
       position: relative;
       overflow: hidden;
+      box-shadow: var(--shadow);
+      text-align: center;
     }
 
-    .price-card.featured {
-      background: linear-gradient(180deg, rgba(34,197,94,0.14), rgba(255,255,255,0.05));
-      border-color: rgba(34,197,94,0.35);
-      transform: translateY(-6px);
-    }
-
-    .popular {
-      position: absolute;
-      top: 16px;
-      right: 16px;
+    .offer-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       background: var(--green);
       color: #05210f;
       font-weight: 900;
       font-size: 12px;
-      padding: 8px 10px;
+      padding: 8px 12px;
       border-radius: 999px;
+      margin-bottom: 16px;
     }
 
-    .price-card h3 {
+    .offer-card h3 {
       margin: 0 0 8px;
-      font-size: 24px;
+      font-size: 30px;
     }
 
-    .price-card p {
+    .offer-card p {
       margin: 0 0 18px;
       color: var(--muted);
+      font-size: 17px;
     }
 
-    .price {
-      font-size: 48px;
+    .offer-price {
+      font-size: 60px;
       font-weight: 900;
       line-height: 1;
       margin-bottom: 8px;
     }
 
-    .price small {
-      font-size: 16px;
+    .offer-price small {
+      font-size: 18px;
       color: var(--muted);
       font-weight: 600;
     }
 
-    .price-card ul {
-      list-style: none;
-      padding: 0;
-      margin: 22px 0;
+    .offer-subtext {
+      font-size: 14px;
+      color: #d7e4f4;
+      margin-bottom: 24px !important;
     }
 
-    .price-card li {
-      padding: 10px 0;
-      border-bottom: 1px solid rgba(255,255,255,0.06);
+    .offer-list {
+      list-style: none;
+      padding: 0;
+      margin: 26px 0;
+      text-align: left;
+    }
+
+    .offer-list li {
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
       color: #eaf0f8;
     }
 
-    .price-card li:last-child {
+    .offer-list li:last-child {
       border-bottom: 0;
+    }
+
+    .offer-list li::before {
+      content: "✔";
+      color: var(--green);
+      font-weight: 900;
+      margin-right: 10px;
     }
 
     .testimonial-wrap {
@@ -845,7 +856,6 @@
       .hero-grid,
       .features-grid,
       .proof-grid,
-      .pricing-grid,
       .testimonial-wrap,
       .steps,
       .problem-solution,
@@ -911,6 +921,10 @@
       .cookie-btn {
         width: 100%;
       }
+
+      .offer-price {
+        font-size: 48px;
+      }
     }
   </style>
 </head>
@@ -924,13 +938,13 @@
 
       <nav class="nav">
         <a href="#fonctionnalites">Fonctionnalités</a>
-        <a href="#tarifs">Tarifs</a>
+        <a href="#offre">Offre</a>
         <a href="#avis">Avis</a>
         <a href="#contact">Contact</a>
         <a href="#faq">FAQ</a>
       </nav>
 
-      <a class="btn btn-primary" href="https://buy.stripe.com/14A00idFb7Dv2Yt2je2Ji05" target="_blank" rel="noopener noreferrer">S’abonner</a>
+      <a class="btn btn-primary" href="https://buy.stripe.com/14A00idFb7Dv2Yt2je2Ji05" target="_blank" rel="noopener noreferrer">S’abonner 49€/mois</a>
     </div>
   </header>
 
@@ -947,11 +961,11 @@
 
           <div class="hero-actions">
             <a class="btn btn-primary" href="https://buy.stripe.com/14A00idFb7Dv2Yt2je2Ji05" target="_blank" rel="noopener noreferrer">S’abonner maintenant</a>
-            <a class="btn btn-secondary" href="#tarifs">Voir les tarifs</a>
+            <a class="btn btn-secondary" href="#offre">Voir l’offre</a>
           </div>
 
           <div class="hero-points">
-            <span>Abonnement simple et rapide</span>
+            <span>49€ / mois HT</span>
             <span>Sans installation</span>
             <span>Simple à prendre en main</span>
             <span>Conçu pour garages auto</span>
@@ -1163,57 +1177,40 @@
       </div>
     </section>
 
-    <section id="tarifs">
+    <section id="offre">
       <div class="container">
         <div class="section-head">
-          <h2>Des tarifs simples, sans usine à gaz</h2>
+          <h2>Une offre claire, simple et efficace</h2>
           <p>
-            Choisissez l’offre adaptée à votre garage et abonnez-vous simplement en ligne, sans installation compliquée.
+            Pas d’usine à gaz. Pas de confusion. Une seule formule pensée pour couvrir les besoins
+            réels d’un garage indépendant.
           </p>
         </div>
 
-        <div class="pricing-grid">
-          <div class="price-card">
-            <h3>Starter</h3>
-            <p>Pour démarrer proprement</p>
-            <div class="price">29€ <small>/ mois HT</small></div>
-            <ul>
-              <li>Clients</li>
-              <li>Véhicules</li>
-              <li>Devis</li>
-              <li>Factures</li>
-              <li>PDF pro</li>
-            </ul>
-            <a class="btn btn-secondary" href="https://buy.stripe.com/14A00idFb7Dv2Yt2je2Ji05" target="_blank" rel="noopener noreferrer">Choisir Starter</a>
-          </div>
+        <div class="offer-wrap">
+          <div class="offer-card">
+            <div class="offer-badge">OFFRE PRO</div>
+            <h3>Mon Logiciel Garage Pro</h3>
+            <p>Le meilleur rapport simplicité / efficacité pour gérer votre garage au quotidien.</p>
+            <div class="offer-price">49€ <small>/ mois HT</small></div>
+            <p class="offer-subtext">Abonnement en ligne via paiement sécurisé Stripe.</p>
 
-          <div class="price-card featured">
-            <div class="popular">Le plus choisi</div>
-            <h3>Pro</h3>
-            <p>Le meilleur rapport simplicité / efficacité</p>
-            <div class="price">49€ <small>/ mois HT</small></div>
-            <ul>
-              <li>Tout Starter</li>
+            <ul class="offer-list">
+              <li>Gestion clients</li>
+              <li>Gestion véhicules</li>
+              <li>Devis rapides</li>
+              <li>Factures automatiques</li>
               <li>Ordres de réparation</li>
               <li>Suivi atelier</li>
-              <li>Organisation plus complète</li>
-              <li>Utilisation quotidienne optimale</li>
+              <li>PDF propres et professionnels</li>
+              <li>Utilisation simple au quotidien</li>
+              <li>Accessible en ligne</li>
+              <li>Support par email</li>
             </ul>
-            <a class="btn btn-primary" href="https://buy.stripe.com/14A00idFb7Dv2Yt2je2Ji05" target="_blank" rel="noopener noreferrer">Choisir Pro</a>
-          </div>
 
-          <div class="price-card">
-            <h3>Elite</h3>
-            <p>Pour les garages qui veulent aller plus loin</p>
-            <div class="price">79€ <small>/ mois HT</small></div>
-            <ul>
-              <li>Tout Pro</li>
-              <li>Fonctions avancées</li>
-              <li>Gestion plus poussée</li>
-              <li>Support prioritaire</li>
-              <li>Évolution premium</li>
-            </ul>
-            <a class="btn btn-secondary" href="https://buy.stripe.com/14A00idFb7Dv2Yt2je2Ji05" target="_blank" rel="noopener noreferrer">Choisir Elite</a>
+            <div class="hero-actions" style="justify-content:center; margin-bottom:0;">
+              <a class="btn btn-primary" href="https://buy.stripe.com/14A00idFb7Dv2Yt2je2Ji05" target="_blank" rel="noopener noreferrer">S’abonner à 49€/mois</a>
+            </div>
           </div>
         </div>
       </div>
@@ -1262,10 +1259,10 @@
     <section id="contact" class="contact-section">
       <div class="container">
         <div class="section-head">
-          <h2>Demander une démo ou un essai</h2>
+          <h2>Demander une démo</h2>
           <p>
-            Laissez vos coordonnées et décrivez rapidement votre besoin. Votre demande sera
-            enregistrée via Netlify Forms puis redirigée vers la page merci.
+            Vous avez une question avant de vous abonner ? Laissez vos coordonnées et décrivez rapidement
+            votre besoin. Votre demande sera enregistrée via Netlify Forms puis redirigée vers la page merci.
           </p>
         </div>
 
@@ -1281,7 +1278,7 @@
               <li><strong>Email :</strong> <a href="mailto:support@monlogicielgarage.fr">support@monlogicielgarage.fr</a></li>
               <li><strong>Société :</strong> La Boutique BYMEO</li>
               <li><strong>Responsable :</strong> Anthony Meoli</li>
-              <li><strong>Positionnement :</strong> SaaS simple, pro, rapide à prendre en main</li>
+              <li><strong>Offre actuelle :</strong> Pro à 49€/mois HT</li>
               <li><strong>Cible :</strong> garages, ateliers, structures légères à intermédiaires</li>
             </ul>
 
@@ -1333,12 +1330,9 @@
               </div>
 
               <div class="field">
-                <label for="offre">Offre qui vous intéresse</label>
+                <label for="offre">Offre</label>
                 <select id="offre" name="offre">
-                  <option value="Starter">Starter</option>
-                  <option value="Pro" selected>Pro</option>
-                  <option value="Elite">Elite</option>
-                  <option value="Je ne sais pas encore">Je ne sais pas encore</option>
+                  <option value="Pro 49€/mois" selected>Pro 49€/mois</option>
                 </select>
               </div>
 
@@ -1364,7 +1358,7 @@
       <div class="container">
         <div class="section-head">
           <h2>Questions fréquentes</h2>
-          <p>Les réponses simples aux questions que se posent les garages avant d’essayer.</p>
+          <p>Les réponses simples aux questions que se posent les garages avant de s’abonner.</p>
         </div>
 
         <div class="faq">
@@ -1375,12 +1369,12 @@
 
           <div class="faq-item">
             <h3>Comment fonctionne l’abonnement ?</h3>
-            <p>Vous choisissez votre formule et vous êtes redirigé vers une page de paiement sécurisée Stripe pour finaliser votre abonnement.</p>
+            <p>Vous cliquez sur le bouton d’abonnement et vous êtes redirigé vers une page de paiement sécurisée Stripe pour finaliser votre souscription.</p>
           </div>
 
           <div class="faq-item">
-            <h3>Est-ce adapté à un petit garage ?</h3>
-            <p>Oui. C’est même la cible principale : garage indépendant, atelier simple, structure légère.</p>
+            <h3>À qui s’adresse cette offre ?</h3>
+            <p>Principalement aux garages indépendants, ateliers auto et petites structures qui veulent aller vite sans logiciel compliqué.</p>
           </div>
 
           <div class="faq-item">
@@ -1397,15 +1391,15 @@
           <h2>Commencez maintenant et gagnez du temps dès cette semaine</h2>
           <p>
             Si vous perdez déjà du temps sur vos devis, vos factures ou votre suivi atelier,
-            le plus simple est de tester le logiciel et voir la différence en quelques minutes.
+            le plus simple est de passer à un outil clair, rapide et conçu pour le quotidien d’un garage.
           </p>
           <div class="hero-actions" style="justify-content:center; margin-bottom:0;">
-            <a class="btn btn-primary" href="https://buy.stripe.com/14A00idFb7Dv2Yt2je2Ji05" target="_blank" rel="noopener noreferrer">S’abonner maintenant</a>
-            <a class="btn btn-secondary" href="#tarifs">Voir les tarifs</a>
+            <a class="btn btn-primary" href="https://buy.stripe.com/14A00idFb7Dv2Yt2je2Ji05" target="_blank" rel="noopener noreferrer">S’abonner à 49€/mois</a>
+            <a class="btn btn-secondary" href="#contact">Demander une démo</a>
           </div>
           <p class="rgpd-note">
-            En poursuivant votre demande d’essai ou de contact, vous acceptez que vos données soient utilisées
-            pour vous recontacter dans le cadre commercial et technique du service. Voir la
+            En poursuivant votre demande de contact ou votre abonnement, vous acceptez que vos données soient utilisées
+            dans le cadre commercial et technique du service. Voir la
             <a href="#politique-confidentialite"><strong> politique de confidentialité</strong></a>.
           </p>
         </div>
@@ -1479,9 +1473,9 @@
 
           <h3>3. Tarifs</h3>
           <p>
-            Les tarifs sont exprimés en euros hors taxes. Ils peuvent être modifiés à tout moment pour les
-            nouvelles souscriptions, sans effet rétroactif sur les abonnements déjà en cours, sauf stipulation
-            contraire clairement portée à la connaissance du client.
+            Le tarif actuel de l’offre proposée sur le site est affiché en euros hors taxes. Il peut être modifié
+            à tout moment pour les nouvelles souscriptions, sans effet rétroactif sur les abonnements déjà en cours,
+            sauf stipulation contraire clairement portée à la connaissance du client.
           </p>
 
           <h3>4. Paiement</h3>
@@ -1547,13 +1541,13 @@
           <p>
             Les données susceptibles d’être collectées via le site ou le service incluent notamment :
             nom, prénom, adresse email, numéro de téléphone, nom du garage, informations professionnelles
-            et toute information communiquée volontairement dans le cadre d’une demande de contact ou d’essai.
+            et toute information communiquée volontairement dans le cadre d’une demande de contact ou de démonstration.
           </p>
 
           <h3>2. Finalités du traitement</h3>
           <p>Les données sont utilisées pour :</p>
           <ul>
-            <li>répondre aux demandes de contact, de démonstration ou d’essai ;</li>
+            <li>répondre aux demandes de contact ou de démonstration ;</li>
             <li>gérer la relation commerciale ;</li>
             <li>fournir le service ;</li>
             <li>assurer le support ;</li>
