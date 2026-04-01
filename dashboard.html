@@ -3,537 +3,425 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tableau de bord | Mon Logiciel Garage</title>
+  <title>Dashboard | Mon Logiciel Garage</title>
   <meta name="robots" content="noindex, nofollow" />
   <style>
     :root {
       --bg: #081120;
+      --bg-soft: #0d1a2d;
       --card: rgba(255,255,255,0.06);
-      --card-border: rgba(255,255,255,0.12);
+      --card-strong: rgba(255,255,255,0.1);
+      --border: rgba(255,255,255,0.12);
       --text: #ffffff;
       --muted: #b8c4d6;
       --green: #22c55e;
+      --green-dark: #15803d;
       --blue: #60a5fa;
-      --red: #ef4444;
       --orange: #f59e0b;
-      --shadow: 0 20px 60px rgba(0,0,0,0.28);
+      --red: #ef4444;
+      --shadow: 0 20px 60px rgba(0,0,0,0.35);
       --radius: 22px;
+      --radius-sm: 14px;
     }
 
     * { box-sizing: border-box; }
 
-    html { scroll-behavior: smooth; }
-
     body {
       margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
+      font-family: Inter, Arial, sans-serif;
       background:
-        radial-gradient(circle at top right, rgba(34,197,94,0.15), transparent 25%),
-        radial-gradient(circle at top left, rgba(96,165,250,0.12), transparent 30%),
-        linear-gradient(180deg, #07101d 0%, #0a1424 100%);
+        radial-gradient(circle at top left, rgba(96,165,250,0.14), transparent 30%),
+        radial-gradient(circle at top right, rgba(34,197,94,0.14), transparent 30%),
+        linear-gradient(180deg, #07101d 0%, #081120 100%);
       color: var(--text);
+      min-height: 100vh;
     }
 
-    .wrap {
-      width: min(1280px, calc(100% - 32px));
-      margin: 0 auto;
-      padding: 24px 0 48px;
+    a { color: inherit; text-decoration: none; }
+
+    .app {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      min-height: 100vh;
     }
 
-    .topbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 16px;
-      margin-bottom: 24px;
-      flex-wrap: wrap;
+    .sidebar {
+      border-right: 1px solid var(--border);
+      background: rgba(5,10,18,0.65);
+      backdrop-filter: blur(16px);
+      padding: 24px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: auto;
     }
 
     .brand {
-      font-size: 28px;
-      font-weight: 700;
-    }
-
-    .topbar-right {
       display: flex;
       align-items: center;
       gap: 12px;
-      flex-wrap: wrap;
+      margin-bottom: 24px;
     }
 
-    .user {
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    .logout-btn {
-      border: 0;
-      border-radius: 12px;
-      padding: 10px 14px;
-      font-weight: 700;
-      cursor: pointer;
-      background: rgba(255,255,255,0.08);
+    .brand-badge {
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--blue), var(--green));
+      display: grid;
+      place-items: center;
+      font-weight: 800;
       color: white;
-      border: 1px solid rgba(255,255,255,0.12);
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 18px;
-      margin-bottom: 18px;
-    }
-
-    .card {
-      background: var(--card);
-      border: 1px solid var(--card-border);
-      border-radius: var(--radius);
       box-shadow: var(--shadow);
-      padding: 22px;
-      backdrop-filter: blur(10px);
     }
 
-    .stat-label {
+    .brand h1 {
+      margin: 0;
+      font-size: 1.08rem;
+      line-height: 1.2;
+    }
+
+    .brand p {
+      margin: 4px 0 0;
       color: var(--muted);
-      font-size: 14px;
-      margin-bottom: 10px;
+      font-size: 0.9rem;
     }
 
-    .stat-value {
-      font-size: 34px;
-      font-weight: 700;
-    }
-
-    .main {
-      display: grid;
-      grid-template-columns: 1.2fr 0.8fr;
-      gap: 18px;
+    .side-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: var(--shadow);
       margin-bottom: 18px;
     }
 
-    .modules {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 18px;
-      margin-top: 18px;
-      margin-bottom: 18px;
+    .side-card h3 {
+      margin: 0 0 14px;
+      font-size: 0.98rem;
     }
 
-    .bottom-grid {
+    .small {
+      font-size: 0.88rem;
+      color: var(--muted);
+    }
+
+    .stats {
       display: grid;
       grid-template-columns: 1fr;
-      gap: 18px;
+      gap: 10px;
     }
 
-    h2 {
-      margin: 0 0 18px;
-      font-size: 22px;
+    .stat {
+      padding: 14px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
     }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
+    .stat strong {
+      display: block;
+      font-size: 1.15rem;
+      margin-top: 6px;
     }
 
-    th, td {
-      text-align: left;
-      padding: 12px 8px;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-      font-size: 14px;
-      vertical-align: top;
+    .history-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-height: 48vh;
+      overflow: auto;
+      padding-right: 4px;
     }
 
-    th {
-      color: var(--muted);
-      font-weight: 600;
-    }
-
-    .pill {
-      display: inline-block;
-      padding: 8px 12px;
-      border-radius: 999px;
-      font-size: 13px;
-      font-weight: 700;
-    }
-
-    .pill-orange {
-      background: rgba(245,158,11,0.15);
-      color: #ffe7ba;
-    }
-
-    .pill-blue {
-      background: rgba(96,165,250,0.15);
-      color: #dbeafe;
-    }
-
-    .actions {
-      display: grid;
-      gap: 12px;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-      text-align: center;
-      padding: 14px 16px;
-      border-radius: 12px;
-      background: var(--green);
-      color: #05210f;
-      text-decoration: none;
-      font-weight: 700;
-      border: 0;
+    .history-item {
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.04);
+      border-radius: 16px;
+      padding: 12px;
       cursor: pointer;
       transition: 0.2s ease;
     }
 
-    .btn:hover {
-      background: #34d399;
+    .history-item:hover {
       transform: translateY(-1px);
-    }
-
-    .btn-secondary {
-      background: transparent;
-      color: white;
-      border: 1px solid rgba(255,255,255,0.16);
-    }
-
-    .btn-secondary:hover {
-      background: rgba(255,255,255,0.06);
-    }
-
-    .btn-danger {
-      background: var(--red);
-      color: white;
-    }
-
-    .btn-danger:hover {
-      background: #f87171;
-    }
-
-    .btn-small {
-      width: auto;
-      min-width: 110px;
-      padding: 10px 14px;
-      font-size: 13px;
-      border-radius: 10px;
-    }
-
-    .muted {
-      color: var(--muted);
-      line-height: 1.6;
-      font-size: 15px;
-    }
-
-    .form-grid {
-      display: grid;
-      gap: 12px;
-    }
-
-    .form-grid input,
-    .form-grid textarea,
-    .form-grid select {
-      width: 100%;
-      padding: 14px 14px;
-      border-radius: 12px;
-      border: 1px solid rgba(255,255,255,0.12);
-      background: rgba(255,255,255,0.05);
-      color: white;
-      font-size: 14px;
-      outline: none;
-    }
-
-    .form-grid input::placeholder,
-    .form-grid textarea::placeholder {
-      color: #a9b6c8;
-    }
-
-    .form-grid textarea {
-      min-height: 100px;
-      resize: vertical;
-    }
-
-    .line-editor {
-      display: grid;
-      grid-template-columns: 2.2fr 0.8fr 1fr 0.9fr auto;
-      gap: 10px;
-      align-items: end;
-      margin-top: 12px;
-    }
-
-    .line-editor input,
-    .line-editor select {
-      width: 100%;
-      padding: 12px;
-      border-radius: 12px;
-      border: 1px solid rgba(255,255,255,0.12);
-      background: rgba(255,255,255,0.05);
-      color: white;
-      font-size: 14px;
-      outline: none;
-    }
-
-    .line-editor button {
-      height: 46px;
-    }
-
-    .lines-table-wrap {
-      margin-top: 16px;
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 16px;
-      overflow: hidden;
-      background: rgba(255,255,255,0.03);
-    }
-
-    .lines-table th,
-    .lines-table td {
-      padding: 12px 12px;
-      font-size: 13px;
-    }
-
-    .lines-table th:last-child,
-    .lines-table td:last-child {
-      text-align: right;
-    }
-
-    .line-delete-btn {
-      border: 0;
-      border-radius: 8px;
-      padding: 8px 10px;
-      background: var(--red);
-      color: white;
-      cursor: pointer;
-      font-weight: 700;
-    }
-
-    .result-box {
-      margin-top: 18px;
-      padding: 24px;
-      border-radius: 18px;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
-    }
-
-    .doc-shell {
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 18px;
-      padding: 24px;
-    }
-
-    .doc-topline {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 18px;
-      padding-bottom: 14px;
-      border-bottom: 1px solid rgba(255,255,255,0.1);
-    }
-
-    .doc-badge {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 10px 14px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      background: rgba(34,197,94,0.14);
-      color: #d7ffe4;
-      border: 1px solid rgba(34,197,94,0.18);
-    }
-
-    .doc-badge.facture {
-      background: rgba(245,158,11,0.14);
-      color: #ffe7ba;
-      border-color: rgba(245,158,11,0.18);
-    }
-
-    .doc-header {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 22px;
-      margin-bottom: 22px;
-    }
-
-    .doc-title {
-      font-size: 30px;
-      font-weight: 800;
-      line-height: 1.1;
-      margin-bottom: 10px;
-    }
-
-    .doc-meta {
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.7;
-    }
-
-    .doc-company,
-    .doc-client {
-      padding: 18px;
-      border-radius: 16px;
-      background: rgba(255,255,255,0.035);
-      border: 1px solid rgba(255,255,255,0.08);
-    }
-
-    .doc-box-title {
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: #9bb0ca;
-      margin-bottom: 10px;
-      font-weight: 700;
-    }
-
-    .doc-company strong,
-    .doc-client strong {
-      color: #fff;
-    }
-
-    .doc-table-wrap {
-      margin-top: 18px;
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 16px;
-      overflow: hidden;
-      background: rgba(255,255,255,0.03);
-    }
-
-    .doc-table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    .doc-table th,
-    .doc-table td {
-      padding: 14px 16px;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-      font-size: 14px;
-    }
-
-    .doc-table th {
-      color: #dbe7f6;
-      background: rgba(255,255,255,0.03);
-      font-weight: 700;
-    }
-
-    .doc-table td:nth-child(2),
-    .doc-table td:nth-child(3),
-    .doc-table td:nth-child(4),
-    .doc-table td:nth-child(5),
-    .doc-table th:nth-child(2),
-    .doc-table th:nth-child(3),
-    .doc-table th:nth-child(4),
-    .doc-table th:nth-child(5) {
-      text-align: right;
-    }
-
-    .doc-total {
-      margin-top: 18px;
-      margin-left: auto;
-      width: min(100%, 420px);
-      padding: 18px;
-      border-radius: 16px;
-      background: rgba(255,255,255,0.035);
-      border: 1px solid rgba(255,255,255,0.08);
-    }
-
-    .doc-total-line {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 8px 0;
-      color: var(--muted);
-    }
-
-    .doc-total-line strong {
-      color: #fff;
-    }
-
-    .doc-total-line.final {
-      margin-top: 8px;
-      padding-top: 14px;
-      border-top: 1px solid rgba(255,255,255,0.12);
-      font-size: 22px;
-      font-weight: 800;
-      color: #fff;
-    }
-
-    .doc-footer {
-      margin-top: 26px;
-      padding-top: 16px;
-      border-top: 1px solid rgba(255,255,255,0.12);
-      font-size: 13px;
-      color: var(--muted);
-      line-height: 1.8;
-    }
-
-    .small-actions {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-top: 16px;
-    }
-
-    .small-actions .btn {
-      width: auto;
-      min-width: 140px;
-    }
-
-    .history-list {
-      display: grid;
-      gap: 12px;
-    }
-
-    .history-item {
-      padding: 16px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,0.10);
-      background: rgba(255,255,255,0.04);
+      background: rgba(255,255,255,0.07);
+      border-color: rgba(255,255,255,0.14);
     }
 
     .history-top {
       display: flex;
       justify-content: space-between;
       gap: 12px;
-      align-items: flex-start;
-      flex-wrap: wrap;
-      margin-bottom: 8px;
+      align-items: center;
+      margin-bottom: 6px;
     }
 
-    .history-ref {
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-size: 0.76rem;
       font-weight: 700;
-      font-size: 16px;
-      color: #fff;
+      letter-spacing: 0.02em;
+      border: 1px solid transparent;
+      white-space: nowrap;
     }
 
-    .history-date {
+    .badge.devis {
+      background: rgba(96,165,250,0.12);
+      color: #cfe3ff;
+      border-color: rgba(96,165,250,0.25);
+    }
+
+    .badge.facture {
+      background: rgba(245,158,11,0.12);
+      color: #ffe7bb;
+      border-color: rgba(245,158,11,0.25);
+    }
+
+    .badge.paye {
+      background: rgba(34,197,94,0.13);
+      color: #d7ffe1;
+      border-color: rgba(34,197,94,0.25);
+    }
+
+    .badge.impaye {
+      background: rgba(239,68,68,0.13);
+      color: #ffd6d6;
+      border-color: rgba(239,68,68,0.25);
+    }
+
+    .content {
+      padding: 26px;
+    }
+
+    .topbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+
+    .topbar h2 {
+      margin: 0;
+      font-size: 1.5rem;
+    }
+
+    .topbar p {
+      margin: 6px 0 0;
       color: var(--muted);
-      font-size: 13px;
     }
 
-    .history-line {
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.7;
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
     }
 
-    .clickable-row {
+    button, .btn {
+      appearance: none;
+      border: 0;
       cursor: pointer;
+      border-radius: 14px;
+      padding: 12px 16px;
+      font-weight: 700;
+      font-size: 0.95rem;
       transition: 0.2s ease;
     }
 
-    .clickable-row:hover {
-      background: rgba(255,255,255,0.04);
+    .btn-primary {
+      background: linear-gradient(135deg, var(--green), var(--green-dark));
+      color: white;
+      box-shadow: var(--shadow);
     }
 
-    .empty-state {
+    .btn-secondary {
+      background: rgba(255,255,255,0.08);
+      color: white;
+      border: 1px solid var(--border);
+    }
+
+    .btn-danger {
+      background: rgba(239,68,68,0.15);
+      color: #ffd1d1;
+      border: 1px solid rgba(239,68,68,0.25);
+    }
+
+    button:hover, .btn:hover { transform: translateY(-1px); }
+
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 22px;
+      margin-bottom: 20px;
+    }
+
+    .panel h3 {
+      margin-top: 0;
+      margin-bottom: 18px;
+      font-size: 1.05rem;
+    }
+
+    .grid-2, .grid-3, .grid-4 {
+      display: grid;
+      gap: 14px;
+    }
+
+    .grid-2 { grid-template-columns: repeat(2, minmax(0,1fr)); }
+    .grid-3 { grid-template-columns: repeat(3, minmax(0,1fr)); }
+    .grid-4 { grid-template-columns: repeat(4, minmax(0,1fr)); }
+
+    label {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.06);
+      color: white;
+      padding: 12px 14px;
+      font-size: 0.95rem;
+      outline: none;
+    }
+
+    input::placeholder, textarea::placeholder {
+      color: #a8b4c6;
+    }
+
+    textarea {
+      min-height: 92px;
+      resize: vertical;
+    }
+
+    .line-items {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .line-item {
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.04);
+      border-radius: 18px;
+      padding: 16px;
+    }
+
+    .line-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 2fr 0.85fr 0.95fr 0.85fr 1fr auto;
+      gap: 10px;
+      align-items: end;
+    }
+
+    .line-total {
+      min-height: 46px;
+      display: grid;
+      align-items: center;
+      padding: 0 12px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.08);
+      font-weight: 700;
+    }
+
+    .summary-box {
+      display: grid;
+      gap: 10px;
+      padding: 18px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
       color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .summary-row strong {
+      color: white;
+      font-size: 1rem;
+    }
+
+    .summary-row.total-final {
+      padding-top: 10px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      font-size: 1.05rem;
+    }
+
+    .summary-row.total-final strong {
+      font-size: 1.22rem;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .muted-box {
+      margin-top: 10px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: rgba(96,165,250,0.08);
+      border: 1px solid rgba(96,165,250,0.15);
+      color: #dcecff;
+      font-size: 0.9rem;
+    }
+
+    .empty {
+      color: var(--muted);
+      font-size: 0.92rem;
       padding: 12px 0;
+    }
+
+    .footer-note {
+      color: var(--muted);
+      font-size: 0.86rem;
+      margin-top: 12px;
+    }
+
+    .hidden-print {
+      display: block;
+    }
+
+    @media (max-width: 1180px) {
+      .app { grid-template-columns: 1fr; }
+      .sidebar {
+        position: relative;
+        height: auto;
+        border-right: 0;
+        border-bottom: 1px solid var(--border);
+      }
+      .grid-4 { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .line-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .content, .sidebar { padding: 18px; }
+      .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+      .line-grid { grid-template-columns: 1fr; }
+      .topbar { align-items: flex-start; }
+      .actions, .toolbar { width: 100%; }
+      .actions button, .toolbar button { width: 100%; }
     }
 
     @media print {
@@ -542,878 +430,904 @@
         color: black !important;
       }
 
-      .topbar,
-      .grid,
-      .main,
-      .bottom-grid,
-      .logout-btn,
-      .actions,
-      #moduleDevis h2,
-      #moduleFacture h2,
-      #moduleFacture .muted,
-      #moduleDevis .form-grid,
-      #moduleDevis .line-editor,
-      #moduleDevis .lines-table-wrap,
-      #moduleFacture .actions,
-      .small-actions {
+      .sidebar,
+      .topbar .actions,
+      .toolbar,
+      .hidden-print {
         display: none !important;
       }
 
-      .wrap {
-        width: 100%;
-        margin: 0;
+      .app {
+        display: block;
+      }
+
+      .content {
         padding: 0;
       }
 
-      .modules {
-        display: block !important;
-      }
-
-      .card,
-      .result-box,
-      .doc-shell,
-      .doc-company,
-      .doc-client,
-      .doc-total,
-      .doc-table-wrap {
+      .panel,
+      .line-item,
+      .summary-box {
         background: white !important;
         color: black !important;
-        border: 0 !important;
+        border: 1px solid #ccc !important;
         box-shadow: none !important;
-        backdrop-filter: none !important;
       }
 
-      #resultatDevis,
-      #resultatFacture {
-        display: block !important;
-      }
-
-      #moduleDevis,
-      #moduleFacture {
-        margin: 0 !important;
+      input, select, textarea {
+        border: none !important;
+        background: transparent !important;
+        color: black !important;
         padding: 0 !important;
       }
 
-      .doc-meta,
-      .history-line,
-      .muted,
-      .doc-footer,
-      .doc-total-line,
-      .doc-box-title {
+      .summary-row,
+      .small,
+      .footer-note,
+      .empty {
         color: black !important;
       }
 
-      .doc-title,
-      .doc-company strong,
-      .doc-client strong,
-      .doc-total-line strong,
-      .doc-total-line.final,
-      .doc-badge {
-        color: black !important;
-      }
-
-      .doc-topline,
-      .doc-footer,
-      .doc-total-line.final {
-        border-color: #ddd !important;
-      }
-
-      .doc-table th,
-      .doc-table td {
-        border-color: #ddd !important;
+      .badge {
+        border: 1px solid #bbb !important;
         color: black !important;
         background: white !important;
-      }
-    }
-
-    @media (max-width: 1100px) {
-      .line-editor {
-        grid-template-columns: 1fr 1fr;
-      }
-    }
-
-    @media (max-width: 980px) {
-      .grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .main,
-      .modules,
-      .doc-header {
-        grid-template-columns: 1fr;
-      }
-
-      .doc-total {
-        width: 100%;
-      }
-    }
-
-    @media (max-width: 640px) {
-      .grid {
-        grid-template-columns: 1fr;
-      }
-
-      .wrap {
-        width: min(100%, calc(100% - 20px));
-      }
-
-      .doc-title {
-        font-size: 24px;
-      }
-
-      .small-actions {
-        flex-direction: column;
-      }
-
-      .small-actions .btn {
-        width: 100%;
-      }
-
-      .line-editor {
-        grid-template-columns: 1fr;
       }
     }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="topbar">
-      <div class="brand">Mon Logiciel Garage</div>
-      <div class="topbar-right">
-        <div class="user" id="userEmail">Chargement...</div>
-        <button class="logout-btn" onclick="logout()">Déconnexion</button>
-      </div>
-    </div>
-
-    <div class="grid">
-      <div class="card">
-        <div class="stat-label">Devis enregistrés</div>
-        <div class="stat-value" id="statDevis">0</div>
-      </div>
-      <div class="card">
-        <div class="stat-label">Factures émises</div>
-        <div class="stat-value" id="statFactures">0</div>
-      </div>
-      <div class="card">
-        <div class="stat-label">CA potentiel TTC</div>
-        <div class="stat-value" id="statCA">0 €</div>
-      </div>
-      <div class="card">
-        <div class="stat-label">Véhicules en atelier</div>
-        <div class="stat-value">5</div>
-      </div>
-    </div>
-
-    <div class="main">
-      <div class="card">
-        <h2>Documents récents</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Client</th>
-              <th>Document</th>
-              <th>Véhicule</th>
-              <th>Statut</th>
-            </tr>
-          </thead>
-          <tbody id="documentsRecents"></tbody>
-        </table>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-badge">MG</div>
+        <div>
+          <h1>Mon Logiciel Garage</h1>
+          <p>Devis, factures et suivi simple</p>
+        </div>
       </div>
 
-      <div class="card">
-        <h2>Espace abonné</h2>
-        <p class="muted">
-          Bienvenue dans votre espace privé. Vous pouvez maintenant créer un devis,
-          le transformer en facture, retrouver votre historique et imprimer vos documents.
-        </p>
+      <div class="side-card">
+        <h3>Vue rapide</h3>
+        <div class="stats">
+          <div class="stat">
+            <div class="small">Prochain devis</div>
+            <strong id="nextQuoteNumber">DV-0001</strong>
+          </div>
+          <div class="stat">
+            <div class="small">Prochaine facture</div>
+            <strong id="nextInvoiceNumber">FA-0001</strong>
+          </div>
+          <div class="stat">
+            <div class="small">Documents enregistrés</div>
+            <strong id="docCount">0</strong>
+          </div>
+        </div>
+      </div>
 
+      <div class="side-card">
+        <h3>Historique</h3>
+        <div id="historyList" class="history-list"></div>
+      </div>
+    </aside>
+
+    <main class="content">
+      <div class="topbar">
+        <div>
+          <h2>Dashboard</h2>
+          <p>Gestion des devis et factures avec numérotation automatique, échéance, acompte et solde restant.</p>
+        </div>
         <div class="actions">
-          <button class="btn" onclick="scrollToSection('moduleDevis')">Nouveau devis</button>
-          <button class="btn btn-secondary" onclick="scrollToSection('moduleFacture')">Nouvelle facture</button>
-          <button class="btn btn-secondary" onclick="window.print()">Imprimer le document affiché</button>
-          <a class="btn btn-secondary" href="/">Retour au site</a>
+          <button class="btn-primary" id="newDocBtn">Nouveau document</button>
+          <button class="btn-secondary" id="saveBtnTop">Enregistrer</button>
+          <button class="btn-secondary" id="printBtnTop">Imprimer</button>
         </div>
       </div>
-    </div>
 
-    <div class="modules">
-      <div class="card" id="moduleDevis">
-        <h2>Créer un devis</h2>
-
-        <div class="form-grid">
-          <input type="text" id="devisClient" placeholder="Nom du client" />
-          <input type="text" id="devisVehicule" placeholder="Véhicule / immatriculation" />
-          <input type="text" id="devisReference" placeholder="Référence devis (laisser vide pour automatique)" />
-          <textarea id="devisNotes" placeholder="Notes ou remarques générales du devis (facultatif)"></textarea>
+      <section class="panel">
+        <h3>Document</h3>
+        <div class="grid-4">
+          <div>
+            <label for="docType">Type de document</label>
+            <select id="docType">
+              <option value="devis">Devis</option>
+              <option value="facture">Facture</option>
+            </select>
+          </div>
+          <div>
+            <label for="docNumber">Numéro</label>
+            <input id="docNumber" type="text" readonly />
+          </div>
+          <div>
+            <label for="docDate">Date</label>
+            <input id="docDate" type="date" />
+          </div>
+          <div>
+            <label for="dueDate">Date d’échéance</label>
+            <input id="dueDate" type="date" />
+          </div>
         </div>
 
-        <div class="line-editor">
-          <input type="text" id="ligneDesignation" placeholder="Désignation" />
-          <input type="number" id="ligneQuantite" placeholder="Quantité" step="1" min="1" />
-          <input type="number" id="lignePrixUnitaire" placeholder="Prix unitaire HT" step="0.01" min="0" />
-          <select id="ligneTva">
-            <option value="20">TVA 20 %</option>
-            <option value="10">TVA 10 %</option>
-            <option value="5.5">TVA 5,5 %</option>
-            <option value="0">TVA 0 %</option>
-          </select>
-          <button class="btn btn-secondary" type="button" onclick="ajouterLigneDevis()">Ajouter</button>
+        <div class="grid-4" style="margin-top: 14px;">
+          <div>
+            <label for="paymentStatus">Statut paiement</label>
+            <select id="paymentStatus">
+              <option value="non_paye">Non payé</option>
+              <option value="paye">Payé</option>
+            </select>
+          </div>
+          <div>
+            <label for="vehicle">Véhicule</label>
+            <input id="vehicle" type="text" placeholder="Ex. Renault Clio IV" />
+          </div>
+          <div>
+            <label for="immatriculation">Immatriculation</label>
+            <input id="immatriculation" type="text" placeholder="Ex. AB-123-CD" />
+          </div>
+          <div>
+            <label for="mileage">Kilométrage</label>
+            <input id="mileage" type="text" placeholder="Ex. 154000 km" />
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h3>Client</h3>
+        <div class="grid-3">
+          <div>
+            <label for="clientName">Nom / société</label>
+            <input id="clientName" type="text" placeholder="Ex. Jean Dupont" />
+          </div>
+          <div>
+            <label for="clientPhone">Téléphone</label>
+            <input id="clientPhone" type="text" placeholder="Ex. 06 00 00 00 00" />
+          </div>
+          <div>
+            <label for="clientEmail">Email</label>
+            <input id="clientEmail" type="email" placeholder="Ex. client@email.fr" />
+          </div>
+        </div>
+        <div style="margin-top: 14px;">
+          <label for="clientAddress">Adresse</label>
+          <textarea id="clientAddress" placeholder="Adresse complète du client"></textarea>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h3>Lignes du document</h3>
+        <div id="lineItems" class="line-items"></div>
+        <div class="toolbar hidden-print">
+          <button class="btn-secondary" id="addLineBtn">+ Ajouter une ligne</button>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h3>Totaux</h3>
+        <div class="grid-2">
+          <div>
+            <div class="grid-3">
+              <div>
+                <label for="globalDiscount">Remise globale (€)</label>
+                <input id="globalDiscount" type="number" min="0" step="0.01" value="0" />
+              </div>
+              <div>
+                <label for="deposit">Acompte déjà versé (€)</label>
+                <input id="deposit" type="number" min="0" step="0.01" value="0" />
+              </div>
+              <div>
+                <label for="notes">Notes</label>
+                <textarea id="notes" placeholder="Observations, garantie, délai, etc."></textarea>
+              </div>
+            </div>
+
+            <div class="muted-box">
+              L’acompte est automatiquement déduit du total pour afficher le <strong>solde restant</strong>.  
+              Si le document est marqué <strong>Payé</strong>, le solde restant passe automatiquement à <strong>0 €</strong>.
+            </div>
+          </div>
+
+          <div class="summary-box">
+            <div class="summary-row">
+              <span>Sous-total HT</span>
+              <strong id="subtotalHT">0,00 €</strong>
+            </div>
+            <div class="summary-row">
+              <span>Total TVA</span>
+              <strong id="totalVAT">0,00 €</strong>
+            </div>
+            <div class="summary-row">
+              <span>Total TTC avant remise</span>
+              <strong id="totalTTCBeforeDiscount">0,00 €</strong>
+            </div>
+            <div class="summary-row">
+              <span>Remise globale</span>
+              <strong id="discountDisplay">0,00 €</strong>
+            </div>
+            <div class="summary-row">
+              <span>Total net à payer</span>
+              <strong id="netToPay">0,00 €</strong>
+            </div>
+            <div class="summary-row">
+              <span>Acompte versé</span>
+              <strong id="depositDisplay">0,00 €</strong>
+            </div>
+            <div class="summary-row total-final">
+              <span>Solde restant</span>
+              <strong id="remainingBalance">0,00 €</strong>
+            </div>
+          </div>
         </div>
 
-        <div class="lines-table-wrap">
-          <table class="lines-table">
-            <thead>
-              <tr>
-                <th>Désignation</th>
-                <th>Qté</th>
-                <th>PU HT</th>
-                <th>TVA</th>
-                <th>Total HT</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody id="devisLignesPreview">
-              <tr>
-                <td colspan="6" class="muted">Aucune ligne ajoutée pour le moment.</td>
-              </tr>
-            </tbody>
-          </table>
+        <div class="toolbar">
+          <button class="btn-primary" id="saveBtn">Enregistrer le document</button>
+          <button class="btn-secondary" id="duplicateBtn">Dupliquer</button>
+          <button class="btn-secondary" id="convertBtn">Transformer en facture</button>
+          <button class="btn-secondary" id="printBtn">Imprimer</button>
+          <button class="btn-danger" id="deleteBtn">Supprimer</button>
         </div>
 
-        <div class="small-actions">
-          <button class="btn" onclick="genererDevis()">Générer le devis</button>
-          <button class="btn btn-secondary" type="button" onclick="viderLignesTemp()">Vider les lignes</button>
+        <div class="footer-note">
+          Sauvegarde locale automatique compatible avec l’existant via <strong>localStorage</strong>.
         </div>
-
-        <div class="result-box" id="resultatDevis" style="display:none;"></div>
-      </div>
-
-      <div class="card" id="moduleFacture">
-        <h2>Créer une facture</h2>
-
-        <p class="muted">
-          Clique sur le bouton ci-dessous pour transformer le dernier devis généré en facture.
-        </p>
-
-        <div class="actions">
-          <button class="btn btn-secondary" onclick="genererFacture()">Transformer le devis en facture</button>
-          <button class="btn btn-danger" onclick="viderDocuments()">Vider les documents affichés</button>
-        </div>
-
-        <div class="result-box" id="resultatFacture" style="display:none;"></div>
-      </div>
-    </div>
-
-    <div class="bottom-grid">
-      <div class="card">
-        <h2>Historique des devis</h2>
-        <div id="listeDevis" class="history-list"></div>
-      </div>
-    </div>
+      </section>
+    </main>
   </div>
 
   <script>
-    (function () {
-      const premiumAccess = localStorage.getItem("premium_access");
+    const STORAGE_KEYS = {
+      docs: "garage_documents_v2",
+      legacyQuotes: "garage_quotes_history",
+      currentDocId: "garage_current_document_id",
+      quoteCounter: "garage_quote_counter",
+      invoiceCounter: "garage_invoice_counter"
+    };
 
-      if (premiumAccess !== "true") {
-        window.location.replace("/");
-        return;
+    const defaultTVA = 20;
+
+    const state = {
+      documents: [],
+      currentId: null
+    };
+
+    function todayISO() {
+      return new Date().toISOString().split("T")[0];
+    }
+
+    function addDaysISO(dateStr, days) {
+      const d = dateStr ? new Date(dateStr + "T00:00:00") : new Date();
+      d.setDate(d.getDate() + days);
+      return d.toISOString().split("T")[0];
+    }
+
+    function formatCurrency(value) {
+      const safe = Number(value || 0);
+      return safe.toLocaleString("fr-FR", { style: "currency", currency: "EUR" });
+    }
+
+    function toNumber(value) {
+      const n = parseFloat(value);
+      return Number.isFinite(n) ? n : 0;
+    }
+
+    function uid() {
+      return "doc_" + Date.now() + "_" + Math.random().toString(36).slice(2, 10);
+    }
+
+    function getCounter(key) {
+      return parseInt(localStorage.getItem(key) || "0", 10);
+    }
+
+    function setCounter(key, value) {
+      localStorage.setItem(key, String(value));
+    }
+
+    function nextNumberFor(type) {
+      if (type === "facture") {
+        const next = getCounter(STORAGE_KEYS.invoiceCounter) + 1;
+        return "FA-" + String(next).padStart(4, "0");
       }
+      const next = getCounter(STORAGE_KEYS.quoteCounter) + 1;
+      return "DV-" + String(next).padStart(4, "0");
+    }
 
-      const garageRaw = localStorage.getItem("mlg_garage_infos");
-
-      if (!garageRaw) {
-        window.location.replace("/setup.html");
-        return;
+    function incrementCounterFor(type) {
+      if (type === "facture") {
+        const next = getCounter(STORAGE_KEYS.invoiceCounter) + 1;
+        setCounter(STORAGE_KEYS.invoiceCounter, next);
+        return "FA-" + String(next).padStart(4, "0");
       }
-
-      function getGarageInfos() {
-        try {
-          return JSON.parse(localStorage.getItem("mlg_garage_infos") || "{}");
-        } catch (e) {
-          return {};
-        }
-      }
-
-      function isGarageConfigured() {
-        const garage = getGarageInfos();
-        return !!(
-          garage.nomGarage &&
-          garage.adresse &&
-          garage.codePostal &&
-          garage.ville &&
-          garage.telephone &&
-          garage.email &&
-          garage.siret &&
-          garage.tva
-        );
-      }
-
-      if (!isGarageConfigured()) {
-        window.location.replace("/setup.html");
-        return;
-      }
-
-      function escapeHtml(value) {
-        return String(value || "")
-          .replace(/&/g, "&amp;")
-          .replace(/</g, "&lt;")
-          .replace(/>/g, "&gt;")
-          .replace(/"/g, "&quot;")
-          .replace(/'/g, "&#039;");
-      }
-
-      const email = localStorage.getItem("mlg_access_email") || "Abonné";
-      document.getElementById("userEmail").textContent = email;
-
-      let devisLignesTemp = [];
-
-      function getGarageBlockHtml() {
-        const garage = getGarageInfos();
-
-        return `
-          <div class="doc-company">
-            <div class="doc-box-title">Coordonnées garage</div>
-            <strong>${escapeHtml(garage.nomGarage || "")}</strong><br>
-            ${escapeHtml(garage.adresse || "")}<br>
-            ${escapeHtml(garage.codePostal || "")} ${escapeHtml(garage.ville || "")}<br>
-            Tél. : ${escapeHtml(garage.telephone || "")}<br>
-            Email : ${escapeHtml(garage.email || "")}<br>
-            ${garage.siret ? `SIRET : ${escapeHtml(garage.siret)}<br>` : ""}
-            ${garage.tva ? `TVA : ${escapeHtml(garage.tva)}` : ""}
-          </div>
-        `;
-      }
-
-      function getClientBlockHtml(client, vehicule) {
-        return `
-          <div class="doc-client">
-            <div class="doc-box-title">Client / véhicule</div>
-            <strong>Client :</strong> ${escapeHtml(client)}<br>
-            <strong>Véhicule :</strong> ${escapeHtml(vehicule)}
-          </div>
-        `;
-      }
-
-      function getFooterMentionsHtml(typeDocument) {
-        const garage = getGarageInfos();
-        const lignes = [];
-
-        lignes.push(`${typeDocument} généré par Mon Logiciel Garage.`);
-        if (garage.siret) lignes.push(`SIRET : ${escapeHtml(garage.siret)}`);
-        if (garage.tva) lignes.push(`TVA intracommunautaire : ${escapeHtml(garage.tva)}`);
-        lignes.push("Merci pour votre confiance.");
-
-        return `<div class="doc-footer">${lignes.join("<br>")}</div>`;
-      }
-
-      function formatPrix(value) {
-        return Number(value || 0).toLocaleString("fr-FR", {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2
-        }) + " €";
-      }
-
-      function getDateFR() {
-        return new Date().toLocaleDateString("fr-FR");
-      }
-
-      function getDevisList() {
-        try {
-          return JSON.parse(localStorage.getItem("mlg_devis_list") || "[]");
-        } catch (e) {
-          return [];
-        }
-      }
-
-      function saveDevisList(list) {
-        localStorage.setItem("mlg_devis_list", JSON.stringify(list));
-      }
-
-      function getFacturesList() {
-        try {
-          return JSON.parse(localStorage.getItem("mlg_factures_list") || "[]");
-        } catch (e) {
-          return [];
-        }
-      }
-
-      function saveFacturesList(list) {
-        localStorage.setItem("mlg_factures_list", JSON.stringify(list));
-      }
-
-      function getNextDevisReference() {
-        const devisList = getDevisList();
-        const nextNumber = devisList.length + 1;
-        return "DEV-2026-" + String(nextNumber).padStart(4, "0");
-      }
-
-      function calculerTotauxLignes(lignes) {
-        const totalHT = lignes.reduce((sum, ligne) => sum + Number(ligne.totalHT || 0), 0);
-        const totalTVA = lignes.reduce((sum, ligne) => sum + Number(ligne.montantTVA || 0), 0);
-        const totalTTC = totalHT + totalTVA;
-
-        return { totalHT, totalTVA, totalTTC };
-      }
-
-      function creerLigne(designation, quantite, prixUnitaireHT, tva) {
-        const qte = Number(quantite);
-        const pu = Number(prixUnitaireHT);
-        const taux = Number(tva);
-        const totalHT = qte * pu;
-        const montantTVA = totalHT * (taux / 100);
-        const totalTTC = totalHT + montantTVA;
-
-        return {
-          id: Date.now() + Math.floor(Math.random() * 1000),
-          designation,
-          quantite: qte,
-          prixUnitaireHT: pu,
-          tva: taux,
-          totalHT,
-          montantTVA,
-          totalTTC
-        };
-      }
-
-      function renderLignesPreview() {
-        const tbody = document.getElementById("devisLignesPreview");
-
-        if (!devisLignesTemp.length) {
-          tbody.innerHTML = `<tr><td colspan="6" class="muted">Aucune ligne ajoutée pour le moment.</td></tr>`;
-          return;
-        }
-
-        tbody.innerHTML = devisLignesTemp.map(ligne => `
-          <tr>
-            <td>${escapeHtml(ligne.designation)}</td>
-            <td>${ligne.quantite}</td>
-            <td>${formatPrix(ligne.prixUnitaireHT)}</td>
-            <td>${ligne.tva} %</td>
-            <td>${formatPrix(ligne.totalHT)}</td>
-            <td>
-              <button class="line-delete-btn" type="button" onclick="supprimerLigneTemp(${ligne.id})">X</button>
-            </td>
-          </tr>
-        `).join("");
-      }
-
-      window.ajouterLigneDevis = function () {
-        const designation = document.getElementById("ligneDesignation").value.trim();
-        const quantite = parseFloat(document.getElementById("ligneQuantite").value);
-        const prixUnitaire = parseFloat(document.getElementById("lignePrixUnitaire").value);
-        const tva = parseFloat(document.getElementById("ligneTva").value);
-
-        if (!designation || isNaN(quantite) || quantite <= 0 || isNaN(prixUnitaire) || prixUnitaire < 0 || isNaN(tva)) {
-          alert("Merci de remplir correctement la ligne de devis.");
-          return;
-        }
-
-        devisLignesTemp.push(creerLigne(designation, quantite, prixUnitaire, tva));
-        renderLignesPreview();
-
-        document.getElementById("ligneDesignation").value = "";
-        document.getElementById("ligneQuantite").value = "";
-        document.getElementById("lignePrixUnitaire").value = "";
-        document.getElementById("ligneTva").value = "20";
-      };
-
-      window.supprimerLigneTemp = function (id) {
-        devisLignesTemp = devisLignesTemp.filter(l => l.id !== id);
-        renderLignesPreview();
-      };
-
-      window.viderLignesTemp = function () {
-        devisLignesTemp = [];
-        renderLignesPreview();
-      };
-
-      function getDocumentTableRowsHtml(lignes) {
-        return lignes.map(ligne => `
-          <tr>
-            <td>${escapeHtml(ligne.designation)}</td>
-            <td>${ligne.quantite}</td>
-            <td>${formatPrix(ligne.prixUnitaireHT)}</td>
-            <td>${ligne.tva} %</td>
-            <td>${formatPrix(ligne.totalHT)}</td>
-          </tr>
-        `).join("");
-      }
-
-      function getDocumentShell(type, reference, date, client, vehicule, notes, lignes, isFacture) {
-        const badgeClass = isFacture ? "doc-badge facture" : "doc-badge";
-        const titre = isFacture ? "FACTURE" : "DEVIS";
-        const totalLabel = isFacture ? "Total TTC à payer" : "Total TTC";
-        const totaux = calculerTotauxLignes(lignes);
-
-        return `
-          <div class="doc-shell">
-            <div class="doc-topline">
-              <div class="${badgeClass}">${titre}</div>
-              <div class="doc-meta">
-                <strong style="color:#fff;">Réf. :</strong> ${escapeHtml(reference)}<br>
-                <strong style="color:#fff;">Date :</strong> ${escapeHtml(date)}
-              </div>
-            </div>
-
-            <div class="doc-header">
-              <div>
-                <div class="doc-title">${titre}</div>
-                ${getClientBlockHtml(client, vehicule)}
-              </div>
-              <div>
-                ${getGarageBlockHtml()}
-              </div>
-            </div>
-
-            ${notes ? `
-              <div class="doc-client" style="margin-bottom:18px;">
-                <div class="doc-box-title">Notes</div>
-                ${escapeHtml(notes).replace(/\n/g, "<br>")}
-              </div>
-            ` : ""}
-
-            <div class="doc-table-wrap">
-              <table class="doc-table">
-                <thead>
-                  <tr>
-                    <th>Désignation</th>
-                    <th>Qté</th>
-                    <th>PU HT</th>
-                    <th>TVA</th>
-                    <th>Total HT</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  ${getDocumentTableRowsHtml(lignes)}
-                </tbody>
-              </table>
-            </div>
-
-            <div class="doc-total">
-              <div class="doc-total-line">
-                <span>Total HT</span>
-                <strong>${formatPrix(totaux.totalHT)}</strong>
-              </div>
-              <div class="doc-total-line">
-                <span>Total TVA</span>
-                <strong>${formatPrix(totaux.totalTVA)}</strong>
-              </div>
-              <div class="doc-total-line final">
-                <span>${totalLabel}</span>
-                <span>${formatPrix(totaux.totalTTC)}</span>
-              </div>
-            </div>
-
-            ${getFooterMentionsHtml(type)}
-          </div>
-        `;
-      }
-
-      function afficherDevis(devisData) {
-        const html = `
-          ${getDocumentShell(
-            "Devis",
-            devisData.reference,
-            devisData.date,
-            devisData.client,
-            devisData.vehicule,
-            devisData.notes || "",
-            devisData.lignes || [],
-            false
-          )}
-
-          <div class="small-actions">
-            <button class="btn" onclick="window.print()">Imprimer le devis</button>
-            <button class="btn btn-secondary" onclick="chargerDevisDansFormulaire(${devisData.id})">Charger dans le formulaire</button>
-          </div>
-        `;
-
-        const box = document.getElementById("resultatDevis");
-        box.innerHTML = html;
-        box.style.display = "block";
-        document.getElementById("resultatFacture").style.display = "none";
-        document.getElementById("resultatFacture").innerHTML = "";
-        localStorage.setItem("mlg_last_devis", JSON.stringify(devisData));
-      }
-
-      function afficherFacture(factureData) {
-        const html = `
-          ${getDocumentShell(
-            "Facture",
-            factureData.reference,
-            factureData.date,
-            factureData.client,
-            factureData.vehicule,
-            factureData.notes || "",
-            factureData.lignes || [],
-            true
-          )}
-
-          <div class="small-actions">
-            <button class="btn" onclick="window.print()">Imprimer la facture</button>
-          </div>
-        `;
-
-        const box = document.getElementById("resultatFacture");
-        box.innerHTML = html;
-        box.style.display = "block";
-        document.getElementById("resultatDevis").style.display = "none";
-        document.getElementById("resultatDevis").innerHTML = "";
-      }
-
-      window.genererDevis = function () {
-        const client = document.getElementById("devisClient").value.trim();
-        const vehicule = document.getElementById("devisVehicule").value.trim();
-        const reference = document.getElementById("devisReference").value.trim() || getNextDevisReference();
-        const notes = document.getElementById("devisNotes").value.trim();
-
-        if (!client || !vehicule) {
-          alert("Merci de remplir le client et le véhicule.");
-          return;
-        }
-
-        if (!devisLignesTemp.length) {
-          alert("Merci d'ajouter au moins une ligne de devis.");
-          return;
-        }
-
-        const totaux = calculerTotauxLignes(devisLignesTemp);
-
-        const devisData = {
-          id: Date.now(),
-          client,
-          vehicule,
-          reference,
-          notes,
-          lignes: devisLignesTemp.map(l => ({ ...l })),
-          prixHT: totaux.totalHT,
-          tva: totaux.totalTVA,
-          prixTTC: totaux.totalTTC,
-          date: getDateFR()
-        };
-
-        localStorage.setItem("mlg_last_devis", JSON.stringify(devisData));
-
-        const devisList = getDevisList();
-        devisList.unshift(devisData);
-        saveDevisList(devisList);
-
-        afficherDevis(devisData);
-        afficherListeDevis();
-        afficherDocumentsRecents();
-        mettreAJourStats();
-
-        document.getElementById("devisClient").value = "";
-        document.getElementById("devisVehicule").value = "";
-        document.getElementById("devisReference").value = "";
-        document.getElementById("devisNotes").value = "";
-        devisLignesTemp = [];
-        renderLignesPreview();
-      };
-
-      window.genererFacture = function () {
-        const stored = localStorage.getItem("mlg_last_devis");
-
-        if (!stored) {
-          alert("Aucun devis disponible. Générez d'abord un devis.");
-          return;
-        }
-
-        const devisData = JSON.parse(stored);
-        const referenceFacture = devisData.reference.replace("DEV", "FAC");
-
-        const factureData = {
-          id: Date.now(),
-          client: devisData.client,
-          vehicule: devisData.vehicule,
-          reference: referenceFacture,
-          notes: devisData.notes || "",
-          lignes: (devisData.lignes || []).map(l => ({ ...l })),
-          prixHT: devisData.prixHT,
-          tva: devisData.tva,
-          prixTTC: devisData.prixTTC,
-          date: getDateFR()
-        };
-
-        const facturesList = getFacturesList();
-        facturesList.unshift(factureData);
-        saveFacturesList(facturesList);
-
-        afficherFacture(factureData);
-        afficherDocumentsRecents();
-        mettreAJourStats();
-      };
-
-      window.ouvrirDevis = function (id) {
-        const devis = getDevisList().find(item => item.id === id);
-        if (!devis) {
-          alert("Devis introuvable.");
-          return;
-        }
-        afficherDevis(devis);
-        scrollToSection("moduleDevis");
-      };
-
-      window.ouvrirFacture = function (id) {
-        const facture = getFacturesList().find(item => item.id === id);
-        if (!facture) {
-          alert("Facture introuvable.");
-          return;
-        }
-        afficherFacture(facture);
-        scrollToSection("moduleFacture");
-      };
-
-      window.chargerDevisDansFormulaire = function (id) {
-        const devis = getDevisList().find(item => item.id === id);
-        if (!devis) {
-          alert("Devis introuvable.");
-          return;
-        }
-
-        document.getElementById("devisClient").value = devis.client || "";
-        document.getElementById("devisVehicule").value = devis.vehicule || "";
-        document.getElementById("devisReference").value = devis.reference || "";
-        document.getElementById("devisNotes").value = devis.notes || "";
-
-        devisLignesTemp = (devis.lignes || []).map(l => ({ ...l }));
-        renderLignesPreview();
-
-        scrollToSection("moduleDevis");
-      };
-
-      window.supprimerDevis = function (id) {
-        if (!confirm("Voulez-vous vraiment supprimer ce devis ?")) {
-          return;
-        }
-
-        const devisList = getDevisList().filter(item => item.id !== id);
-        saveDevisList(devisList);
-
-        const lastDevis = localStorage.getItem("mlg_last_devis");
-        if (lastDevis) {
-          try {
-            const parsed = JSON.parse(lastDevis);
-            if (parsed.id === id) {
-              localStorage.removeItem("mlg_last_devis");
-            }
-          } catch (e) {}
-        }
-
-        afficherListeDevis();
-        afficherDocumentsRecents();
-        mettreAJourStats();
-        viderDocuments();
-      };
-
-      function afficherListeDevis() {
-        const devisList = getDevisList();
-        const container = document.getElementById("listeDevis");
-
-        if (!devisList.length) {
-          container.innerHTML = `<div class="empty-state">Aucun devis enregistré pour le moment.</div>`;
-          return;
-        }
-
-        container.innerHTML = devisList.map(d => `
-          <div class="history-item">
-            <div class="history-top">
-              <div class="history-ref">${escapeHtml(d.reference)}</div>
-              <div class="history-date">${escapeHtml(d.date)}</div>
-            </div>
-            <div class="history-line"><strong>Client :</strong> ${escapeHtml(d.client)}</div>
-            <div class="history-line"><strong>Véhicule :</strong> ${escapeHtml(d.vehicule)}</div>
-            <div class="history-line"><strong>Lignes :</strong> ${(d.lignes || []).length}</div>
-            <div class="history-line"><strong>Total TTC :</strong> ${formatPrix(d.prixTTC)}</div>
-
-            <div class="small-actions">
-              <button class="btn btn-secondary btn-small" onclick="ouvrirDevis(${d.id})">Voir</button>
-              <button class="btn btn-secondary btn-small" onclick="chargerDevisDansFormulaire(${d.id})">Charger</button>
-              <button class="btn btn-danger btn-small" onclick="supprimerDevis(${d.id})">Supprimer</button>
-            </div>
-          </div>
-        `).join("");
-      }
-
-      function afficherDocumentsRecents() {
-        const devisList = getDevisList();
-        const facturesList = getFacturesList();
-        const tbody = document.getElementById("documentsRecents");
-
-        const lignes = [];
-
-        facturesList.slice(0, 3).forEach(f => {
-          lignes.push(`
-            <tr class="clickable-row" onclick="ouvrirFacture(${f.id})">
-              <td>${escapeHtml(f.client)}</td>
-              <td>${escapeHtml(f.reference)}</td>
-              <td>${escapeHtml(f.vehicule)}</td>
-              <td><span class="pill pill-orange">Facture</span></td>
-            </tr>
-          `);
-        });
-
-        devisList.slice(0, 3).forEach(d => {
-          lignes.push(`
-            <tr class="clickable-row" onclick="ouvrirDevis(${d.id})">
-              <td>${escapeHtml(d.client)}</td>
-              <td>${escapeHtml(d.reference)}</td>
-              <td>${escapeHtml(d.vehicule)}</td>
-              <td><span class="pill pill-blue">Devis</span></td>
-            </tr>
-          `);
-        });
-
-        if (!lignes.length) {
-          tbody.innerHTML = `
-            <tr>
-              <td colspan="4" class="muted">Aucun document récent.</td>
-            </tr>
-          `;
-          return;
-        }
-
-        tbody.innerHTML = lignes.slice(0, 6).join("");
-      }
-
-      function mettreAJourStats() {
-        const devisList = getDevisList();
-        const facturesList = getFacturesList();
-
-        const totalCA = devisList.reduce((sum, devis) => sum + Number(devis.prixTTC || 0), 0);
-
-        document.getElementById("statDevis").textContent = devisList.length;
-        document.getElementById("statFactures").textContent = facturesList.length;
-        document.getElementById("statCA").textContent = formatPrix(totalCA);
-      }
-
-      window.scrollToSection = function (id) {
-        document.getElementById(id).scrollIntoView({ behavior: "smooth", block: "start" });
-      };
-
-      window.logout = function () {
-        localStorage.removeItem("premium_access");
-        localStorage.removeItem("mlg_access_email");
-        window.location.replace("/");
-      };
-
-      window.viderDocuments = function () {
-        document.getElementById("resultatDevis").style.display = "none";
-        document.getElementById("resultatDevis").innerHTML = "";
-        document.getElementById("resultatFacture").style.display = "none";
-        document.getElementById("resultatFacture").innerHTML = "";
-        localStorage.removeItem("mlg_last_devis");
-      };
-
-      document.addEventListener("DOMContentLoaded", () => {
-        renderLignesPreview();
-        afficherListeDevis();
-        afficherDocumentsRecents();
-        mettreAJourStats();
+      const next = getCounter(STORAGE_KEYS.quoteCounter) + 1;
+      setCounter(STORAGE_KEYS.quoteCounter, next);
+      return "DV-" + String(next).padStart(4, "0");
+    }
+
+    function ensureCountersFromDocs() {
+      let maxQuote = getCounter(STORAGE_KEYS.quoteCounter);
+      let maxInvoice = getCounter(STORAGE_KEYS.invoiceCounter);
+
+      state.documents.forEach(doc => {
+        if (!doc.number) return;
+        const m = doc.number.match(/^(DV|FA)-(\d{1,})$/i);
+        if (!m) return;
+        const n = parseInt(m[2], 10);
+        if (m[1].toUpperCase() === "DV" && n > maxQuote) maxQuote = n;
+        if (m[1].toUpperCase() === "FA" && n > maxInvoice) maxInvoice = n;
       });
-    })();
+
+      setCounter(STORAGE_KEYS.quoteCounter, maxQuote);
+      setCounter(STORAGE_KEYS.invoiceCounter, maxInvoice);
+    }
+
+    function createEmptyLine() {
+      return {
+        type: "main_oeuvre",
+        description: "",
+        quantity: 1,
+        unitPrice: 0,
+        tva: defaultTVA
+      };
+    }
+
+    function createNewDocument(type = "devis") {
+      const date = todayISO();
+      return {
+        id: uid(),
+        type,
+        number: nextNumberFor(type),
+        date,
+        dueDate: addDaysISO(date, 30),
+        paymentStatus: "non_paye",
+        clientName: "",
+        clientPhone: "",
+        clientEmail: "",
+        clientAddress: "",
+        vehicle: "",
+        immatriculation: "",
+        mileage: "",
+        notes: "",
+        globalDiscount: 0,
+        deposit: 0,
+        lines: [createEmptyLine()],
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
+    }
+
+    function migrateLegacyData() {
+      const existing = JSON.parse(localStorage.getItem(STORAGE_KEYS.docs) || "[]");
+      if (Array.isArray(existing) && existing.length > 0) {
+        state.documents = existing;
+        ensureCountersFromDocs();
+        return;
+      }
+
+      const legacyRaw = localStorage.getItem(STORAGE_KEYS.legacyQuotes);
+      if (!legacyRaw) {
+        state.documents = [];
+        return;
+      }
+
+      try {
+        const legacy = JSON.parse(legacyRaw);
+        if (!Array.isArray(legacy)) {
+          state.documents = [];
+          return;
+        }
+
+        state.documents = legacy.map((item, index) => {
+          const date = item.date || todayISO();
+          return {
+            id: item.id || uid() + "_" + index,
+            type: item.type || "devis",
+            number: item.number || ("DV-" + String(index + 1).padStart(4, "0")),
+            date,
+            dueDate: item.dueDate || addDaysISO(date, 30),
+            paymentStatus: item.paymentStatus || "non_paye",
+            clientName: item.clientName || "",
+            clientPhone: item.clientPhone || "",
+            clientEmail: item.clientEmail || "",
+            clientAddress: item.clientAddress || "",
+            vehicle: item.vehicle || "",
+            immatriculation: item.immatriculation || "",
+            mileage: item.mileage || "",
+            notes: item.notes || "",
+            globalDiscount: toNumber(item.globalDiscount),
+            deposit: toNumber(item.deposit),
+            lines: Array.isArray(item.lines) && item.lines.length
+              ? item.lines.map(l => ({
+                  type: l.type || "autre",
+                  description: l.description || "",
+                  quantity: toNumber(l.quantity || 1),
+                  unitPrice: toNumber(l.unitPrice || 0),
+                  tva: toNumber(l.tva ?? defaultTVA)
+                }))
+              : [createEmptyLine()],
+            createdAt: item.createdAt || new Date().toISOString(),
+            updatedAt: item.updatedAt || new Date().toISOString()
+          };
+        });
+
+        persistDocuments();
+        ensureCountersFromDocs();
+      } catch (e) {
+        state.documents = [];
+      }
+    }
+
+    function persistDocuments() {
+      localStorage.setItem(STORAGE_KEYS.docs, JSON.stringify(state.documents));
+      updateSidebarStats();
+      renderHistory();
+    }
+
+    function getCurrentDoc() {
+      return state.documents.find(d => d.id === state.currentId) || null;
+    }
+
+    function setCurrentDoc(doc) {
+      state.currentId = doc.id;
+      localStorage.setItem(STORAGE_KEYS.currentDocId, doc.id);
+      fillForm(doc);
+      renderHistory();
+    }
+
+    function updateSidebarStats() {
+      document.getElementById("docCount").textContent = String(state.documents.length);
+      document.getElementById("nextQuoteNumber").textContent = nextNumberFor("devis");
+      document.getElementById("nextInvoiceNumber").textContent = nextNumberFor("facture");
+    }
+
+    function calculateLine(line) {
+      const quantity = toNumber(line.quantity);
+      const unitPrice = toNumber(line.unitPrice);
+      const tva = toNumber(line.tva);
+      const ht = quantity * unitPrice;
+      const vat = ht * (tva / 100);
+      const ttc = ht + vat;
+      return { ht, vat, ttc };
+    }
+
+    function calculateDoc(doc) {
+      const lines = Array.isArray(doc.lines) ? doc.lines : [];
+      let subtotalHT = 0;
+      let totalVAT = 0;
+      let totalTTCBeforeDiscount = 0;
+
+      lines.forEach(line => {
+        const calc = calculateLine(line);
+        subtotalHT += calc.ht;
+        totalVAT += calc.vat;
+        totalTTCBeforeDiscount += calc.ttc;
+      });
+
+      const globalDiscount = Math.max(0, toNumber(doc.globalDiscount));
+      const deposit = Math.max(0, toNumber(doc.deposit));
+      const netToPay = Math.max(0, totalTTCBeforeDiscount - globalDiscount);
+
+      let remainingBalance = Math.max(0, netToPay - deposit);
+      if (doc.paymentStatus === "paye") remainingBalance = 0;
+
+      return {
+        subtotalHT,
+        totalVAT,
+        totalTTCBeforeDiscount,
+        globalDiscount,
+        netToPay,
+        deposit,
+        remainingBalance
+      };
+    }
+
+    function lineTypeLabel(type) {
+      if (type === "main_oeuvre") return "Main-d’œuvre";
+      if (type === "piece") return "Pièce";
+      return "Autre";
+    }
+
+    function fillForm(doc) {
+      document.getElementById("docType").value = doc.type;
+      document.getElementById("docNumber").value = doc.number || "";
+      document.getElementById("docDate").value = doc.date || todayISO();
+      document.getElementById("dueDate").value = doc.dueDate || addDaysISO(doc.date || todayISO(), 30);
+      document.getElementById("paymentStatus").value = doc.paymentStatus || "non_paye";
+
+      document.getElementById("clientName").value = doc.clientName || "";
+      document.getElementById("clientPhone").value = doc.clientPhone || "";
+      document.getElementById("clientEmail").value = doc.clientEmail || "";
+      document.getElementById("clientAddress").value = doc.clientAddress || "";
+      document.getElementById("vehicle").value = doc.vehicle || "";
+      document.getElementById("immatriculation").value = doc.immatriculation || "";
+      document.getElementById("mileage").value = doc.mileage || "";
+      document.getElementById("notes").value = doc.notes || "";
+      document.getElementById("globalDiscount").value = toNumber(doc.globalDiscount).toFixed(2);
+      document.getElementById("deposit").value = toNumber(doc.deposit).toFixed(2);
+
+      renderLines(doc.lines || [createEmptyLine()]);
+      updateSummaryFromForm();
+      updateConvertButton();
+    }
+
+    function readFormToDoc(existingDoc = null) {
+      const lines = readLinesFromDOM();
+      const doc = existingDoc || createNewDocument(document.getElementById("docType").value);
+
+      doc.type = document.getElementById("docType").value;
+      doc.number = document.getElementById("docNumber").value || doc.number;
+      doc.date = document.getElementById("docDate").value || todayISO();
+      doc.dueDate = document.getElementById("dueDate").value || addDaysISO(doc.date, 30);
+      doc.paymentStatus = document.getElementById("paymentStatus").value;
+
+      doc.clientName = document.getElementById("clientName").value.trim();
+      doc.clientPhone = document.getElementById("clientPhone").value.trim();
+      doc.clientEmail = document.getElementById("clientEmail").value.trim();
+      doc.clientAddress = document.getElementById("clientAddress").value.trim();
+      doc.vehicle = document.getElementById("vehicle").value.trim();
+      doc.immatriculation = document.getElementById("immatriculation").value.trim();
+      doc.mileage = document.getElementById("mileage").value.trim();
+      doc.notes = document.getElementById("notes").value.trim();
+      doc.globalDiscount = toNumber(document.getElementById("globalDiscount").value);
+      doc.deposit = toNumber(document.getElementById("deposit").value);
+      doc.lines = lines;
+      doc.updatedAt = new Date().toISOString();
+
+      if (!doc.createdAt) doc.createdAt = doc.updatedAt;
+
+      return doc;
+    }
+
+    function renderLines(lines) {
+      const container = document.getElementById("lineItems");
+      container.innerHTML = "";
+
+      lines.forEach((line, index) => {
+        const calc = calculateLine(line);
+
+        const wrapper = document.createElement("div");
+        wrapper.className = "line-item";
+        wrapper.innerHTML = `
+          <div class="line-grid">
+            <div>
+              <label>Type</label>
+              <select class="line-type">
+                <option value="main_oeuvre" ${line.type === "main_oeuvre" ? "selected" : ""}>Main-d’œuvre</option>
+                <option value="piece" ${line.type === "piece" ? "selected" : ""}>Pièce</option>
+                <option value="autre" ${line.type === "autre" ? "selected" : ""}>Autre</option>
+              </select>
+            </div>
+            <div>
+              <label>Description</label>
+              <input class="line-description" type="text" placeholder="Description de la ligne" value="${escapeHtml(line.description || "")}" />
+            </div>
+            <div>
+              <label>Qté</label>
+              <input class="line-qty" type="number" min="0" step="0.01" value="${toNumber(line.quantity)}" />
+            </div>
+            <div>
+              <label>PU HT (€)</label>
+              <input class="line-unit-price" type="number" min="0" step="0.01" value="${toNumber(line.unitPrice)}" />
+            </div>
+            <div>
+              <label>TVA (%)</label>
+              <input class="line-tva" type="number" min="0" step="0.01" value="${toNumber(line.tva)}" />
+            </div>
+            <div>
+              <label>Total TTC</label>
+              <div class="line-total">${formatCurrency(calc.ttc)}</div>
+            </div>
+            <div class="hidden-print">
+              <button class="btn-danger remove-line-btn" type="button">Suppr.</button>
+            </div>
+          </div>
+        `;
+
+        const inputs = wrapper.querySelectorAll("input, select");
+        inputs.forEach(input => {
+          input.addEventListener("input", updateSummaryFromForm);
+          input.addEventListener("change", updateSummaryFromForm);
+        });
+
+        wrapper.querySelector(".remove-line-btn").addEventListener("click", () => {
+          const currentLines = readLinesFromDOM();
+          currentLines.splice(index, 1);
+          renderLines(currentLines.length ? currentLines : [createEmptyLine()]);
+          updateSummaryFromForm();
+        });
+
+        container.appendChild(wrapper);
+      });
+    }
+
+    function readLinesFromDOM() {
+      const items = Array.from(document.querySelectorAll(".line-item"));
+      return items.map(item => ({
+        type: item.querySelector(".line-type").value,
+        description: item.querySelector(".line-description").value.trim(),
+        quantity: toNumber(item.querySelector(".line-qty").value),
+        unitPrice: toNumber(item.querySelector(".line-unit-price").value),
+        tva: toNumber(item.querySelector(".line-tva").value)
+      }));
+    }
+
+    function updateSummaryFromForm() {
+      const fakeDoc = readFormToDoc(getCurrentDoc() || createNewDocument(document.getElementById("docType").value));
+      const totals = calculateDoc(fakeDoc);
+
+      document.querySelectorAll(".line-item").forEach((row, idx) => {
+        const lines = readLinesFromDOM();
+        const line = lines[idx];
+        if (!line) return;
+        const calc = calculateLine(line);
+        const totalCell = row.querySelector(".line-total");
+        if (totalCell) totalCell.textContent = formatCurrency(calc.ttc);
+      });
+
+      document.getElementById("subtotalHT").textContent = formatCurrency(totals.subtotalHT);
+      document.getElementById("totalVAT").textContent = formatCurrency(totals.totalVAT);
+      document.getElementById("totalTTCBeforeDiscount").textContent = formatCurrency(totals.totalTTCBeforeDiscount);
+      document.getElementById("discountDisplay").textContent = formatCurrency(totals.globalDiscount);
+      document.getElementById("netToPay").textContent = formatCurrency(totals.netToPay);
+      document.getElementById("depositDisplay").textContent = formatCurrency(totals.deposit);
+      document.getElementById("remainingBalance").textContent = formatCurrency(totals.remainingBalance);
+
+      updateConvertButton();
+      autoSaveCurrentDocumentSilently();
+    }
+
+    function renderHistory() {
+      const list = document.getElementById("historyList");
+      if (!state.documents.length) {
+        list.innerHTML = `<div class="empty">Aucun document enregistré.</div>`;
+        return;
+      }
+
+      const docs = [...state.documents].sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+
+      list.innerHTML = "";
+      docs.forEach(doc => {
+        const totals = calculateDoc(doc);
+        const item = document.createElement("div");
+        item.className = "history-item";
+        if (doc.id === state.currentId) {
+          item.style.borderColor = "rgba(96,165,250,0.35)";
+          item.style.background = "rgba(96,165,250,0.08)";
+        }
+
+        item.innerHTML = `
+          <div class="history-top">
+            <span class="badge ${doc.type === "facture" ? "facture" : "devis"}">${doc.type === "facture" ? "Facture" : "Devis"}</span>
+            <span class="badge ${doc.paymentStatus === "paye" ? "paye" : "impaye"}">${doc.paymentStatus === "paye" ? "Payé" : "Non payé"}</span>
+          </div>
+          <div style="font-weight: 800; margin-bottom: 4px;">${escapeHtml(doc.number || "")}</div>
+          <div class="small" style="margin-bottom: 6px;">${escapeHtml(doc.clientName || "Sans client")} ${doc.vehicle ? "• " + escapeHtml(doc.vehicle) : ""}</div>
+          <div class="small">Date : ${escapeHtml(doc.date || "-")} ${doc.dueDate ? "• Échéance : " + escapeHtml(doc.dueDate) : ""}</div>
+          <div style="margin-top: 8px; font-weight: 700;">${formatCurrency(totals.remainingBalance)} restant</div>
+        `;
+
+        item.addEventListener("click", () => {
+          setCurrentDoc(doc);
+        });
+
+        list.appendChild(item);
+      });
+    }
+
+    function saveCurrentDocument(showAlert = true) {
+      const current = getCurrentDoc();
+      let doc = readFormToDoc(current);
+
+      if (!doc.number || !doc.number.trim()) {
+        doc.number = incrementCounterFor(doc.type);
+      } else if (!current) {
+        const existingNumber = state.documents.some(d => d.number === doc.number);
+        if (!existingNumber) {
+          const prefix = doc.type === "facture" ? "FA-" : "DV-";
+          if (doc.number.startsWith(prefix)) {
+            const match = doc.number.match(/(\d+)$/);
+            if (match) {
+              const n = parseInt(match[1], 10);
+              if (doc.type === "facture" && n > getCounter(STORAGE_KEYS.invoiceCounter)) {
+                setCounter(STORAGE_KEYS.invoiceCounter, n);
+              }
+              if (doc.type === "devis" && n > getCounter(STORAGE_KEYS.quoteCounter)) {
+                setCounter(STORAGE_KEYS.quoteCounter, n);
+              }
+            }
+          }
+        }
+      }
+
+      const existingIndex = state.documents.findIndex(d => d.id === doc.id);
+      if (existingIndex >= 0) {
+        state.documents[existingIndex] = doc;
+      } else {
+        if (!doc.number || doc.number === nextNumberFor(doc.type)) {
+          doc.number = incrementCounterFor(doc.type);
+        }
+        state.documents.unshift(doc);
+      }
+
+      persistDocuments();
+      setCurrentDoc(doc);
+
+      if (showAlert) {
+        alert("Document enregistré avec succès.");
+      }
+    }
+
+    function autoSaveCurrentDocumentSilently() {
+      const current = getCurrentDoc();
+      if (!current) return;
+
+      const doc = readFormToDoc(current);
+      const index = state.documents.findIndex(d => d.id === doc.id);
+      if (index >= 0) {
+        state.documents[index] = doc;
+        persistDocuments();
+      }
+    }
+
+    function deleteCurrentDocument() {
+      const current = getCurrentDoc();
+      if (!current) return;
+
+      const ok = confirm("Supprimer ce document ?");
+      if (!ok) return;
+
+      state.documents = state.documents.filter(d => d.id !== current.id);
+      persistDocuments();
+
+      if (state.documents.length) {
+        setCurrentDoc(state.documents[0]);
+      } else {
+        const fresh = createNewDocument("devis");
+        state.documents = [fresh];
+        persistDocuments();
+        setCurrentDoc(fresh);
+      }
+    }
+
+    function duplicateCurrentDocument() {
+      const current = getCurrentDoc();
+      if (!current) return;
+
+      const clone = JSON.parse(JSON.stringify(current));
+      clone.id = uid();
+      clone.type = current.type;
+      clone.number = nextNumberFor(clone.type);
+      clone.date = todayISO();
+      clone.dueDate = addDaysISO(clone.date, 30);
+      clone.paymentStatus = "non_paye";
+      clone.createdAt = new Date().toISOString();
+      clone.updatedAt = new Date().toISOString();
+
+      state.documents.unshift(clone);
+      persistDocuments();
+      setCurrentDoc(clone);
+    }
+
+    function convertCurrentToInvoice() {
+      const current = getCurrentDoc();
+      if (!current) return;
+
+      if (current.type === "facture") {
+        alert("Ce document est déjà une facture.");
+        return;
+      }
+
+      const invoice = JSON.parse(JSON.stringify(current));
+      invoice.id = uid();
+      invoice.type = "facture";
+      invoice.number = incrementCounterFor("facture");
+      invoice.date = todayISO();
+      invoice.dueDate = addDaysISO(invoice.date, 30);
+      invoice.paymentStatus = "non_paye";
+      invoice.createdAt = new Date().toISOString();
+      invoice.updatedAt = new Date().toISOString();
+
+      state.documents.unshift(invoice);
+      persistDocuments();
+      setCurrentDoc(invoice);
+    }
+
+    function updateConvertButton() {
+      const currentType = document.getElementById("docType").value;
+      const btn = document.getElementById("convertBtn");
+      btn.disabled = currentType === "facture";
+      btn.style.opacity = currentType === "facture" ? "0.55" : "1";
+      btn.style.cursor = currentType === "facture" ? "not-allowed" : "pointer";
+    }
+
+    function handleDocTypeChange() {
+      const current = getCurrentDoc();
+      const newType = document.getElementById("docType").value;
+
+      if (!current) return;
+
+      if (current.type !== newType) {
+        const currentNumber = document.getElementById("docNumber").value;
+        const hasSavedNumber = !!currentNumber;
+
+        if (!hasSavedNumber || currentNumber === current.number) {
+          document.getElementById("docNumber").value = nextNumberFor(newType);
+        }
+      }
+
+      updateConvertButton();
+      updateSummaryFromForm();
+    }
+
+    function startNewDocument() {
+      const type = document.getElementById("docType").value || "devis";
+      const doc = createNewDocument(type);
+      state.documents.unshift(doc);
+      persistDocuments();
+      setCurrentDoc(doc);
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function initBindings() {
+      document.getElementById("addLineBtn").addEventListener("click", () => {
+        const lines = readLinesFromDOM();
+        lines.push(createEmptyLine());
+        renderLines(lines);
+        updateSummaryFromForm();
+      });
+
+      document.getElementById("saveBtn").addEventListener("click", () => saveCurrentDocument(true));
+      document.getElementById("saveBtnTop").addEventListener("click", () => saveCurrentDocument(true));
+      document.getElementById("printBtn").addEventListener("click", () => window.print());
+      document.getElementById("printBtnTop").addEventListener("click", () => window.print());
+      document.getElementById("newDocBtn").addEventListener("click", startNewDocument);
+      document.getElementById("deleteBtn").addEventListener("click", deleteCurrentDocument);
+      document.getElementById("duplicateBtn").addEventListener("click", duplicateCurrentDocument);
+      document.getElementById("convertBtn").addEventListener("click", convertCurrentToInvoice);
+
+      [
+        "docType", "docDate", "dueDate", "paymentStatus",
+        "clientName", "clientPhone", "clientEmail", "clientAddress",
+        "vehicle", "immatriculation", "mileage",
+        "notes", "globalDiscount", "deposit"
+      ].forEach(id => {
+        const el = document.getElementById(id);
+        el.addEventListener("input", updateSummaryFromForm);
+        el.addEventListener("change", updateSummaryFromForm);
+      });
+
+      document.getElementById("docType").addEventListener("change", handleDocTypeChange);
+      document.getElementById("paymentStatus").addEventListener("change", updateSummaryFromForm);
+    }
+
+    function init() {
+      migrateLegacyData();
+      ensureCountersFromDocs();
+      updateSidebarStats();
+      initBindings();
+
+      let currentId = localStorage.getItem(STORAGE_KEYS.currentDocId);
+      let current = state.documents.find(d => d.id === currentId);
+
+      if (!current && state.documents.length) {
+        current = state.documents[0];
+      }
+
+      if (!current) {
+        current = createNewDocument("devis");
+        state.documents.unshift(current);
+        persistDocuments();
+      }
+
+      setCurrentDoc(current);
+    }
+
+    init();
   </script>
 </body>
 </html>
